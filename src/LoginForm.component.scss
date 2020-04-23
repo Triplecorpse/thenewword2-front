@@ -1,10 +1,22 @@
+@import "variables";
+
 .login-form-component {
   label {
-    color: #ffffff;
+    color: $light-color;
     margin-top: 10px;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
   }
 
   button {
     margin-top: 10px;
+  }
+
+  .register {
+    background-color: transparent;
+    border: none;
   }
 }

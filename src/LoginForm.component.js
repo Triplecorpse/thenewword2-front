@@ -22,14 +22,17 @@ class LoginFormComponent extends React.Component {
             <div className="login-form-component" >
                 <form className="form" onSubmit={this.submit}>
                     <label>
-                        Login
+                        Ім'я користувача
                         <input type="text" name="login" value={this.state.login} onChange={this.handleChange}/>
                     </label>
                     <label>
-                        Password
+                        Гасло
                         <input type="password" name="password" value={this.state.password} onChange={this.handleChange}/>
                     </label>
-                    <button type="submit">OK</button>
+                    <div className="actions">
+                        <button type="button" className="register" onClick={this.props.register}>Зареєструватися</button>
+                        <button type="submit">Продовжити</button>
+                    </div>
                 </form>
             </div>
         );

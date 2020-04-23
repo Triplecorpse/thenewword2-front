@@ -17,11 +17,16 @@ class WelcomeComponent extends React.Component {
     constructor(props) {
         super(props);
 
+        const coords = welcomes.map(() => this.createCoord());
+
         this.state = {
-            coords: welcomes.map(() => this.createCoord()),
-            initialCoords: welcomes.map(() => this.createCoord())
+            coords,
+            initialCoords: coords.map(c => c)
         };
         this.onMouseMove = this.onMouseMove.bind(this);
+    }
+
+    componentDidMount() {
         this.onMouseMove();
     }
 
@@ -52,20 +57,19 @@ class WelcomeComponent extends React.Component {
         )
     }
 
+    // todo: implement light position change on mouse move
     onMouseMove() {
-        setInterval(() => {
-            this.setState((prev) => ({
-                coords: prev.coords.map(coord => {
-                    const movementX = (.5 - Math.random());
-                    const movementY = (.5 - Math.random());
+        this.setState((prev) => ({
+            coords: prev.coords.map(coord => {
+                const movementX = (.5 - Math.random());
+                const movementY = (.5 - Math.random());
 
-                    return {
-                        x: coord.x + movementX,
-                        y: coord.y + movementY
-                    }
-                })
-            }));
-        }, 100)
+                return {
+                    x: coord.x + movementX,
+                    y: coord.y + movementY
+                }
+            })
+        }));
     }
 }
 
