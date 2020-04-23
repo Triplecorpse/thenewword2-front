@@ -1,0 +1,23 @@
+.background {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(ellipse at center, #1e5799 0%,#000000 100%);
+  position: relative;
+}
+
+.form-wrapper, .welcome-wrapper {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+
+.form-wrapper {
+  z-index: 2;
+}
+
+.welcome-wrapper {
+  width: calc(100vw - 200px);
+  height: calc(100vh - 200px);
+}

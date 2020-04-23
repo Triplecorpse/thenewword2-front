@@ -1,0 +1,13 @@
+.welcome-component {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  .welcome-word {
+    position: absolute;
+    font-size: 10px;
+    color: antiquewhite;
+    transform: translate(-50%, -50%);
+    transition: 1s left, top ease;
+  }
+}
