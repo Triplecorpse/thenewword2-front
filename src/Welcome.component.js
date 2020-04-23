@@ -14,6 +14,17 @@ const welcomes = ["i mirëpritur", "ongietorri", "дабро запрашаем"
     "sambutan", "tonga soa", "selamat datang", "nau mai", "bonvenon", "akeyi", "gratissimum"];
 
 class WelcomeComponent extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            coords: welcomes.map(() => this.createCoord()),
+            initialCoords: welcomes.map(() => this.createCoord())
+        };
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseMove();
+    }
+
     createCoord() {
         const x = Math.random() * 100;
         const y = Math.random() * 100;
@@ -28,8 +39,8 @@ class WelcomeComponent extends React.Component {
     welcomes() {
         return welcomes.map((welcome, index) =>
             <div className="welcome-word" key={index} style={{
-                left: this.createCoord().x + '%',
-                top: this.createCoord().y + '%'
+                left: this.state.coords[index].x + '%',
+                top: this.state.coords[index].y + '%'
             }}>{welcome.toUpperCase()}</div>)
     }
 
@@ -39,6 +50,22 @@ class WelcomeComponent extends React.Component {
                 {this.welcomes()}
             </div>
         )
+    }
+
+    onMouseMove() {
+        setInterval(() => {
+            this.setState((prev) => ({
+                coords: prev.coords.map(coord => {
+                    const movementX = (.5 - Math.random());
+                    const movementY = (.5 - Math.random());
+
+                    return {
+                        x: coord.x + movementX,
+                        y: coord.y + movementY
+                    }
+                })
+            }));
+        }, 100)
     }
 }
 
