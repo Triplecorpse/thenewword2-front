@@ -20,7 +20,7 @@ class LoginComponent extends React.Component<Props, State> {
         this.state = {
             loginFormWrapperClasses: 'form-wrapper',
             registerFormWrapperClasses: 'form-wrapper hidden register'
-        }
+        };
     }
 
     register() {

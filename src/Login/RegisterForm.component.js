@@ -70,9 +70,19 @@ class RegisterFormComponent extends React.Component<Props, State> {
         };
 
         e.preventDefault();
-        fetch(this.props.apiLink + 'user/register', {
-            method: 'post',
-            body: JSON.stringify(body)
+        window.grecaptcha.ready(async () => {
+            const token = await window.grecaptcha.execute('6LcKUuwUAAAAAMrf5iUjvcqfyult47l9hgGrXfF7', {action: 'homepage'});
+            const rawResponse = await fetch(this.props.apiLink + 'user/register', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors',
+                body: JSON.stringify({...body, token})
+            });
+            const jsonResponse = await rawResponse.json();
+            console.log(jsonResponse);
         });
     }
 }
