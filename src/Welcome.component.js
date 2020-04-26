@@ -1,7 +1,20 @@
+// @flow
+
 import './Welcome.component.scss';
 import * as React from "react";
 
-const welcomes = ["i mirëpritur", "ongietorri", "дабро запрашаем", "dobrodošli", "добре дошли", "benvinguda",
+type coord = {
+    x: number;
+    y: number;
+}
+
+type Props = {};
+type State = {
+    coords: coord[];
+    initialCoords: coord[];
+};
+
+const welcomes: string[] = ["i mirëpritur", "ongietorri", "дабро запрашаем", "dobrodošli", "добре дошли", "benvinguda",
     "Dobrodošli", "Vítejte", "Velkommen", "Welkom", "Tere tulemast", "Tervetuloa", "Bienvenue", "Benvido",
     "herzlich willkommen", "καλως ΗΡΘΑΤΕ", "Üdvözöljük", "velkominn", "fáilte", "benvenuto", "gaidīts", "laukiamas",
     "добредојден", "merħba", "Velkommen", "Witamy", "bem vinda", "Bine ati venit", "добро пожаловать", "Добродошли",
@@ -13,24 +26,24 @@ const welcomes = ["i mirëpritur", "ongietorri", "дабро запрашаем"
     "soo dhaweyn", "karibu", "welcome", "wamukelekile", "welcome", "maligayang pagdating", "SELAMAT DATANG",
     "sambutan", "tonga soa", "selamat datang", "nau mai", "bonvenon", "akeyi", "gratissimum"];
 
-class WelcomeComponent extends React.Component {
-    constructor(props) {
+class WelcomeComponent extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
-        const coords = welcomes.map(() => this.createCoord());
+        const coords: coord[] = welcomes.map(() => this.createCoord());
 
         this.state = {
             coords,
             initialCoords: coords.map(c => c)
         };
-        this.onMouseMove = this.onMouseMove.bind(this);
+        (this: any).onMouseMove = this.onMouseMove.bind(this);
     }
 
     componentDidMount() {
         this.onMouseMove();
     }
 
-    createCoord() {
+    createCoord(): coord {
         const x = Math.random() * 100;
         const y = Math.random() * 100;
 
@@ -41,7 +54,7 @@ class WelcomeComponent extends React.Component {
         return {x, y}
     }
 
-    welcomes() {
+    welcomes(): React.Element<'div'>[] {
         return welcomes.map((welcome, index) =>
             <div className="welcome-word" key={index} style={{
                 left: this.state.coords[index].x + '%',

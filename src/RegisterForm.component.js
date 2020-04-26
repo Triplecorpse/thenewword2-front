@@ -1,8 +1,21 @@
+// @flow
+
 import './LoginForm.component.scss';
 import * as React from "react";
 
-class RegisterFormComponent extends React.Component {
-    constructor(props) {
+type Props = {
+    login: () => void;
+    apiLink: string;
+};
+type State = {
+    login: string;
+    password: string;
+    confirm: string;
+    email: string;
+};
+
+class RegisterFormComponent extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             login: '',
@@ -11,11 +24,11 @@ class RegisterFormComponent extends React.Component {
             email: ''
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.submit = this.submit.bind(this);
+        (this: any).handleChange = this.handleChange.bind(this);
+        (this: any).submit = this.submit.bind(this);
     }
 
-    handleChange(e) {
+    handleChange(e: SyntheticInputEvent<EventTarget>) {
         this.setState({[e.target.name]: e.target.value});
     }
 
@@ -48,7 +61,7 @@ class RegisterFormComponent extends React.Component {
         );
     }
 
-    submit(e) {
+    submit(e: SyntheticEvent<EventTarget>) {
         const body = {
             login: this.state.login,
             password: this.state.password,

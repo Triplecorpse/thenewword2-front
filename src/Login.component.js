@@ -1,41 +1,49 @@
+// @flow
+
 import './Login.component.scss';
 import * as React from "react";
 import LoginFormComponent from "./LoginForm.component";
 import WelcomeComponent from "./Welcome.component";
 import RegisterFormComponent from "./RegisterForm.component";
 
-class LoginComponent extends React.Component {
-    constructor(props) {
+type Props = {};
+type State = {
+    loginFormWrapperClasses: string;
+    registerFormWrapperClasses: string;
+};
+
+class LoginComponent extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
-        this.register = this.register.bind(this)
-        this.login = this.login.bind(this)
+        (this: any).register = this.register.bind(this);
+        (this: any).login = this.login.bind(this);
         this.state = {
-            loginFormWrapperClasses: ['form-wrapper'],
-            registerFormWrapperClasses: ['form-wrapper', 'hidden', 'register']
+            loginFormWrapperClasses: 'form-wrapper',
+            registerFormWrapperClasses: 'form-wrapper hidden register'
         }
     }
 
     register() {
         this.setState({
-            loginFormWrapperClasses: ['form-wrapper', 'hidden'],
-            registerFormWrapperClasses: ['form-wrapper']
+            loginFormWrapperClasses: 'form-wrapper hidden',
+            registerFormWrapperClasses: 'form-wrapper'
         });
     }
 
     login() {
         this.setState({
-            loginFormWrapperClasses: ['form-wrapper'],
-            registerFormWrapperClasses: ['form-wrapper', 'hidden', 'register']
+            loginFormWrapperClasses: 'form-wrapper',
+            registerFormWrapperClasses: 'form-wrapper hidden register'
         });
     }
 
     render() {
         return (
             <div className="background">
-                <div className={this.state.loginFormWrapperClasses.join(' ')}>
+                <div className={this.state.loginFormWrapperClasses}>
                     <LoginFormComponent apiLink="http://localhost:5000/" register={this.register}/>
                 </div>
-                <div className={this.state.registerFormWrapperClasses.join(' ')}>
+                <div className={this.state.registerFormWrapperClasses}>
                     <RegisterFormComponent apiLink="http://localhost:5000/" login={this.login}/>
                 </div>
                 <div className="welcome-wrapper">
