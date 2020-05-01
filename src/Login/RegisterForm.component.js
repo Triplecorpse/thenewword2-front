@@ -42,7 +42,7 @@ class RegisterFormComponent extends React.Component<Props, State> {
                     </label>
                     <label>
                         Email
-                        <input type="email" name="email" value={this.state.password} onChange={this.handleChange}/>
+                        <input type="email" name="email" value={this.state.email} onChange={this.handleChange}/>
                     </label>
                     <label>
                         Гасло
@@ -50,7 +50,7 @@ class RegisterFormComponent extends React.Component<Props, State> {
                     </label>
                     <label>
                         Підтвердження гасла
-                        <input type="password" name="confirm" value={this.state.password} onChange={this.handleChange}/>
+                        <input type="password" name="confirm" value={this.state.confirm} onChange={this.handleChange}/>
                     </label>
                     <div className="actions">
                         <button type="button" className="register" onClick={this.props.login}>Повернутися до логіна</button>
@@ -82,7 +82,16 @@ class RegisterFormComponent extends React.Component<Props, State> {
                 body: JSON.stringify({...body, token})
             });
             const jsonResponse = await rawResponse.json();
-            console.log(jsonResponse);
+
+            if (jsonResponse.status === 'ok') {
+                this.setState({
+                    login: '',
+                    password: '',
+                    confirm: '',
+                    email: ''
+                });
+                this.props.login();
+            }
         });
     }
 }

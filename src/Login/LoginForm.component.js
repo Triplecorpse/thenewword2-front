@@ -69,7 +69,7 @@ class LoginFormComponent extends React.Component<Props, State> {
                 body: JSON.stringify({...body, token})
             });
             const jsonResponse = await rawResponse.json();
-            console.log(jsonResponse);
+            localStorage.setItem('authToken', jsonResponse.token);
         });
     }
 }
