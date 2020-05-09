@@ -3,7 +3,6 @@ import {Route, Switch} from "react-router-dom";
 import DashboardComponent from "../Dashboard/dashboard.component";
 import WordsetsComponent from "../Wordsets/wordsets.component";
 import WordsComponent from "../Words/words.component";
-import HeaderComponent from "../Header/header.component";
 
 class AccountComponent extends React.Component {
     constructor(props) {
@@ -15,14 +14,13 @@ class AccountComponent extends React.Component {
     render() {
         return (
             <Switch>
-                <HeaderComponent/>
-                <Route exact path={`account/dashboard`}>
+                <Route path="/account/dashboard">
                     <DashboardComponent/>
                 </Route>
-                <Route path={`account/wordsets`}>
+                <Route path="/account/wordsets">
                     <WordsetsComponent />
                 </Route>
-                <Route path={`account/words`}>
+                <Route path="/account/words">
                     <WordsComponent />
                 </Route>
             </Switch>
