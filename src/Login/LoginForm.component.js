@@ -70,7 +70,7 @@ class LoginFormComponent extends React.Component<Props, State> {
             });
             const jsonResponse = await rawResponse.json();
             localStorage.setItem('authToken', jsonResponse.token);
-            window.location.href = window.location.origin + '/dashboard';
+            window.location.href = window.location.origin + '/account';
         });
     }
 }

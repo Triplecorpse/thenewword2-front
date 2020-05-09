@@ -21,6 +21,10 @@ class LoginComponent extends React.Component<Props, State> {
             loginFormWrapperClasses: 'form-wrapper',
             registerFormWrapperClasses: 'form-wrapper hidden register'
         };
+
+        if (localStorage.getItem('authToken')) {
+
+        }
     }
 
     register() {

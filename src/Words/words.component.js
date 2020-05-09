@@ -1,6 +1,6 @@
 import * as React from "react";
 
-class DashboardComponent extends React.Component {
+class WordsComponent extends React.Component {
     constructor(props) {
         super(props);
 
@@ -9,9 +9,9 @@ class DashboardComponent extends React.Component {
 
     render() {
         return (
-            <div>Dashboard works</div>
+            <div>Words works</div>
                 )
     }
 }
 
-export default DashboardComponent;
+export default WordsComponent;
