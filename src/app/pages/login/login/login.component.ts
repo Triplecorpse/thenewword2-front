@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.recaptchaV3Service.execute('importantAction')
         .pipe(
           takeUntil(this.destroy$),
-          switchMap(token => this.httpClient.post('login', {...this.formGroup.value, token}))
+          switchMap(token => this.httpClient.post('user/login', {...this.formGroup.value, token}))
         )
         .subscribe();
     }

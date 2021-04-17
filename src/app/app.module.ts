@@ -8,6 +8,7 @@ import {RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module} from "ng-recaptcha";
 import {environment} from "../environments/environment";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {InterceptorService} from "./services/interceptor.service";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {InterceptorService} from "./services/interceptor.service";
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
-    RecaptchaV3Module
+    RecaptchaV3Module,
+    MatSnackBarModule
   ],
   providers: [
     { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha },

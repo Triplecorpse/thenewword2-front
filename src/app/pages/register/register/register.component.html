@@ -1,38 +1,38 @@
 <div class="general-wrapper">
     <div class="wrapper">
         <mat-card>
-            <form>
+            <form [formGroup]="formGroup" (ngSubmit)="submit()">
                 <div>
                     <mat-form-field>
                         <mat-label>Login</mat-label>
-                        <input matInput>
+                        <input matInput [formControl]="login">
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field>
                         <mat-label>Password</mat-label>
-                        <input matInput type="password">
+                        <input matInput type="password" [formControl]="password">
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field>
                         <mat-label>Password repeat</mat-label>
-                        <input matInput type="password">
+                        <input matInput type="password" [formControl]="passwordRepeat">
                     </mat-form-field>
                 </div>
 
                 <div>
                     <mat-form-field>
                         <mat-label>Email</mat-label>
-                        <input matInput>
+                        <input matInput [formControl]="email">
                     </mat-form-field>
                 </div>
 
                 <div>
-                    <button mat-raised-button color="primary">Register</button>
-                    <button mat-button color="primary">Register</button>
+                    <button mat-raised-button color="primary" type="submit">Register</button>
+                    <button mat-button color="primary" routerLink="/login">Go to login</button>
                 </div>
             </form>
         </mat-card>
