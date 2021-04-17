@@ -31,9 +31,8 @@ export class InterceptorService implements HttpInterceptor {
     return next.handle(newReq)
       .pipe(
         catchError(error => {
-          if (error.error) {
-            this.snackBar.open(`An error '${error.error.desc}' occurred to the request. Error code: ${error.error.code}`, '',{duration: 10000});
-          }
+          this.snackBar.open(`An error '${error.error.desc}' occurred to the request. Error code: ${error.error.code}`, '',{duration: 10000});
+
           return throwError(error);
         })
       );
