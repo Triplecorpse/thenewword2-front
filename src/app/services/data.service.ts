@@ -9,8 +9,8 @@ export class DataService {
   isBrowser: boolean;
 
   constructor(@Inject(PLATFORM_ID) private platformId: string) {
-    this.isServer = isPlatformServer(PLATFORM_ID);
-    this.isBrowser = isPlatformBrowser(PLATFORM_ID);
+    this.isServer = isPlatformServer(platformId);
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   setToken(token: string) {

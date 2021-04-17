@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {ReCaptchaV3Service} from "ng-recaptcha";
 import {Subject} from "rxjs";
 import {switchMap, switchMapTo, takeUntil} from "rxjs/operators";
+import {DataService} from "../../../services/data.service";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     saveSession: this.saveSession
   });
 
-  constructor(private httpClient: HttpClient, private recaptchaV3Service: ReCaptchaV3Service) { }
+  constructor(private httpClient: HttpClient, private recaptchaV3Service: ReCaptchaV3Service, private dataService: DataService) { }
 
   ngOnInit(): void {
   }
@@ -37,9 +38,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.recaptchaV3Service.execute('importantAction')
         .pipe(
           takeUntil(this.destroy$),
-          switchMap(token => this.httpClient.post('user/login', {...this.formGroup.value, token}))
+          switchMap(token => this.httpClient.post<{token: string}>('user/login', {...this.formGroup.value, token}))
         )
-        .subscribe();
+        .subscribe(response => {
+          this.dataService.setToken(response.token)
+        });
     }
   }
 }
