@@ -4,7 +4,8 @@ import {AccountComponent} from './account/account.component';
 import {RouterModule, Routes} from "@angular/router";
 
 const routes: Routes = [
-  {path: '', component: AccountComponent}
+  {path: '', component: AccountComponent},
+  {path: 'add-word', loadChildren: () => import('../../pages/add-word/add-word.module').then(m => m.AddWordModule)}
 ]
 
 @NgModule({
