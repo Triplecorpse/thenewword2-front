@@ -1,10 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {catchError, switchMap, takeUntil} from "rxjs/operators";
-import {HttpClient} from "@angular/common/http";
-import {ReCaptchaV3Service} from "ng-recaptcha";
-import {Subject, throwError} from "rxjs";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {Subject} from "rxjs";
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-register',
@@ -24,7 +21,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   });
   private destroy$ = new Subject();
 
-  constructor(private httpClient: HttpClient, private recaptchaV3Service: ReCaptchaV3Service) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -36,12 +33,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   submit() {
     if (this.formGroup.valid) {
-      this.recaptchaV3Service.execute('importantAction')
-        .pipe(
-          takeUntil(this.destroy$),
-          switchMap(token => this.httpClient.post('user/register', {...this.formGroup.value, token})),
-        )
-        .subscribe();
+      this.userService.register(this.formGroup.value).subscribe();
     }
   }
 }

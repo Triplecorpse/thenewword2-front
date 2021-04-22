@@ -6,20 +6,25 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module} from "ng-recaptcha";
 import {environment} from "../environments/environment";
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {InterceptorService} from "./services/interceptor.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {HeaderComponent} from "./components/header/header.component";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule.withServerTransition({appId: 'serverApp'}),
     AppRoutingModule,
     BrowserAnimationsModule,
     RecaptchaV3Module,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatButtonModule,
+    HttpClientModule
   ],
   providers: [
     { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha },

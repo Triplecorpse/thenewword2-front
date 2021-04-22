@@ -1,10 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
-import {ReCaptchaV3Service} from "ng-recaptcha";
 import {Subject} from "rxjs";
-import {switchMap, switchMapTo, takeUntil} from "rxjs/operators";
-import {DataService} from "../../../services/data.service";
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -23,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     saveSession: this.saveSession
   });
 
-  constructor(private httpClient: HttpClient, private recaptchaV3Service: ReCaptchaV3Service, private dataService: DataService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
   }
@@ -35,14 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   submit() {
     if (this.formGroup.valid) {
-      this.recaptchaV3Service.execute('importantAction')
-        .pipe(
-          takeUntil(this.destroy$),
-          switchMap(token => this.httpClient.post<{token: string}>('user/login', {...this.formGroup.value, token}))
-        )
-        .subscribe(response => {
-          this.dataService.setToken(response.token)
-        });
+      this.userService.login(this.formGroup.value).subscribe();
     }
   }
 }
