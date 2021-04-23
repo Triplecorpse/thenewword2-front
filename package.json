@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev:ssr": "ng run thenewword2-front:serve-ssr",
+    "dev:ssr": "ng run thenewword2-front:serve-ssr --host 0.0.0.0",
     "serve:ssr": "node dist/thenewword2-front/server/main.js",
     "build:ssr": "ng build --prod && ng run thenewword2-front:server:production",
     "prerender": "ng run thenewword2-front:prerender"

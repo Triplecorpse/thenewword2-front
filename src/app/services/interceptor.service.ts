@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
-import {DataService} from "./data.service";
 import {environment} from "../../environments/environment";
 import {catchError} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {UserService} from "./user.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterceptorService implements HttpInterceptor {
 
-  constructor(private dataService: DataService, private snackBar: MatSnackBar) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.dataService.getToken();
+    const token = this.userService.getUser()?.token;
     const headers = req.headers;
     let url = req.url;
 

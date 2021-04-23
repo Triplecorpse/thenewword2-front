@@ -1,16 +1,26 @@
 <header class="mat-elevation-z6">
   <nav class="docs-navbar-header">
     <div class="nav-block">
-      <button mat-stroked-button routerLink="/" class="nav-item">The New Word</button>
-      <button mat-stroked-button routerLink="/" class="nav-item">What does this app do?</button>
+      <div *ngIf="user$ | async as user; else guestTpl">
+        <div>
+          <button mat-stroked-button routerLink="/" class="nav-item">Dashboard</button>
+          <button mat-stroked-button routerLink="/" class="nav-item">My Words</button>
+        </div>
+      </div>
+      <ng-template #guestTpl>
+        <div>
+          <button mat-stroked-button routerLink="/" class="nav-item">The New Word</button>
+          <button mat-stroked-button routerLink="/" class="nav-item">What does this app do?</button>
+        </div>
+      </ng-template>
     </div>
     <div class="user-block">
-      <div *ngIf="user$ | async as user; else guestTpl">
+      <div *ngIf="user$ | async as user; else guestTpl2">
         <div>
           <button mat-stroked-button>{{user.login}}</button>
         </div>
       </div>
-      <ng-template #guestTpl>
+      <ng-template #guestTpl2>
         <div>
           <button mat-button routerLink="register">Register</button>
           <button mat-stroked-button routerLink="login">Login</button>
