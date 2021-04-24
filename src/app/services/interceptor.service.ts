@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpParams, HttpRequest} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {catchError} from "rxjs/operators";
@@ -11,27 +11,35 @@ import {UserService} from "./user.service";
 })
 export class InterceptorService implements HttpInterceptor {
 
-  constructor(private userService: UserService, private snackBar: MatSnackBar) { }
+  constructor(private userService: UserService, private snackBar: MatSnackBar) {
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.userService.getUser()?.token;
-    const headers = req.headers;
+    const token = this.userService.getUser()?.token ? this.userService.getUser()?.token : '';
     let url = req.url;
+    let params = req.params;
+    let newReq;
 
     if (token) {
-      headers.append('token', token);
+      params.append('token', token as string);
     }
+
+    console.log(params);
 
     if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
       url = `${environment.api}/${url}`;
     }
 
-    const newReq = req.clone({headers, url});
+    if (token) {
+      newReq = req.clone({url, setParams: {token}});
+    } else {
+      newReq = req.clone({url});
+    }
 
     return next.handle(newReq)
       .pipe(
         catchError(error => {
-          this.snackBar.open(`An error '${error.error.desc}' occurred to the request. Error code: ${error.error.code}`, '',{duration: 10000});
+          this.snackBar.open(`An error '${error.error.desc}' occurred to the request. Error code: ${error.error.code}`, '', {duration: 10000});
 
           return throwError(error);
         })

@@ -1,0 +1,67 @@
+<div>
+  <div>
+    <form [formGroup]="formGroup">
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Word" formControlName="word">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Language" formControlName="fromLanguage">
+            <mat-option *ngFor="let l of (wordMetadata$ | async)?.languages" [value]="l.id">
+              {{l.englishName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Comma separated translations" formControlName="translations">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Language" formControlName="toLanguage">
+            <mat-option *ngFor="let l of (wordMetadata$ | async)?.languages" [value]="l.id">
+              {{l.englishName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <mat-select placeholder="Speech part" formControlName="speechPart">
+            <mat-option *ngFor="let sp of (wordMetadata$ | async)?.speechParts" [value]="sp.id">
+              {{sp.englishName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <mat-select placeholder="Gender" formControlName="gender">
+            <mat-option *ngFor="let g of (wordMetadata$ | async)?.genders" [value]="g.id">
+              {{g.englishName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Forms" formControlName="forms">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Any remarks" formControlName="remarks">
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+  <div>
+    <button mat-button>Discard</button>
+    <button mat-flat-button (click)="saveWord()" color="primary">Save</button>
+  </div>
+</div>
