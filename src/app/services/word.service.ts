@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable, of} from "rxjs";
+import {combineLatest, Observable, of} from "rxjs";
 import {IWord} from "../interfaces/IWord";
-import {map, tap} from "rxjs/operators";
+import {combineAll, map, switchMap, tap} from "rxjs/operators";
 import {IWordDto} from "../interfaces/dto/IWordDto";
 import {IWordMetadataDto} from "../interfaces/dto/IWordMetadataDto";
 import {IWordMetadata} from "../interfaces/IWordMetadata";
@@ -20,8 +20,13 @@ export class WordService {
   constructor(private httpClient: HttpClient, private userService: UserService) {
   }
 
-  getWords(): Observable<IWordDto> {
-    return this.httpClient.get<IWordDto>('word/get');
+  getWords(): Observable<IWord[]> {
+    return this.httpClient.get<IWordDto[]>('word/get')
+      .pipe(switchMap(wordsDto => {
+        const words$ = wordsDto.map(wordDto => this.wordFromDto(wordDto));
+
+        return combineLatest(words$);
+      }));
   }
 
   getWordMetadata$(): Observable<IWordMetadata> {

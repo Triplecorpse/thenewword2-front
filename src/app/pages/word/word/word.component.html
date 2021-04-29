@@ -1,1 +1,6 @@
 <button mat-flat-button (click)="openNewWordModal()">New Word</button>
+<div class="words-wrapper">
+  <div class="word" *ngFor="let word of words$ | async">
+    {{word}}
+  </div>
+</div>

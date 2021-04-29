@@ -11,6 +11,8 @@ import {InterceptorService} from "./services/interceptor.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {HeaderComponent} from "./components/header/header.component";
 import {MatButtonModule} from "@angular/material/button";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import {MatButtonModule} from "@angular/material/button";
     RecaptchaV3Module,
     MatSnackBarModule,
     MatButtonModule,
-    HttpClientModule
+    HttpClientModule,
+    MatMenuModule,
+    MatIconModule
   ],
   providers: [
     { provide: RECAPTCHA_V3_SITE_KEY, useValue: environment.recaptcha },
