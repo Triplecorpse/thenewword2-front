@@ -10,6 +10,9 @@ import {WordListComponent} from '../../components/word-list/word-list.component'
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
+import {ModalConfirmModule} from '../../components/modal-confirm/modal-confirm.module';
+import {MatSelectModule} from "@angular/material/select";
+import {MatInputModule} from "@angular/material/input";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -26,10 +29,12 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatDialogModule,
     ModalNewWordModule,
+    ModalConfirmModule,
     MatCardModule,
     MatTableModule,
     MatIconModule,
-    MatDividerModule
+    MatSelectModule,
+    MatInputModule
   ]
 })
 export class WordModule {
