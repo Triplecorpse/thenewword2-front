@@ -1,10 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {NotUserGuard} from "./services/not-user-guard.service";
+import {UserGuard} from "./services/user-guard.service";
 
 const routes: Routes = [
-  {path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)},
-  {path: 'register', loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule)},
-  {path: 'word', loadChildren: () => import('./pages/word/word.module').then(m => m.WordModule)}
+  {
+    path: '',
+    loadChildren: () => import('./pages/main-page/main-page.module').then(m => m.MainPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule),
+    canActivate: [NotUserGuard]
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule),
+    canActivate: [NotUserGuard]
+  },
+  {
+    path: 'word',
+    loadChildren: () => import('./pages/word/word.module').then(m => m.WordModule),
+    canActivate: [UserGuard]
+  }
 ];
 
 @NgModule({

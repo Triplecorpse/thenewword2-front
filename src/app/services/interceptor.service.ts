@@ -16,15 +16,13 @@ export class InterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.userService.getUser()?.token ? this.userService.getUser()?.token : '';
+    const params = req.params;
     let url = req.url;
-    let params = req.params;
     let newReq;
 
     if (token) {
       params.append('token', token as string);
     }
-
-    console.log(params);
 
     if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
       url = `${environment.api}/${url}`;

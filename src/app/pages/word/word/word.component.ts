@@ -11,12 +11,10 @@ import {ModalNewWordComponent} from "../../../components/modal-new-word/modal-ne
   styleUrls: ['./word.component.scss']
 })
 export class WordComponent implements OnInit {
-  words$: Observable<IWord[]>;
-
-  constructor(private wordService: WordService, private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.words$ = this.wordService.getWords();
+
   }
 
   openNewWordModal() {
