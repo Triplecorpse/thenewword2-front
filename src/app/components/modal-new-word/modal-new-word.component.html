@@ -1,4 +1,5 @@
 <div>
+  <h2 mat-dialog-title>{{isEditing ? 'Modify a word' : 'Add new word'}}</h2>
   <div>
     <form [formGroup]="formGroup">
       <div>
@@ -61,7 +62,7 @@
     </form>
   </div>
   <div>
-    <button mat-button>Discard</button>
-    <button mat-flat-button (click)="saveWord()" color="primary">Save</button>
+    <button mat-flat-button (click)="saveWord()" color="primary">{{isEditing ? 'Modify' : 'Save'}}</button>
+    <button mat-button mat-dialog-close>Discard</button>
   </div>
 </div>

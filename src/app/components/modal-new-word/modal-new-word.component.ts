@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {MatDialogRef} from "@angular/material/dialog";
-import {WordService} from "../../services/word.service";
-import {IWord} from "../../interfaces/IWord";
-import {switchMap, take, tap} from "rxjs/operators";
-import {Observable} from "rxjs";
-import {IWordMetadata} from "../../interfaces/IWordMetadata";
-import {Word} from "../../models/Word";
-import {UserService} from "../../services/user.service";
-import {IUser} from "../../interfaces/IUser";
-import {FormControl, FormGroup} from "@angular/forms";
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {WordService} from '../../services/word.service';
+import {IWord} from '../../interfaces/IWord';
+import {switchMap, take, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {IWordMetadata} from '../../interfaces/IWordMetadata';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-modal-new-word',
@@ -16,7 +13,7 @@ import {FormControl, FormGroup} from "@angular/forms";
   styleUrls: ['./modal-new-word.component.scss']
 })
 export class ModalNewWordComponent implements OnInit {
-  word: IWord;
+  isEditing = false;
   wordMetadata$: Observable<IWordMetadata>;
   formGroup = new FormGroup({
     word: new FormControl(''),
@@ -31,10 +28,23 @@ export class ModalNewWordComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
-              private userService: UserService) { }
+              @Inject(MAT_DIALOG_DATA) public data: {word: IWord}) { }
 
   ngOnInit(): void {
     this.wordMetadata$ = this.wordService.getWordMetadata$();
+    if (this.data?.word) {
+      this.isEditing = true;
+      this.formGroup.setValue({
+        word: this.data.word.word,
+        translations: this.data.word.translations,
+        fromLanguage: this.data.word.originalLanguage.id,
+        toLanguage: this.data.word.translatedLanguage.id,
+        speechPart: this.data.word.speechPart.id,
+        gender: this.data.word.gender.id,
+        forms: this.data.word.forms,
+        remarks: this.data.word.remarks
+      });
+    }
   }
 
   saveWord() {
@@ -42,6 +52,7 @@ export class ModalNewWordComponent implements OnInit {
       const form = this.formGroup.value;
 
       this.wordService.wordFromDto({
+        id: this.data?.word.dbid,
         word: form.word,
         gender_id: form.gender,
         forms: form.forms,
@@ -54,7 +65,7 @@ export class ModalNewWordComponent implements OnInit {
       })
         .pipe(
           take(1),
-          switchMap(word => this.wordService.addWord(word))
+          switchMap(word => this.wordService.addOrModifyWord(word))
         )
         .subscribe(result => {
           this.dialogRef.close(result);
