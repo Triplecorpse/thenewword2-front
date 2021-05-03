@@ -1,18 +1,18 @@
-import {IWordDto} from "../interfaces/dto/IWordDto";
-import {IWord} from "../interfaces/IWord";
-import {ISpeechPart} from "../interfaces/ISpeechPart";
-import {IGender} from "../interfaces/IGender";
-import {ILanguage} from "../interfaces/ILanguage";
-import {IUser} from "../interfaces/IUser";
-import {IWordMetadata} from "../interfaces/IWordMetadata";
+import {IWordDto} from '../interfaces/dto/IWordDto';
+import {IWord} from '../interfaces/IWord';
+import {ISpeechPart} from '../interfaces/ISpeechPart';
+import {IGender} from '../interfaces/IGender';
+import {ILanguage} from '../interfaces/ILanguage';
+import {IUser} from '../interfaces/IUser';
+import {IWordMetadata} from '../interfaces/IWordMetadata';
 
 export class Word implements IWord {
   dbid?: number;
   word?: string;
-  translations?: string;
+  translations?: string[];
   speechPart?: ISpeechPart;
   gender?: IGender;
-  forms?: string;
+  forms?: string[];
   originalLanguage?: ILanguage;
   translatedLanguage?: ILanguage;
   remarks?: string;

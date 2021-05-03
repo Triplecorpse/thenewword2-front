@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {combineLatest, Observable, of} from "rxjs";
-import {IWord} from "../interfaces/IWord";
-import {map, switchMap, tap} from "rxjs/operators";
-import {IWordDto} from "../interfaces/dto/IWordDto";
-import {IWordMetadataDto} from "../interfaces/dto/IWordMetadataDto";
-import {IWordMetadata} from "../interfaces/IWordMetadata";
-import {UserService} from "./user.service";
-import {Word} from "../models/Word";
-import {IUser} from "../interfaces/IUser";
-import {IGender} from "../interfaces/IGender";
-import {ISpeechPart} from "../interfaces/ISpeechPart";
-import {ILanguage} from "../interfaces/ILanguage";
+import {HttpClient} from '@angular/common/http';
+import {combineLatest, Observable, of} from 'rxjs';
+import {IWord} from '../interfaces/IWord';
+import {map, switchMap, tap} from 'rxjs/operators';
+import {IWordDto} from '../interfaces/dto/IWordDto';
+import {IWordMetadataDto} from '../interfaces/dto/IWordMetadataDto';
+import {IWordMetadata} from '../interfaces/IWordMetadata';
+import {UserService} from './user.service';
+import {Word} from '../models/Word';
+import {IUser} from '../interfaces/IUser';
+import {IGender} from '../interfaces/IGender';
+import {ISpeechPart} from '../interfaces/ISpeechPart';
+import {ILanguage} from '../interfaces/ILanguage';
 
 @Injectable({
   providedIn: 'root'

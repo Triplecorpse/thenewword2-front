@@ -36,12 +36,12 @@ export class ModalNewWordComponent implements OnInit {
       this.isEditing = true;
       this.formGroup.setValue({
         word: this.data.word.word,
-        translations: this.data.word.translations,
+        translations: this.data.word.translations.join(', '),
         fromLanguage: this.data.word.originalLanguage.id,
         toLanguage: this.data.word.translatedLanguage.id,
         speechPart: this.data.word.speechPart.id,
         gender: this.data.word.gender.id,
-        forms: this.data.word.forms,
+        forms: this.data.word.forms.join(', '),
         remarks: this.data.word.remarks
       });
     }
@@ -55,8 +55,8 @@ export class ModalNewWordComponent implements OnInit {
         id: this.data?.word.dbid,
         word: form.word,
         gender_id: form.gender,
-        forms: form.forms,
-        translations: form.translations,
+        forms: form.forms.split(','),
+        translations: form.translations.split(','),
         speech_part_id: form.speechPart,
         remarks: form.remarks,
         stress_letter_index: 0,
