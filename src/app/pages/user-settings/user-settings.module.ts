@@ -7,6 +7,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
+import {MatButtonModule} from "@angular/material/button";
 
 const routes: Routes = [
   {path: '', component: UserSettingsComponent}
@@ -23,7 +24,8 @@ const routes: Routes = [
     MatSelectModule,
     MatCardModule,
     MatDividerModule,
-    MatListModule
+    MatListModule,
+    MatButtonModule
   ]
 })
 export class UserSettingsModule { }
