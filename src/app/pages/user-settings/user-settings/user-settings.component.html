@@ -1,1 +1,69 @@
-<p>user-settings works!</p>
+<mat-card>
+  <h2>Settings</h2>
+  <h3>User settings</h3>
+  <div>
+    <mat-form-field>
+      <input matInput placeholder="Login" [value]="username" disabled>
+    </mat-form-field>
+    <p>
+      This is login that is user to enter your account. It cannot be changed.
+    </p>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-form-field>
+      <mat-select placeholder="Native Language">
+        <mat-option *ngFor="let l of (languages$ | async)" [value]="l.id">
+          {{l.englishName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p>
+      This is your native language. It is set to ask the translations from your native language to a foreign one. Once set it cannot be changed.
+    </p>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-form-field>
+      <mat-select multiple placeholder="Learned Languages">
+        <mat-option *ngFor="let l of (languages$ | async)" [value]="l.id">
+          {{l.englishName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p>
+      These are languages you learn. They are used to limit the language list just for your convenience.
+    </p>
+  </div>
+  <mat-divider></mat-divider>
+  <h3>Security settings</h3>
+  <div>
+    <mat-form-field>
+      <input matInput placeholder="Old Password" type="password">
+    </mat-form-field>
+    <p>
+      This is required field if you want to change any setting from this block
+    </p>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-form-field>
+      <input matInput placeholder="New Password" type="password">
+    </mat-form-field>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-form-field>
+      <input matInput placeholder="New Password Repeat" type="password">
+    </mat-form-field>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <mat-form-field>
+      <input matInput placeholder="Email" type="email">
+    </mat-form-field>
+    <p>
+      This is your email. It is used to recover your password.
+    </p>
+  </div>
+</mat-card>

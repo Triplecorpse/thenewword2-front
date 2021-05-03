@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 import {RouterModule, Routes} from "@angular/router";
+import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from "@angular/material/select";
+import {MatCardModule} from "@angular/material/card";
+import {MatDividerModule} from "@angular/material/divider";
 
 const routes: Routes = [
   {path: '', component: UserSettingsComponent}
@@ -13,7 +17,11 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatInputModule,
+    MatSelectModule,
+    MatCardModule,
+    MatDividerModule
   ]
 })
 export class UserSettingsModule { }
