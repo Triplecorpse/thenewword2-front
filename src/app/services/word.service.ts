@@ -74,7 +74,7 @@ export class WordService {
 
   addOrModifyWord(word: IWord): Observable<void> {
     if (word.dbid) {
-      return this.httpClient.put('word/modify', this.dtoFromWord(word))
+      return this.httpClient.put('word/edit', this.dtoFromWord(word))
         .pipe(map(() => {
         }));
     }
