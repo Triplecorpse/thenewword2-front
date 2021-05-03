@@ -5,6 +5,7 @@ import {IUser} from "../interfaces/IUser";
 import {HttpClient} from "@angular/common/http";
 import {ReCaptchaV3Service} from "ng-recaptcha";
 import {switchMap, tap} from "rxjs/operators";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class UserService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: string,
               private httpClient: HttpClient,
-              private recaptchaV3Service: ReCaptchaV3Service) {
+              private recaptchaV3Service: ReCaptchaV3Service,
+              private router: Router) {
     this.isServer = isPlatformServer(platformId);
     this.isBrowser = isPlatformBrowser(platformId);
     this.user = this.getUser();
@@ -57,6 +59,7 @@ export class UserService {
         tap(response => {
           this.setUser(response);
           this.user$.next(this.getUser());
+          this.router.navigate(['dashboard']);
         })
       );
   }
@@ -66,5 +69,13 @@ export class UserService {
       .pipe(
         switchMap(token => this.httpClient.post<void>('user/register', {...user, token})),
       );
+  }
+
+  logout() {
+    if (this.isBrowser) {
+      localStorage.removeItem('user');
+      this.user$.next();
+      this.router.navigate(['']);
+    }
   }
 }

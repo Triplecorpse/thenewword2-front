@@ -19,8 +19,18 @@ const routes: Routes = [
     canActivate: [NotUserGuard]
   },
   {
+    path: 'dashboard',
+    loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule),
+    canActivate: [UserGuard]
+  },
+  {
     path: 'word',
     loadChildren: () => import('./pages/word/word.module').then(m => m.WordModule),
+    canActivate: [UserGuard]
+  },
+  {
+    path: 'user-settings',
+    loadChildren: () => import('./pages/user-settings/user-settings.module').then(m => m.UserSettingsModule),
     canActivate: [UserGuard]
   }
 ];
