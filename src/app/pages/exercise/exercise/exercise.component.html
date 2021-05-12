@@ -1,1 +1,3 @@
-<p>exercise works!</p>
+<mat-card *ngIf="isLoaded">
+  {{getWord() | json}}
+</mat-card>
