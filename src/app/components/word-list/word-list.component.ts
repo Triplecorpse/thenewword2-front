@@ -45,7 +45,7 @@ export class WordListComponent implements OnInit {
       .pipe(
         take(1),
         filter(result => !!result),
-        switchMapTo(this.httpClient.delete('word/delete', {params: {id: element.dbid.toString()}}))
+        switchMapTo(this.wordService.remove(element.dbid))
       )
       .subscribe();
   }

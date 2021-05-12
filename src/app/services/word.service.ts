@@ -84,6 +84,12 @@ export class WordService {
       }));
   }
 
+  remove(id: number): Observable<void> {
+    return this.httpClient.delete('word/remove', {params: {id: id.toString()}})
+      .pipe(map(() => {
+      }));
+  }
+
   wordFromDto(wordDto: IWordDto): Observable<IWord> {
     return this.getWordMetadata$()
       .pipe(map(metadata => new Word(wordDto, metadata, this.userService.getUser() as IUser)));

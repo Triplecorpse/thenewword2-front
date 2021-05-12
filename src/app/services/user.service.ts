@@ -1,10 +1,10 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser, isPlatformServer} from "@angular/common";
-import {Observable, ReplaySubject, Subject} from "rxjs";
+import {Observable, ReplaySubject, Subject, throwError} from "rxjs";
 import {IUser} from "../interfaces/IUser";
 import {HttpClient} from "@angular/common/http";
 import {ReCaptchaV3Service} from "ng-recaptcha";
-import {switchMap, tap} from "rxjs/operators";
+import {catchError, switchMap, tap} from "rxjs/operators";
 import {Router} from "@angular/router";
 
 @Injectable({
