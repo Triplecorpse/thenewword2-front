@@ -1,3 +1,26 @@
-<mat-card *ngIf="isLoaded">
-  {{getWord() | json}}
-</mat-card>
+<div style="display: flex;">
+  <div style="width: 33%; border-right: 1px solid lightgray;">
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let word of askedWords">
+        <div style="font-weight: bold; font-style: italic">{{word.speechPart.englishName}}</div>
+        <div style="margin-left: 8px">{{word.word}}</div>
+        <div style="margin-left: 8px">{{word.translations.join(', ')}}</div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div style="width: 66.666%">
+    <mat-card *ngIf="(wordToAsk$ | async) as word" style="margin: 8px auto; width: 240px;">
+      <div style="font-style: italic; font-weight: bold">{{word.speechPart.englishName}}</div>
+      <div>{{word.translations.join(", ")}}</div>
+      <form (ngSubmit)="submit(word)" [formGroup]="formGroup">
+        <mat-form-field class="example-form-field">
+          <mat-label>Type a word</mat-label>
+          <input matInput type="text" formControlName="word">
+          <button mat-button matSuffix mat-icon-button type="submit">
+            <mat-icon>check</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
+    </mat-card>
+  </div>
+</div>

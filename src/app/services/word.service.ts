@@ -136,10 +136,8 @@ export class WordService {
         encoded: sessionStorage.getItem('wordsToLearn'),
         word: this.dtoFromWord(word)
       })
-      .pipe(map(response => {
-        console.log(response);
-
-        return !!response;
+      .pipe(map((response: any) => {
+        return response.right;
       }));
   }
 }
