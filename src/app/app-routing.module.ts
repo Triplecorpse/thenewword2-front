@@ -29,6 +29,11 @@ const routes: Routes = [
     canActivate: [UserGuard]
   },
   {
+    path: 'exercise',
+    loadChildren: () => import('./pages/exercise/exercise.module').then(m => m.ExerciseModule),
+    canActivate: [UserGuard]
+  },
+  {
     path: 'user-settings',
     loadChildren: () => import('./pages/user-settings/user-settings.module').then(m => m.UserSettingsModule),
     canActivate: [UserGuard]

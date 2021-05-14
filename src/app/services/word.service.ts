@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {combineLatest, Observable, of} from 'rxjs';
 import {IWord} from '../interfaces/IWord';
@@ -12,14 +12,23 @@ import {IUser} from '../interfaces/IUser';
 import {IGender} from '../interfaces/IGender';
 import {ISpeechPart} from '../interfaces/ISpeechPart';
 import {ILanguage} from '../interfaces/ILanguage';
+import {isPlatformBrowser, isPlatformServer} from "@angular/common";
+import {IWordCheck} from "../interfaces/IWordCheck";
+import {IWordCheckDto} from "../interfaces/dto/IWordCheckDto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WordService {
   wordMetadata: IWordMetadata;
+  isServer: boolean;
+  isBrowser: boolean;
 
-  constructor(private httpClient: HttpClient, private userService: UserService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: string,
+              private httpClient: HttpClient,
+              private userService: UserService) {
+    this.isServer = isPlatformServer(platformId);
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   getWords$(): Observable<IWord[]> {
@@ -108,5 +117,31 @@ export class WordService {
       forms: word.forms,
       gender_id: word.gender?.id
     };
+  }
+
+  getWordsToLearn(): Observable<IWord[]> {
+    return this.httpClient.get<{ words: IWordDto[], encoded: string }>('word/exercise')
+      .pipe(switchMap(({words: wordsDto, encoded}) => {
+        const words$ = wordsDto.map(wordDto => this.wordFromDto(wordDto));
+
+        if (this.isBrowser) {
+          sessionStorage.setItem('wordsToLearn', encoded);
+        }
+
+        return combineLatest(words$);
+      }));
+  }
+
+  checkWord(word: IWord): Observable<IWordCheck> {
+    return this.httpClient.post<IWordCheckDto>('word/exercise',
+      {
+        encoded: sessionStorage.getItem('wordsToLearn'),
+        word: this.dtoFromWord(word)
+      })
+      .pipe(map(response => ({
+        isRight: response.right,
+        vault: new Word(response.vault, this.wordMetadata, this.userService.user),
+        you: new Word(response.you, this.wordMetadata, this.userService.user)
+      })));
   }
 }

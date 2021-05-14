@@ -17,15 +17,12 @@ export class WordListComponent implements OnInit {
   words$: Observable<IWord[]>;
   displayedColumns: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'actions'];
 
-  constructor(private wordService: WordService, private dialog: MatDialog, private httpClient: HttpClient) {
+  constructor(private wordService: WordService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
     this.words$ = this.wordService.getWords$();
-
-    this.words$.subscribe(w => {
-      console.log(w);
-    });
   }
 
   openEditWordModal(element: IWord) {
