@@ -13,6 +13,8 @@ import {IGender} from '../interfaces/IGender';
 import {ISpeechPart} from '../interfaces/ISpeechPart';
 import {ILanguage} from '../interfaces/ILanguage';
 import {isPlatformBrowser, isPlatformServer} from "@angular/common";
+import {IWordCheck} from "../interfaces/IWordCheck";
+import {IWordCheckDto} from "../interfaces/dto/IWordCheckDto";
 
 @Injectable({
   providedIn: 'root'
@@ -130,14 +132,16 @@ export class WordService {
       }));
   }
 
-  checkWord(word: IWord): Observable<boolean> {
-    return this.httpClient.post('word/exercise',
+  checkWord(word: IWord): Observable<IWordCheck> {
+    return this.httpClient.post<IWordCheckDto>('word/exercise',
       {
         encoded: sessionStorage.getItem('wordsToLearn'),
         word: this.dtoFromWord(word)
       })
-      .pipe(map((response: any) => {
-        return response.right;
-      }));
+      .pipe(map(response => ({
+        isRight: response.right,
+        vault: new Word(response.vault, this.wordMetadata, this.userService.user),
+        you: new Word(response.you, this.wordMetadata, this.userService.user)
+      })));
   }
 }

@@ -2,25 +2,35 @@
   <div style="width: 33%; border-right: 1px solid lightgray;">
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let word of askedWords">
-        <div style="font-weight: bold; font-style: italic">{{word.speechPart.englishName}}</div>
-        <div style="margin-left: 8px">{{word.word}}</div>
-        <div style="margin-left: 8px">{{word.translations.join(', ')}}</div>
+        <div mat-line>
+          <span style="font-weight: bold; font-style: italic">{{word.vault.speechPart.englishName}}</span>
+          <span style="margin-left: 8px">{{word.vault.word}}</span>
+          <span *ngIf="!word.isRight" style="font-size: smaller; color: gray; margin-left: 8px; font-style: italic">(You wrote: {{word.you.word}})</span>
+        </div>
+        <div style="font-size: smaller; color: gray" mat-line>{{word.vault.translations.join(', ')}}</div>
+        <mat-icon mat-list-icon *ngIf="word.isRight" style="color: green">check</mat-icon>
+        <mat-icon mat-list-icon *ngIf="!word.isRight" style="color: red">close</mat-icon>
       </mat-list-item>
     </mat-list>
   </div>
   <div style="width: 66.666%">
-    <mat-card *ngIf="(wordToAsk$ | async) as word" style="margin: 8px auto; width: 240px;">
-      <div style="font-style: italic; font-weight: bold">{{word.speechPart.englishName}}</div>
-      <div>{{word.translations.join(", ")}}</div>
-      <form (ngSubmit)="submit(word)" [formGroup]="formGroup">
-        <mat-form-field class="example-form-field">
-          <mat-label>Type a word</mat-label>
-          <input matInput type="text" formControlName="word">
-          <button mat-button matSuffix mat-icon-button type="submit">
-            <mat-icon>check</mat-icon>
-          </button>
-        </mat-form-field>
-      </form>
+    <ng-container *ngIf="!allAnswered">
+      <mat-card *ngIf="(wordToAsk$ | async) as word" style="margin: 8px auto; width: 240px;">
+        <div style="font-style: italic; font-weight: bold">{{word.speechPart.englishName}}</div>
+        <div>{{word.translations.join(", ")}}</div>
+        <form (ngSubmit)="submit(word)" [formGroup]="formGroup">
+          <mat-form-field class="example-form-field">
+            <mat-label>Type a word</mat-label>
+            <input matInput type="text" formControlName="word">
+            <button mat-button matSuffix mat-icon-button type="submit">
+              <mat-icon>check</mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </mat-card>
+    </ng-container>
+    <mat-card style="margin: 8px auto; max-width: 320px; text-align: center" *ngIf="allAnswered">
+      <h2 mat-card-title>You've answered all the words in this exercise</h2>
     </mat-card>
   </div>
 </div>

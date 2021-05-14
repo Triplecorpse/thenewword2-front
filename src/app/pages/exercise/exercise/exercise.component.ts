@@ -6,6 +6,7 @@ import {delay, take} from "rxjs/operators";
 import {Observable, Subject} from "rxjs";
 import {FormControl, FormGroup} from "@angular/forms";
 import {Word} from "../../../models/Word";
+import {IWordCheck} from "../../../interfaces/IWordCheck";
 
 @Component({
   selector: 'app-exercise',
@@ -15,11 +16,12 @@ import {Word} from "../../../models/Word";
 export class ExerciseComponent implements OnInit {
   private wordsToLearn: IWord[] = [];
   private lastAskedId = 0;
-  askedWords: IWord[] = [];
+  askedWords: IWordCheck[] = [];
   wordToAsk$ = new Subject<IWord>();
   formGroup = new FormGroup({
     word: new FormControl()
   });
+  allAnswered: boolean;
 
   constructor(private wordService: WordService) {
   }
@@ -37,8 +39,8 @@ export class ExerciseComponent implements OnInit {
     if (this.formGroup.value) {
       word.word = this.formGroup.value.word;
       this.wordService.checkWord(word)
-        .subscribe(r => {
-          this.askedWords.push(this.wordsToLearn[this.lastAskedId]);
+        .subscribe( result => {
+          this.askedWords.push(result);
           this.lastAskedId++;
 
           if (this.wordsToLearn[this.lastAskedId]) {
@@ -46,9 +48,9 @@ export class ExerciseComponent implements OnInit {
             this.formGroup.setValue({
               word: ''
             });
+          } else {
+            this.allAnswered = true;
           }
-
-          console.log(r);
         })
     }
   }
