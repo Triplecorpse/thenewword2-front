@@ -1,5 +1,5 @@
 <div class="general-wrapper">
-  <div class="wrapper">
+  <mat-card class="wrapper">
     <h2 style="margin-right: 8px;">Sign up a new user</h2>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <div style="display:flex;">
@@ -7,8 +7,7 @@
           <div style="margin-bottom: 26px;">
             <mat-form-field>
               <input matInput [formControl]="login" placeholder="Login">
-              <mat-icon matSuffix style="cursor: pointer"
-                        matTooltip="At least 6 latin letters and numbers long. Cannot be changed after you set it">
+              <mat-icon matSuffix matTooltip="At least 6 latin letters and numbers long. Cannot be changed after you set it">
                 info_outlined
               </mat-icon>
               <mat-error *ngIf="login.hasError('minlength')">
@@ -32,7 +31,7 @@
 
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-label>Password repeat</mat-label>
+              <mat-label>Password Repeat</mat-label>
               <input matInput type="password" [formControl]="passwordRepeat">
               <mat-error *ngIf="passwordRepeat.hasError('notequal')">
                 Password repeat should be the same as password
@@ -41,21 +40,50 @@
           </div>
         </div>
         <div style="margin-left: 8px;">
-          <div>
+          <div style="margin-bottom: 26px;">
             <mat-form-field>
               <mat-label>Email</mat-label>
               <input matInput [formControl]="email">
+              <mat-icon matSuffix matTooltip="We will use it just for password recovery">
+                info_outlined
+              </mat-icon>
               <mat-error *ngIf="email.hasError('email')">
                 This is not a valid email
               </mat-error>
             </mat-form-field>
           </div>
+          <div style="margin-bottom: 16px;">
+            <mat-form-field>
+              <mat-select matInput [formControl]="nativeLanguage" placeholder="Native Language">
+                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
+              </mat-select>
+              <mat-icon matSuffix matTooltip="After it is set, it cannot be changed">
+                info_outlined
+              </mat-icon>
+              <mat-error *ngIf="nativeLanguage.hasError('required')">
+                Native Language is a required field
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <mat-form-field>
+              <mat-select matInput [formControl]="learningLanguages" placeholder="Learning Language" multiple [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
+                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
+              </mat-select>
+              <mat-icon matSuffix matTooltip="It is needed just for you convenience">
+                info_outlined
+              </mat-icon>
+            </mat-form-field>
+          </div>
         </div>
       </div>
-      <div>
+      <div style="display:flex; justify-content: space-between">
         <button mat-raised-button color="primary" type="submit">Register</button>
-        <button mat-button color="primary" routerLink="/login">Go to Login</button>
+        <div>
+          <label>Already registered?</label>
+          <button mat-button color="primary" routerLink="/login">Go to Login</button>
+        </div>
       </div>
     </form>
-  </div>
+  </mat-card>
 </div>

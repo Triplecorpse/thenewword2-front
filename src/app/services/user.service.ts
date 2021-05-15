@@ -1,11 +1,12 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser, isPlatformServer} from "@angular/common";
-import {Observable, ReplaySubject, Subject, throwError} from "rxjs";
-import {IUser} from "../interfaces/IUser";
-import {HttpClient} from "@angular/common/http";
-import {ReCaptchaV3Service} from "ng-recaptcha";
-import {catchError, switchMap, tap} from "rxjs/operators";
-import {Router} from "@angular/router";
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
+import {Observable, ReplaySubject} from 'rxjs';
+import {IUser} from '../interfaces/IUser';
+import {HttpClient} from '@angular/common/http';
+import {ReCaptchaV3Service} from 'ng-recaptcha';
+import {switchMap, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {IUserDto} from '../interfaces/dto/IUserDto';
 
 @Injectable({
   providedIn: 'root'
@@ -65,9 +66,17 @@ export class UserService {
   }
 
   register(user: IUser): Observable<void> {
+    const userDto: IUserDto = {
+      login: user.login,
+      learning_languages: user.learningLanguages?.map(l => l.id),
+      native_language: user.nativeLanguage.id,
+      email: user.email,
+      password: user.password
+    };
+
     return this.recaptchaV3Service.execute('importantAction')
       .pipe(
-        switchMap(token => this.httpClient.post<void>('user/register', {...user, token})),
+        switchMap(token => this.httpClient.post<void>('user/register', {...userDto, token})),
       );
   }
 

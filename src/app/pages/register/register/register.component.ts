@@ -1,8 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Subject} from "rxjs";
-import {UserService} from "../../../services/user.service";
-import {takeUntil} from "rxjs/operators";
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Subject} from 'rxjs';
+import {UserService} from '../../../services/user.service';
+import {take, takeUntil} from 'rxjs/operators';
+import {ILanguage} from '../../../interfaces/ILanguage';
+import {WordService} from '../../../services/word.service';
+import {HttpClient} from '@angular/common/http';
+import {IUser} from "../../../interfaces/IUser";
 
 @Component({
   selector: 'app-register',
@@ -14,22 +18,36 @@ export class RegisterComponent implements OnInit, OnDestroy {
   password = new FormControl('', [Validators.required, Validators.minLength(6)]);
   passwordRepeat = new FormControl('', [Validators.required, Validators.minLength(6)]);
   email = new FormControl('', Validators.email);
+  nativeLanguage = new FormControl('', Validators.required);
+  learningLanguages = new FormControl('', Validators.required);
   formGroup = new FormGroup({
     login: this.login,
     password: this.password,
     passwordRepeat: this.passwordRepeat,
-    email: this.email
+    email: this.email,
+    nativeLanguage: this.nativeLanguage,
+    learningLanguages: this.learningLanguages
   });
+  languages: ILanguage[] = [];
   private destroy$ = new Subject();
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,
+              private wordService: WordService) {
+  }
 
   ngOnInit(): void {
     this.formGroup.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(value => {
-        const error = value.password === value.passwordRepeat && this.passwordRepeat.touched ? null : {notequal: true};
+        const repeatValid = value.passwordRepeat || this.passwordRepeat.touched && !value.passwordRepeat;
+        const error = value.password === value.passwordRepeat && repeatValid ? null : {notequal: true};
+
         this.passwordRepeat.setErrors(error);
+      });
+    this.wordService.getWordMetadata$()
+      .pipe(take(1))
+      .subscribe(result => {
+        this.languages = result.languages;
       });
   }
 
@@ -39,11 +57,21 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    console.log(this.login);
-    console.log(this.passwordRepeat);
-    console.log(this.email);
     if (this.formGroup.valid) {
-      this.userService.register(this.formGroup.value).subscribe();
+      const user: IUser = {
+        login: this.formGroup.value.login,
+        password: this.formGroup.value.password,
+        email: this.formGroup.value.email,
+        nativeLanguage: this.languages.find(lang => lang.id === this.formGroup.value.nativeLanguage),
+        learningLanguages: this.languages.filter(lang => this.formGroup.value.learningLanguages.includes(lang.id))
+      };
+      this.userService.register(user).subscribe();
     }
+  }
+
+  getLanguagesValue(languagesModel: number[]): string[] {
+    return this.languages
+      .filter(lang => languagesModel.includes(lang.id))
+      .map(lang => lang.englishName);
   }
 }
