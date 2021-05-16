@@ -7,8 +7,8 @@
           <input matInput placeholder="Word" formControlName="word">
         </mat-form-field>
         <mat-form-field>
-          <mat-select placeholder="Language" formControlName="fromLanguage">
-            <mat-option *ngFor="let l of (wordMetadata$ | async)?.languages" [value]="l.id">
+          <mat-select placeholder="Language" formControlName="toLanguage">
+            <mat-option *ngFor="let l of learningLanguages" [value]="l.id">
               {{l.englishName}}
             </mat-option>
           </mat-select>
@@ -20,9 +20,9 @@
           <input matInput placeholder="Comma separated translations" formControlName="translations">
         </mat-form-field>
         <mat-form-field>
-          <mat-select placeholder="Language" formControlName="toLanguage">
-            <mat-option *ngFor="let l of (wordMetadata$ | async)?.languages" [value]="l.id">
-              {{l.englishName}}
+          <mat-select placeholder="Language" formControlName="fromLanguage">
+            <mat-option [value]="nativeLanguage.id">
+              {{nativeLanguage.englishName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -31,7 +31,7 @@
       <div>
         <mat-form-field>
           <mat-select placeholder="Speech part" formControlName="speechPart">
-            <mat-option *ngFor="let sp of (wordMetadata$ | async)?.speechParts" [value]="sp.id">
+            <mat-option *ngFor="let sp of wordMetadata.speechParts" [value]="sp.id">
               {{sp.englishName}}
             </mat-option>
           </mat-select>
@@ -41,7 +41,7 @@
       <div>
         <mat-form-field>
           <mat-select placeholder="Gender" formControlName="gender">
-            <mat-option *ngFor="let g of (wordMetadata$ | async)?.genders" [value]="g.id">
+            <mat-option *ngFor="let g of wordMetadata.genders" [value]="g.id">
               {{g.englishName}}
             </mat-option>
           </mat-select>

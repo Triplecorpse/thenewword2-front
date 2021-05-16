@@ -5,7 +5,10 @@ import {IWord} from '../../interfaces/IWord';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UserService} from "../../services/user.service";
+import {MetadataService} from "../../services/metadata.service";
+import {ILanguage} from "../../interfaces/ILanguage";
 
 @Component({
   selector: 'app-modal-new-word',
@@ -14,13 +17,15 @@ import {FormControl, FormGroup} from '@angular/forms';
 })
 export class ModalNewWordComponent implements OnInit {
   isEditing = false;
-  wordMetadata$: Observable<IWordMetadata>;
+  wordMetadata: IWordMetadata;
+  nativeLanguage: ILanguage;
+  learningLanguages: ILanguage[];
   formGroup = new FormGroup({
-    word: new FormControl(''),
-    translations: new FormControl(''),
-    fromLanguage: new FormControl(''),
+    word: new FormControl('', Validators.required),
+    translations: new FormControl('', Validators.required),
+    fromLanguage: new FormControl('', Validators.required),
     toLanguage: new FormControl(''),
-    speechPart: new FormControl(''),
+    speechPart: new FormControl('', Validators.required),
     gender: new FormControl(''),
     forms: new FormControl(''),
     remarks: new FormControl('')
@@ -28,10 +33,21 @@ export class ModalNewWordComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
+              private userService: UserService,
+              private metadataService: MetadataService,
               @Inject(MAT_DIALOG_DATA) public data: {word: IWord}) { }
 
   ngOnInit(): void {
-    this.wordMetadata$ = this.wordService.getWordMetadata$();
+    this.wordMetadata = {
+      languages: this.metadataService.languages,
+      genders: this.metadataService.genders,
+      speechParts: this.metadataService.speechParts
+    };
+    this.nativeLanguage = this.userService.getUser().nativeLanguage;
+    this.learningLanguages = this.userService.getUser().learningLanguages;
+    this.formGroup.patchValue({
+      fromLanguage: this.nativeLanguage.id
+    });
     if (this.data?.word) {
       this.isEditing = true;
       this.formGroup.setValue({
@@ -67,8 +83,8 @@ export class ModalNewWordComponent implements OnInit {
           take(1),
           switchMap(word => this.wordService.addOrModifyWord(word))
         )
-        .subscribe(result => {
-          this.dialogRef.close(result);
+        .subscribe(() => {
+          this.dialogRef.close(true);
         });
     }
   }

@@ -95,8 +95,7 @@ export class WordService {
 
   remove(id: number): Observable<void> {
     return this.httpClient.delete('word/remove', {params: {id: id.toString()}})
-      .pipe(map(() => {
-      }));
+      .pipe(map(() => {}));
   }
 
   wordFromDto(wordDto: IWordDto): Observable<IWord> {

@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {IWord} from '../../interfaces/IWord';
 import {WordService} from '../../services/word.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalNewWordComponent} from '../modal-new-word/modal-new-word.component';
 import {IModalConfirm, ModalConfirmComponent} from '../modal-confirm/modal-confirm.component';
-import {filter, switchMapTo, take} from 'rxjs/operators';
+import {filter, switchMap, switchMapTo, take, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 
 @Component({
@@ -14,6 +14,7 @@ import {HttpClient} from '@angular/common/http';
   styleUrls: ['./word-list.component.scss']
 })
 export class WordListComponent implements OnInit {
+  @Input() reload$: Observable<void>;
   words$: Observable<IWord[]>;
   displayedColumns: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'actions'];
 
@@ -23,12 +24,19 @@ export class WordListComponent implements OnInit {
 
   ngOnInit(): void {
     this.words$ = this.wordService.getWords$();
+    this.reload$?.subscribe(() => {
+      this.words$ = this.wordService.getWords$();
+    });
   }
 
   openEditWordModal(element: IWord) {
     this.dialog.open(ModalNewWordComponent, {
       data: {word: element}
-    });
+    })
+      .afterClosed()
+      .subscribe(() => {
+        this.words$ = this.wordService.getWords$();
+      });
   }
 
   openDeleteWordModal(element: IWord) {
@@ -42,8 +50,10 @@ export class WordListComponent implements OnInit {
       .pipe(
         take(1),
         filter(result => !!result),
-        switchMapTo(this.wordService.remove(element.dbid))
+        switchMap(() => this.wordService.remove(element.dbid))
       )
-      .subscribe();
+      .subscribe(() => {
+        this.words$ = this.wordService.getWords$();
+      });
   }
 }
