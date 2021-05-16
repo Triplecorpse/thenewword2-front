@@ -9,8 +9,8 @@ import {UserService} from "../../../services/user.service";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginInput = new FormControl('', Validators.required);
-  passwordInput = new FormControl('', Validators.required);
+  loginInput = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  passwordInput = new FormControl('', [Validators.required, Validators.minLength(6)]);
   saveSession = new FormControl();
   private destroy$ = new Subject();
 

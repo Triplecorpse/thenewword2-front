@@ -21,6 +21,11 @@ const routes: Routes = [
     canActivate: [NotUserGuard, MetadataService]
   },
   {
+    path: 'forgot-password',
+    loadChildren: () => import('./pages/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
+    canActivate: [NotUserGuard, MetadataService]
+  },
+  {
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule),
     canActivate: [UserGuard, MetadataService]
