@@ -3,7 +3,7 @@ import {UserService} from '../../../services/user.service';
 import {ILanguage} from '../../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MetadataService} from '../../../services/metadata.service';
-import {IUser} from "../../../interfaces/IUser";
+import {IUser} from '../../../interfaces/IUser';
 
 @Component({
   selector: 'app-user-settings',
@@ -22,6 +22,11 @@ export class UserSettingsComponent implements OnInit {
     newPasswordRepeat: new FormControl()
   });
   learningLanguagesTooltip: string;
+  languageSections: {
+    lang: ILanguage,
+    model: string,
+    letters: {text: string, currentBadgeSize: 'small' | 'large'}[]
+  }[];
 
   constructor(private userService: UserService,
               private metadataService: MetadataService) {
@@ -31,8 +36,15 @@ export class UserSettingsComponent implements OnInit {
     this.languages = this.metadataService.languages;
     this.formGroup.valueChanges
       .subscribe(val => {
-        this.learningLanguagesTooltip = this.languages
+        this.languageSections = this.languages
           .filter(lang => val.learningLanguages.includes(lang.id))
+          .map(lang => ({
+            lang,
+            model: '',
+            letters: []
+          }));
+        this.learningLanguagesTooltip = this.languageSections
+          .map(({lang}) => lang)
           .map(lang => lang.englishName)
           .join(', ');
       });
@@ -44,6 +56,9 @@ export class UserSettingsComponent implements OnInit {
       oldPassword: this.formGroup.value.oldPassword || '',
       newPassword: this.formGroup.value.newPassword || '',
       newPasswordRepeat: this.formGroup.value.newPasswordRepeat || '',
+    });
+    this.formGroup.value.learningLanguages.forEach((langId: number) => {
+
     });
   }
 
@@ -58,5 +73,26 @@ export class UserSettingsComponent implements OnInit {
 
       this.userService.update(user, this.formGroup.value.newPassword).subscribe();
     }
+  }
+
+  addLetter(id: number) {
+    const section = this.languageSections.find(sec => sec.lang.id === id);
+
+    if (section.model) {
+      section.letters.push({text: section.model, currentBadgeSize: 'small'});
+      section.model = '';
+    }
+  }
+
+  changeBadgeSize(id: number, bi: number, desiredSize: 'small' | 'large') {
+    const section = this.languageSections.find(sec => sec.lang.id === id);
+    const button = section.letters[bi];
+
+    button.currentBadgeSize = desiredSize;
+  }
+
+  removeLetter(id: number, bi: number) {
+    const section = this.languageSections.find(sec => sec.lang.id === id);
+    section.letters.splice(bi, 1);
   }
 }

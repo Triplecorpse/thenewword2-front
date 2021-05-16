@@ -2,7 +2,7 @@
   <h2 style="margin: 16px 0 16px 16px;">Settings</h2>
   <form [formGroup]="formGroup" (ngSubmit)="submit()">
     <mat-card style="margin: 16px;">
-      <h3>User settings</h3>
+      <h3 matCardTitle>User settings</h3>
       <div>
         <mat-form-field>
           <input matInput placeholder="Login" disabled formControlName="login">
@@ -28,7 +28,8 @@
 
       <div>
         <mat-form-field>
-          <mat-select multiple placeholder="Learned Languages" formControlName="learningLanguages" [matTooltip]="learningLanguagesTooltip">
+          <mat-select multiple placeholder="Learning Languages" formControlName="learningLanguages"
+                      [matTooltip]="learningLanguagesTooltip">
             <mat-option *ngFor="let l of languages" [value]="l.id">
               {{l.englishName}}
             </mat-option>
@@ -40,7 +41,7 @@
       </div>
     </mat-card>
     <mat-card style="margin: 16px;">
-      <h3>Security settings</h3>
+      <h3 matCardTitle>Security settings</h3>
       <div>
         <mat-form-field>
           <input matInput placeholder="New Password" type="password" formControlName="newPassword">
@@ -62,13 +63,48 @@
         </p>
       </div>
     </mat-card>
+    <mat-card style="margin: 16px;">
+      <h3 matCardTitle>Keyboard settings</h3>
+      <h4 matCardTitle style="color: red;">Note: this section is under construction</h4>
+      <p>You can place here language-specific letters like Umlauts for German. Those buttons will appear next to each
+        word field and you'll have no need to install foreign keyboard</p>
+      <p>You can input even phrases - if you need to</p>
+      <p>No need to keep lower- and uppercase. You can switch right in the input</p>
+      <mat-card-content>
+        <div *ngFor="let section of languageSections">
+          <h4>{{section.lang.englishName}}</h4>
+          <div>
+            <button mat-flat-button
+                    color="primary"
+                    *ngFor="let letter of section.letters; let bi = index"
+                    matBadge="✖"
+                    matBadgeColor="warn"
+                    [matBadgeSize]="letter.currentBadgeSize"
+                    (mousemove)="changeBadgeSize(section.lang.id, bi, 'large')"
+                    (mouseout)="changeBadgeSize(section.lang.id, bi, 'small')"
+                    (click)="removeLetter(section.lang.id, bi)"
+                    type="button"
+                    style="margin: 8px 16px 8px 0">
+              {{letter.text}}
+            </button>
+          </div>
+          <mat-form-field>
+            <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}" (keydown.enter)="addLetter(section.lang.id)">
+            <button mat-button matSuffix mat-icon-button type="button" (keydown.enter)="addLetter(section.lang.id)" (click)="addLetter(section.lang.id)">
+              <mat-icon>check</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
 
     <div style="display:flex; justify-content: flex-end">
       <mat-form-field>
         <input matInput placeholder="Current Password" type="password" formControlName="oldPassword">
       </mat-form-field>
       <div style="display:flex; align-items: center">
-        <button mat-flat-button color="primary" style="margin-right: 16px; margin-left: 8px;" type="submit">Save</button>
+        <button mat-flat-button color="primary" style="margin-right: 16px; margin-left: 8px;" type="submit">Save
+        </button>
       </div>
     </div>
   </form>

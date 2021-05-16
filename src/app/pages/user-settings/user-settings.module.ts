@@ -8,8 +8,10 @@ import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
+import {MatBadgeModule} from "@angular/material/badge";
 
 const routes: Routes = [
   {path: '', component: UserSettingsComponent}
@@ -19,18 +21,21 @@ const routes: Routes = [
   declarations: [
     UserSettingsComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatInputModule,
-    MatSelectModule,
-    MatCardModule,
-    MatDividerModule,
-    MatListModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatTooltipModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatInputModule,
+        MatSelectModule,
+        MatCardModule,
+        MatDividerModule,
+        MatListModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatTooltipModule,
+        MatIconModule,
+        FormsModule,
+      MatBadgeModule
+    ]
 })
 export class UserSettingsModule {
 }
