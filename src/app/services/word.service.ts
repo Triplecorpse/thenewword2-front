@@ -12,9 +12,9 @@ import {IUser} from '../interfaces/IUser';
 import {IGender} from '../interfaces/IGender';
 import {ISpeechPart} from '../interfaces/ISpeechPart';
 import {ILanguage} from '../interfaces/ILanguage';
-import {isPlatformBrowser, isPlatformServer} from "@angular/common";
-import {IWordCheck} from "../interfaces/IWordCheck";
-import {IWordCheckDto} from "../interfaces/dto/IWordCheckDto";
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
+import {IWordCheck} from '../interfaces/IWordCheck';
+import {IWordCheckDto} from '../interfaces/dto/IWordCheckDto';
 
 @Injectable({
   providedIn: 'root'
@@ -140,8 +140,8 @@ export class WordService {
       })
       .pipe(map(response => ({
         isRight: response.right,
-        vault: new Word(response.vault, this.wordMetadata, this.userService.user),
-        you: new Word(response.you, this.wordMetadata, this.userService.user)
+        vault: new Word(response.vault, this.wordMetadata, this.userService.getUser()),
+        you: new Word(response.you, this.wordMetadata, this.userService.getUser())
       })));
   }
 }

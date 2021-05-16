@@ -4,22 +4,26 @@ import {Observable, ReplaySubject} from 'rxjs';
 import {IUser} from '../interfaces/IUser';
 import {HttpClient} from '@angular/common/http';
 import {ReCaptchaV3Service} from 'ng-recaptcha';
-import {switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {IUserDto} from '../interfaces/dto/IUserDto';
+import {MetadataService} from './metadata.service';
+import {response} from "express";
+import {resolveSrv} from "dns";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private user$ = new ReplaySubject<IUser | null>(1);
+  private user: IUser | null = null;
   isServer: boolean;
   isBrowser: boolean;
-  user: IUser | null = null;
 
   constructor(@Inject(PLATFORM_ID) private platformId: string,
               private httpClient: HttpClient,
               private recaptchaV3Service: ReCaptchaV3Service,
+              private metadataService: MetadataService,
               private router: Router) {
     this.isServer = isPlatformServer(platformId);
     this.isBrowser = isPlatformBrowser(platformId);
@@ -35,6 +39,8 @@ export class UserService {
     if (this.isBrowser) {
       localStorage.setItem('user', JSON.stringify(user));
     }
+
+    this.user = user;
   }
 
   getUser(): IUser | null {
@@ -56,9 +62,17 @@ export class UserService {
   login(user: IUser): Observable<IUser> {
     return this.recaptchaV3Service.execute('importantAction')
       .pipe(
-        switchMap(token => this.httpClient.post<IUser>('user/login', {...user, token})),
-        tap(response => {
-          this.setUser(response);
+        switchMap(token => this.httpClient.post<IUserDto>('user/login', {...user, token})),
+        map<IUserDto, IUser>(res => ({
+          login: res.login,
+          email: res.email,
+          password: res.password,
+          nativeLanguage: this.metadataService.languages.find(lang => lang.id === res.native_language),
+          learningLanguages: this.metadataService.languages.filter(lang => res.learning_languages.includes(lang.id)),
+          token: res.token
+        })),
+        tap(res => {
+          this.setUser(res);
           this.user$.next(this.getUser());
           this.router.navigate(['dashboard']);
         })
@@ -86,5 +100,35 @@ export class UserService {
       this.user$.next();
       this.router.navigate(['']);
     }
+  }
+
+  update(user: IUser, newPassword?: string): Observable<IUser> {
+    const userDto: IUserDto = {
+      email: user.email || undefined,
+      password: user.password,
+      new_password: newPassword,
+      login: user.login,
+      learning_languages: user.learningLanguages.map(lang => lang.id)
+    };
+
+    return this.httpClient.post<IUserDto>('user/modify', userDto)
+      .pipe(
+        map<IUserDto, IUser>(res => ({
+          login: res.login,
+          email: res.email,
+          password: res.password,
+          nativeLanguage: this.metadataService.languages.find(lang => lang.id === res.native_language),
+          learningLanguages: this.metadataService.languages.filter(lang => res.learning_languages.includes(lang.id)),
+          token: res.token
+        })),
+        tap(newUser => {
+          this.setUser(newUser);
+          this.user$.next(this.getUser());
+
+          if (newPassword) {
+            this.logout();
+          }
+        })
+      );
   }
 }

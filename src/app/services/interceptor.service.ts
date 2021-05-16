@@ -37,7 +37,11 @@ export class InterceptorService implements HttpInterceptor {
     return next.handle(newReq)
       .pipe(
         catchError(error => {
-          this.snackBar.open(`An error '${error.error.desc}' occurred to the request. Error code: ${error.error.code}`, '', {duration: 10000});
+          if (error.status === 401) {
+            this.snackBar.open(`Bad credentials or token, please try to relogin`, '', {duration: 10000});
+          } else {
+            this.snackBar.open(`An error '${error.error.type}' occurred to your request.`, '', {duration: 10000});
+          }
 
           return throwError(error);
         })
