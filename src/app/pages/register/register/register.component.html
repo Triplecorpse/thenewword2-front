@@ -1,12 +1,12 @@
 <div class="general-wrapper">
   <mat-card class="wrapper">
-    <h2 style="margin-right: 8px;">Sign up a new user</h2>
+    <h2 style="margin-right: 8px;">{{'REGISTRATION.FORM_HEADER' | translate}}</h2>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <div style="display:flex;">
         <div>
           <div style="margin-bottom: 26px;">
             <mat-form-field>
-              <input matInput [formControl]="login" placeholder="Login">
+              <input matInput [formControl]="login" [placeholder]="'REGISTRATION.FIELDS.LOGIN' | translate">
               <mat-icon matSuffix matTooltip="At least 6 latin letters and numbers long. Cannot be changed after you set it">
                 info_outlined
               </mat-icon>
@@ -21,8 +21,7 @@
 
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-label>Password</mat-label>
-              <input matInput type="password" [formControl]="password">
+              <input matInput type="password" [formControl]="password" [placeholder]="'REGISTRATION.FIELDS.PASSWORD' | translate">
               <mat-error *ngIf="password.hasError('minlength')">
                 Password should be at least 6 letters long
               </mat-error>
@@ -31,8 +30,7 @@
 
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-label>Password Repeat</mat-label>
-              <input matInput type="password" [formControl]="passwordRepeat">
+              <input matInput type="password" [formControl]="passwordRepeat" [placeholder]="'REGISTRATION.FIELDS.PASSWORD_REPEAT' | translate">
               <mat-error *ngIf="passwordRepeat.hasError('notequal')">
                 Password repeat should be the same as password
               </mat-error>
@@ -42,8 +40,7 @@
         <div style="margin-left: 8px;">
           <div style="margin-bottom: 26px;">
             <mat-form-field>
-              <mat-label>Email</mat-label>
-              <input matInput [formControl]="email">
+              <input matInput [formControl]="email" [placeholder]="'REGISTRATION.FIELDS.EMAIL' | translate">
               <mat-icon matSuffix matTooltip="We will use it just for password recovery">
                 info_outlined
               </mat-icon>
@@ -54,7 +51,7 @@
           </div>
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-select matInput [formControl]="nativeLanguage" placeholder="Native Language">
+              <mat-select [formControl]="nativeLanguage" [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE' | translate">
                 <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
               </mat-select>
               <mat-icon matSuffix matTooltip="After it is set, it cannot be changed">
@@ -67,7 +64,7 @@
           </div>
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-select matInput [formControl]="learningLanguages" placeholder="Learning Language" multiple [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
+              <mat-select [formControl]="learningLanguages" [placeholder]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES' | translate" multiple [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
                 <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
               </mat-select>
               <mat-icon matSuffix matTooltip="It is needed just for you convenience">
@@ -78,10 +75,10 @@
         </div>
       </div>
       <div style="display:flex; justify-content: space-between">
-        <button mat-raised-button color="primary" type="submit">Register</button>
+        <button mat-raised-button color="primary" type="submit">{{'REGISTRATION.REGISTER' | translate}}</button>
         <div>
-          <label>Already registered?</label>
-          <button mat-button color="primary" routerLink="/login">Go to Login</button>
+          <label>{{'REGISTRATION.ALREADY_REGISTERED' | translate}}</label>
+          <button mat-button color="primary" routerLink="/login">{{'REGISTRATION.GOTO_LOGIN' | translate}}</button>
         </div>
       </div>
     </form>

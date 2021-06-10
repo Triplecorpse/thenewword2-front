@@ -11,7 +11,7 @@
       <ng-template #guestTpl>
         <div>
           <button mat-button routerLink="/" class="nav-item">The New Word</button>
-          <button mat-button routerLink="/" class="nav-item">What does this app do?</button>
+          <button mat-button routerLink="/" class="nav-item">{{'MAIN.WHAT_IT_DOES' | translate}}</button>
         </div>
       </ng-template>
     </div>
@@ -37,8 +37,8 @@
       </div>
       <ng-template #guestTpl2>
         <div>
-          <button mat-button routerLink="register">Register</button>
-          <button mat-stroked-button routerLink="login">Login</button>
+          <button mat-button routerLink="register">{{'MAIN.REGISTER' | translate}}</button>
+          <button mat-stroked-button routerLink="login">{{'MAIN.LOGIN' | translate}}</button>
         </div>
       </ng-template>
     </div>

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpParams, HttpRequest} from "@angular/common/http";
-import {Observable, throwError} from "rxjs";
-import {environment} from "../../environments/environment";
-import {catchError} from "rxjs/operators";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {UserService} from "./user.service";
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpParams, HttpRequest} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {catchError} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +17,16 @@ export class InterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.userService.getUser()?.token ? this.userService.getUser()?.token : '';
     const params = req.params;
+    const exclusions: RegExp[] = [/(.json)$/];
     let url = req.url;
     let newReq;
+    const replaceUrlByExclusion = exclusions.map(exclusion => exclusion.test(url)).some(result => !!result);
 
     if (token) {
       params.append('token', token as string);
     }
 
-    if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
+    if (!req.url.startsWith('http://') && !req.url.startsWith('https://') && !replaceUrlByExclusion) {
       url = `${environment.api}/${url}`;
     }
 

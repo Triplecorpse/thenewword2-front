@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RegisterComponent } from './register/register.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RegisterComponent} from './register/register.component';
 import {RouterModule, Routes} from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
@@ -12,6 +12,7 @@ import {InterceptorService} from '../../services/interceptor.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
+import {TranslateModule} from '@ngx-translate/core';
 
 const routes: Routes = [
   {path: '', component: RegisterComponent}
@@ -21,21 +22,26 @@ const routes: Routes = [
   declarations: [
     RegisterComponent
   ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatSelectModule
-    ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatSelectModule,
+    TranslateModule.forChild({
+      extend: true
+    })
+  ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
+    {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ]
 })
-export class RegisterModule { }
+
+export class RegisterModule {
+}
