@@ -7,6 +7,10 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 import {Observable, of} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {IWordMetadataDto} from '../interfaces/dto/IWordMetadataDto';
+import {Language} from '../models/Language';
+import {SpeechPart} from '../models/SpeechPart';
+import {Gender} from '../models/Gender';
+import {IWordMetadata} from "../interfaces/IWordMetadata";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +19,7 @@ export class MetadataService implements CanActivate {
   languages: ILanguage[];
   speechParts: ISpeechPart[];
   genders: IGender[];
+  metadata: IWordMetadata;
 
   constructor(private httpClient: HttpClient) {
   }
@@ -28,12 +33,17 @@ export class MetadataService implements CanActivate {
       .pipe(
         tap(result => {
           this.languages = result.languages
-            .map(l => ({id: l.id, englishName: l.title}))
+            .map(l => new Language(l))
             .sort((a, b) => {
-              return a.englishName > b.englishName ? 1 : -1;
+              return a.nativeName > b.nativeName ? 1 : -1;
             });
-          this.speechParts = result.speechParts.map(sp => ({id: sp.id, englishName: sp.title}));
-          this.genders = result.genders.map(g => ({id: g.id, englishName: g.title}));
+          this.speechParts = result.speechParts.map(sp => new SpeechPart(sp));
+          this.genders = result.genders.map(g => new Gender(g));
+          this.metadata = {
+            genders: this.genders,
+            speechParts: this.speechParts,
+            languages: this.languages
+          };
         }),
         map(_ => true)
       );

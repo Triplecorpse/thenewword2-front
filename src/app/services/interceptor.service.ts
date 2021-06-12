@@ -42,7 +42,7 @@ export class InterceptorService implements HttpInterceptor {
           if (error.status === 401) {
             this.snackBar.open(`Bad credentials or token, please try to relogin`, '', {duration: 10000});
           } else {
-            this.snackBar.open(`An error '${error.error.type}' occurred to your request.`, '', {duration: 10000});
+            this.snackBar.open(`An error '${error.error?.type}' occurred to your request.`, '', {duration: 10000});
           }
 
           return throwError(error);

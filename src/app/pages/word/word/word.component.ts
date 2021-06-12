@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {WordService} from '../../../services/word.service';
-import {Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalNewWordComponent} from '../../../components/modal-new-word/modal-new-word.component';
 import {IWordMetadata} from '../../../interfaces/IWordMetadata';
+import {MetadataService} from '../../../services/metadata.service';
 
 @Component({
   selector: 'app-word',
@@ -11,21 +12,20 @@ import {IWordMetadata} from '../../../interfaces/IWordMetadata';
   styleUrls: ['./word.component.scss']
 })
 export class WordComponent implements OnInit {
-  metadata$: Observable<IWordMetadata>;
+  metadata: IWordMetadata;
   wordListReload$ = new Subject<void>();
 
-  constructor(private dialog: MatDialog, private wordService: WordService) {
+  constructor(private dialog: MatDialog, private wordService: WordService, private metadataService: MetadataService) {
   }
 
   ngOnInit(): void {
-    this.metadata$ = this.wordService.getWordMetadata$();
+    this.metadata = this.metadataService.metadata;
   }
 
   openNewWordModal() {
     this.dialog.open(ModalNewWordComponent)
       .afterClosed()
-      .subscribe((r) => {
-        console.log("ddssad", r);
+      .subscribe(() => {
         this.wordListReload$.next();
       });
   }

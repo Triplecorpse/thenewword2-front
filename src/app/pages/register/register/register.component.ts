@@ -5,8 +5,8 @@ import {UserService} from '../../../services/user.service';
 import {take, takeUntil} from 'rxjs/operators';
 import {ILanguage} from '../../../interfaces/ILanguage';
 import {WordService} from '../../../services/word.service';
-import {HttpClient} from '@angular/common/http';
-import {IUser} from "../../../interfaces/IUser";
+import {IUser} from '../../../interfaces/IUser';
+import {MetadataService} from "../../../services/metadata.service";
 
 @Component({
   selector: 'app-register',
@@ -29,13 +29,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
     learningLanguages: this.learningLanguages
   });
   languages: ILanguage[] = [];
+  recommendedLanguages: ILanguage[] = [];
   private destroy$ = new Subject();
 
   constructor(private userService: UserService,
-              private wordService: WordService) {
+              private wordService: WordService,
+              private metadataService: MetadataService) {
   }
 
   ngOnInit(): void {
+
     this.formGroup.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(value => {
@@ -44,11 +47,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
         this.passwordRepeat.setErrors(error);
       });
-    this.wordService.getWordMetadata$()
-      .pipe(take(1))
-      .subscribe(result => {
-        this.languages = result.languages;
+    this.languages = this.metadataService.languages;
+
+    if (navigator) {
+      const userLangs = navigator.languages.map(l => {
+        const langLocale = l.split('-');
+        return langLocale[0];
       });
+
+      const uniqUserLangs = [...new Set(userLangs)];
+
+      this.recommendedLanguages = this.languages.filter(lang => uniqUserLangs.includes(lang.iso2));
+    }
   }
 
   ngOnDestroy() {

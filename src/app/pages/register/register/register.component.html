@@ -6,7 +6,7 @@
         <div>
           <div style="margin-bottom: 26px;">
             <mat-form-field>
-              <input matInput [formControl]="login" [placeholder]="'REGISTRATION.FIELDS.LOGIN' | translate">
+              <input matInput [formControl]="login" [placeholder]="'REGISTRATION.FIELDS.LOGIN.PLACEHOLDER' | translate">
               <mat-icon matSuffix matTooltip="At least 6 latin letters and numbers long. Cannot be changed after you set it">
                 info_outlined
               </mat-icon>
@@ -21,7 +21,7 @@
 
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <input matInput type="password" [formControl]="password" [placeholder]="'REGISTRATION.FIELDS.PASSWORD' | translate">
+              <input matInput type="password" [formControl]="password" [placeholder]="'REGISTRATION.FIELDS.PASSWORD.PLACEHOLDER' | translate">
               <mat-error *ngIf="password.hasError('minlength')">
                 Password should be at least 6 letters long
               </mat-error>
@@ -30,7 +30,7 @@
 
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <input matInput type="password" [formControl]="passwordRepeat" [placeholder]="'REGISTRATION.FIELDS.PASSWORD_REPEAT' | translate">
+              <input matInput type="password" [formControl]="passwordRepeat" [placeholder]="'REGISTRATION.FIELDS.PASSWORD_REPEAT.PLACEHOLDER' | translate">
               <mat-error *ngIf="passwordRepeat.hasError('notequal')">
                 Password repeat should be the same as password
               </mat-error>
@@ -40,7 +40,7 @@
         <div style="margin-left: 8px;">
           <div style="margin-bottom: 26px;">
             <mat-form-field>
-              <input matInput [formControl]="email" [placeholder]="'REGISTRATION.FIELDS.EMAIL' | translate">
+              <input matInput [formControl]="email" [placeholder]="'REGISTRATION.FIELDS.EMAIL.PLACEHOLDER' | translate">
               <mat-icon matSuffix matTooltip="We will use it just for password recovery">
                 info_outlined
               </mat-icon>
@@ -51,8 +51,11 @@
           </div>
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-select [formControl]="nativeLanguage" [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE' | translate">
-                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
+              <mat-select [formControl]="nativeLanguage" [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.PLACEHOLDER' | translate">
+                <mat-optgroup label="Recommended languages">
+                  <mat-option *ngFor="let lang of recommendedLanguages" [value]="lang.id">{{lang.nativeName}}</mat-option>
+                </mat-optgroup>
+                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>
               </mat-select>
               <mat-icon matSuffix matTooltip="After it is set, it cannot be changed">
                 info_outlined
@@ -64,7 +67,9 @@
           </div>
           <div style="margin-bottom: 16px;">
             <mat-form-field>
-              <mat-select [formControl]="learningLanguages" [placeholder]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES' | translate" multiple [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
+              <mat-select [formControl]="learningLanguages" [placeholder]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.PLACEHOLDER' | translate"
+                          multiple
+                          [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
                 <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
               </mat-select>
               <mat-icon matSuffix matTooltip="It is needed just for you convenience">

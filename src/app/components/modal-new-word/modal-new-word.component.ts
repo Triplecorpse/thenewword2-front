@@ -2,13 +2,11 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
-import {switchMap, take, tap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {UserService} from "../../services/user.service";
-import {MetadataService} from "../../services/metadata.service";
-import {ILanguage} from "../../interfaces/ILanguage";
+import {UserService} from '../../services/user.service';
+import {MetadataService} from '../../services/metadata.service';
+import {ILanguage} from '../../interfaces/ILanguage';
 
 @Component({
   selector: 'app-modal-new-word',
@@ -66,8 +64,7 @@ export class ModalNewWordComponent implements OnInit {
   saveWord() {
     if (this.formGroup.value) {
       const form = this.formGroup.value;
-
-      this.wordService.wordFromDto({
+      const wordDto = this.wordService.wordFromDto({
         id: this.data?.word.dbid,
         word: form.word,
         gender_id: form.gender,
@@ -78,11 +75,9 @@ export class ModalNewWordComponent implements OnInit {
         stress_letter_index: 0,
         original_language_id: form.fromLanguage,
         translated_language_id: form.toLanguage
-      })
-        .pipe(
-          take(1),
-          switchMap(word => this.wordService.addOrModifyWord(word))
-        )
+      });
+
+      this.wordService.addOrModifyWord(wordDto)
         .subscribe(() => {
           this.dialogRef.close(true);
         });

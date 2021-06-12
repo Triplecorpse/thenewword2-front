@@ -3,21 +3,21 @@
     <button mat-flat-button (click)="openNewWordModal()" color="primary">New Word</button>
     <mat-form-field style="margin-left: 8px;">
       <mat-select placeholder="Language">
-        <mat-option *ngFor="let l of (metadata$ | async)?.languages" [value]="l.id">
-          {{l.englishName}}
+        <mat-option *ngFor="let l of metadata.languages" [value]="l.id" [style.direction.rtl]="l.rtl">
+          {{l.nativeName}}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field style="margin-left: 8px;">
       <mat-select placeholder="Gender">
-        <mat-option *ngFor="let g of (metadata$ | async)?.genders" [value]="g.id">
+        <mat-option *ngFor="let g of metadata.genders" [value]="g.id">
           {{g.englishName}}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field style="margin-left: 8px;">
       <mat-select placeholder="Speech Part">
-        <mat-option *ngFor="let sp of (metadata$ | async)?.speechParts" value="sp.id">
+        <mat-option *ngFor="let sp of metadata.speechParts" value="sp.id">
           {{sp.englishName}}
         </mat-option>
       </mat-select>

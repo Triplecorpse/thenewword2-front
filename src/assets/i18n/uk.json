@@ -7,12 +7,24 @@
   "REGISTRATION": {
     "FORM_HEADER": "Зареєструвати нового користувача",
     "FIELDS": {
-      "LOGIN": "Логін",
-      "EMAIL": "Електронна пошта",
-      "PASSWORD": "Пароль",
-      "PASSWORD_REPEAT": "Повторення паролю",
-      "NATIVE_LANGUAGE": "Рідна мова",
-      "LEARNING_LANGUAGES": "Мови, які вивчаються"
+      "LOGIN": {
+        "PLACEHOLDER": "Логін"
+      },
+      "EMAIL": {
+        "PLACEHOLDER": "Електронна пошта"
+      },
+      "PASSWORD": {
+        "PLACEHOLDER": "Пароль"
+      },
+      "PASSWORD_REPEAT": {
+        "PLACEHOLDER": "Повторення паролю"
+      },
+      "NATIVE_LANGUAGE": {
+        "PLACEHOLDER": "Рідна мова"
+      },
+      "LEARNING_LANGUAGES": {
+        "PLACEHOLDER": "Мови, які вивчаються"
+      }
     },
     "ALREADY_REGISTERED": "Вже зареєстровані?",
     "GOTO_LOGIN": "Увійти",
