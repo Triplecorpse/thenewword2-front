@@ -1,0 +1,9 @@
+.spell-letter {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 4px;
+
+  &:hover {
+    font-weight: bold;
+  }
+}

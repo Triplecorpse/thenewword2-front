@@ -23,10 +23,12 @@ export class ModalNewWordComponent implements OnInit {
     translations: new FormControl('', Validators.required),
     fromLanguage: new FormControl('', Validators.required),
     toLanguage: new FormControl(''),
+    transcription: new FormControl(''),
     speechPart: new FormControl('', Validators.required),
     gender: new FormControl(''),
     forms: new FormControl(''),
-    remarks: new FormControl('')
+    remarks: new FormControl(''),
+    stressLetterIndex: new FormControl()
   });
 
   constructor(private dialogRef: MatDialogRef<any>,
@@ -82,5 +84,16 @@ export class ModalNewWordComponent implements OnInit {
           this.dialogRef.close(true);
         });
     }
+  }
+
+  getWordSpelling() {
+    return this.formGroup.value.word.split('');
+  }
+
+  setStressLetter(i: number) {
+    console.log(i);
+    this.formGroup.patchValue({
+      stressLetterIndex: i
+    });
   }
 }
