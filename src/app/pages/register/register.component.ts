@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {UserService} from '../../../services/user.service';
+import {UserService} from '../../services/user.service';
 import {takeUntil} from 'rxjs/operators';
-import {ILanguage} from '../../../interfaces/ILanguage';
-import {WordService} from '../../../services/word.service';
-import {IUser} from '../../../interfaces/IUser';
-import {MetadataService} from '../../../services/metadata.service';
+import {ILanguage} from '../../interfaces/ILanguage';
+import {WordService} from '../../services/word.service';
+import {IUser} from '../../interfaces/IUser';
+import {MetadataService} from '../../services/metadata.service';
 
 @Component({
   selector: 'app-register',

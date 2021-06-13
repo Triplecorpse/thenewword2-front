@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {WordComponent} from './word/word.component';
+import {WordComponent} from './word.component';
 import {RouterModule, Routes} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';

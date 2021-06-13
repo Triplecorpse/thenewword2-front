@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {WordService} from '../../../services/word.service';
+import {WordService} from '../../services/word.service';
 import {Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {ModalNewWordComponent} from '../../../components/modal-new-word/modal-new-word.component';
-import {IWordMetadata} from '../../../interfaces/IWordMetadata';
-import {MetadataService} from '../../../services/metadata.service';
+import {ModalNewWordComponent} from '../../components/modal-new-word/modal-new-word.component';
+import {IWordMetadata} from '../../interfaces/IWordMetadata';
+import {MetadataService} from '../../services/metadata.service';
 
 @Component({
   selector: 'app-word',

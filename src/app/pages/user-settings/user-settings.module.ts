@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {UserSettingsComponent} from './user-settings/user-settings.component';
+import {UserSettingsComponent} from './user-settings.component';
 import {RouterModule, Routes} from '@angular/router';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';

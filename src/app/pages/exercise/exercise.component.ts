@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {WordService} from "../../../services/word.service";
-import {IWord} from "../../../interfaces/IWord";
+import {WordService} from "../../services/word.service";
+import {IWord} from "../../interfaces/IWord";
 import {delay, take} from "rxjs/operators";
 import {Observable, Subject} from "rxjs";
 import {FormControl, FormGroup} from "@angular/forms";
-import {Word} from "../../../models/Word";
-import {IWordCheck} from "../../../interfaces/IWordCheck";
+import {Word} from "../../models/Word";
+import {IWordCheck} from "../../interfaces/IWordCheck";
 
 @Component({
   selector: 'app-exercise',

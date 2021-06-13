@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../../../services/user.service';
-import {ILanguage} from '../../../interfaces/ILanguage';
+import {UserService} from '../../services/user.service';
+import {ILanguage} from '../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MetadataService} from '../../../services/metadata.service';
-import {IUser} from '../../../interfaces/IUser';
+import {MetadataService} from '../../services/metadata.service';
+import {IUser} from '../../interfaces/IUser';
 
 @Component({
   selector: 'app-user-settings',

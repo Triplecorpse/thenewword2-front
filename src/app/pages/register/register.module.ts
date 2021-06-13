@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RegisterComponent} from './register/register.component';
+import {RegisterComponent} from './register.component';
 import {RouterModule, Routes} from '@angular/router';
 import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
