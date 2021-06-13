@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ILanguage} from '../interfaces/ILanguage';
 import {ISpeechPart} from '../interfaces/ISpeechPart';
@@ -10,7 +10,8 @@ import {IWordMetadataDto} from '../interfaces/dto/IWordMetadataDto';
 import {Language} from '../models/Language';
 import {SpeechPart} from '../models/SpeechPart';
 import {Gender} from '../models/Gender';
-import {IWordMetadata} from "../interfaces/IWordMetadata";
+import {IWordMetadata} from '../interfaces/IWordMetadata';
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,13 @@ export class MetadataService implements CanActivate {
   speechParts: ISpeechPart[];
   genders: IGender[];
   metadata: IWordMetadata;
+  isServer: boolean;
+  isBrowser: boolean;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              @Inject(PLATFORM_ID) private platformId: string) {
+    this.isServer = isPlatformServer(platformId);
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {

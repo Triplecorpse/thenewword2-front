@@ -1,6 +1,9 @@
 .general-wrapper {
   height: calc(100% - 52px);
   display: flex;
+  background-image: url('https://picsum.photos/1920/1080');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .wrapper {

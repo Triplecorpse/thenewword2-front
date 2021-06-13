@@ -11,6 +11,11 @@ const routes: Routes = [
     canActivate: [MetadataService]
   },
   {
+    path: 'how-it-works',
+    loadChildren: () => import('./pages/how-it-works/how-it-works.module').then(m => m.HowItWorksModule),
+    canActivate: [MetadataService]
+  },
+  {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule),
     canActivate: [NotUserGuard, MetadataService]

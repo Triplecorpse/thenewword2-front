@@ -70,7 +70,7 @@
               <mat-select [formControl]="learningLanguages" [placeholder]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.PLACEHOLDER' | translate"
                           multiple
                           [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
-                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.englishName}}</mat-option>
+                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>
               </mat-select>
               <mat-icon matSuffix matTooltip="It is needed just for you convenience">
                 info_outlined
