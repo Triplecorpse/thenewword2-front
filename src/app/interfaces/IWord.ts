@@ -15,4 +15,5 @@ export interface IWord {
   remarks?: string;
   stressLetterIndex?: number;
   userCreated?: IUser;
+  transcription?: string;
 }

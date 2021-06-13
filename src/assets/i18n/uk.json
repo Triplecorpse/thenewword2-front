@@ -65,6 +65,24 @@
     "GOTO_REGISTER": "Зареєструватися",
     "LOGIN": "Увійти"
   },
+  "WORDS": {
+    "NEW_WORDSET": "Новий набір слів",
+    "NEW_WORD": "Нове слово",
+    "LANGUAGE": "Мова",
+    "GENDER": "Рід",
+    "SPEECH_PART": "Частина мови",
+    "SEARCH": "Пошук"
+  },
+  "MODAL_WORDSET": {
+    "HEADER_ADD": "Додати новий набір слів",
+    "HEADER_MODIFY": "Редагувати набір слів",
+    "NAME": "Назва",
+    "FROM_LANGUAGE": "З такої мови",
+    "TO_LANGUAGE": "На таку мову",
+    "SUBMIT_ADD": "Додати",
+    "SUBMIT_MODIFY": "Змінити",
+    "CANCEL": "Повернутися"
+  },
   "ERROR_CODES": {
     "LOGIN_EXISTS": "Це ім'я користувача вже існує",
     "EMAIL_EXISTS": "Ця електронна пошта вже існує",

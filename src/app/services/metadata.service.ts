@@ -12,6 +12,7 @@ import {SpeechPart} from '../models/SpeechPart';
 import {Gender} from '../models/Gender';
 import {IWordMetadata} from '../interfaces/IWordMetadata';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
+import {Metadata} from '../models/Metadata';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,9 @@ export class MetadataService implements CanActivate {
             speechParts: this.speechParts,
             languages: this.languages
           };
+          Metadata.languages = this.languages;
+          Metadata.genders = this.genders;
+          Metadata.speechParts = this.speechParts;
         }),
         map(_ => true)
       );

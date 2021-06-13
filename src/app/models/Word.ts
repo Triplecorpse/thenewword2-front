@@ -5,6 +5,8 @@ import {IGender} from '../interfaces/IGender';
 import {ILanguage} from '../interfaces/ILanguage';
 import {IUser} from '../interfaces/IUser';
 import {IWordMetadata} from '../interfaces/IWordMetadata';
+import {Metadata} from './Metadata';
+import {User} from './User';
 
 export class Word implements IWord {
   dbid?: number;
@@ -18,8 +20,12 @@ export class Word implements IWord {
   remarks?: string;
   stressLetterIndex?: number;
   userCreated?: IUser;
+  transcription: string;
 
   constructor(wordDto?: IWordDto, wordMetadata?: IWordMetadata, user?: IUser) {
+    wordMetadata = wordMetadata || Metadata;
+    user = user || User;
+
     const speechParts = wordMetadata?.speechParts;
     const genders = wordMetadata?.genders;
     const languages = wordMetadata?.languages;
@@ -34,5 +40,21 @@ export class Word implements IWord {
     this.originalLanguage = languages?.find(l => l.id === wordDto?.original_language_id);
     this.translatedLanguage = languages?.find(l => l.id === wordDto?.translated_language_id);
     this.userCreated = user;
+  }
+
+  convertToDto(): IWordDto {
+    return {
+      id: this.dbid,
+      word: this.word,
+      forms: this.forms,
+      gender_id: this.gender.id,
+      remarks: this.remarks,
+      original_language_id: this.originalLanguage.id,
+      speech_part_id: this.speechPart.id,
+      stress_letter_index: this.stressLetterIndex,
+      translated_language_id: this.translatedLanguage.id,
+      translations: this.translations,
+      transcription: this.transcription
+    };
   }
 }

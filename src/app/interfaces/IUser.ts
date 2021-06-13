@@ -1,4 +1,4 @@
-import {ILanguage} from "./ILanguage";
+import {ILanguage} from './ILanguage';
 
 export interface IUser {
   login?: string;

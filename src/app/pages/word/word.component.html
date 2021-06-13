@@ -1,33 +1,56 @@
 <mat-card style="margin: 8px; display:flex; justify-content: space-between">
   <div style="display: flex; align-items: center">
-    <button mat-flat-button (click)="openNewWordModal()" color="primary">New Word</button>
+    <button mat-flat-button (click)="openNewWordSetModal()" color="primary">{{'WORDS.NEW_WORDSET' | translate}}</button>
     <mat-form-field style="margin-left: 8px;">
-      <mat-select placeholder="Language">
-        <mat-option *ngFor="let l of metadata.languages" [value]="l.id" [style.direction.rtl]="l.rtl">
+      <mat-select [placeholder]="'WORDS.LANGUAGE' | translate">
+        <mat-option *ngFor="let l of learningLanguages" [value]="l.id" [style.direction.rtl]="l.rtl">
           {{l.nativeName}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field style="margin-left: 8px;">
-      <mat-select placeholder="Gender">
-        <mat-option *ngFor="let g of metadata.genders" [value]="g.id">
-          {{g.englishName}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field style="margin-left: 8px;">
-      <mat-select placeholder="Speech Part">
-        <mat-option *ngFor="let sp of metadata.speechParts" value="sp.id">
-          {{sp.englishName}}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field style="margin-left: 8px;">
-      <input matInput type="text" placeholder="Search">
+      <input matInput type="text" [placeholder]="'WORDS.SEARCH' | translate">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
 </mat-card>
-<app-word-list [reload$]="wordListReload$"></app-word-list>
+<mat-accordion multi>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Wordset
+      </mat-panel-title>
+      <mat-panel-description>
+        French
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-card style="margin: 8px; display:flex; justify-content: space-between">
+      <div style="display: flex; align-items: center">
+        <button mat-flat-button (click)="openNewWordModal()" color="primary">{{'WORDS.NEW_WORD' | translate}}</button>
+        <mat-form-field style="margin-left: 8px;">
+          <mat-select [placeholder]="'WORDS.GENDER' | translate">
+            <mat-option *ngFor="let g of metadata.genders" [value]="g.id">
+              {{g.englishName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="margin-left: 8px;">
+          <mat-select [placeholder]="'WORDS.SPEECH_PART' | translate">
+            <mat-option *ngFor="let sp of metadata.speechParts" value="sp.id">
+              {{sp.englishName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field style="margin-left: 8px;">
+          <input matInput type="text" [placeholder]="'WORDS.SEARCH' | translate">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card>
+    <app-word-list [reload$]="wordListReload$"></app-word-list>
+  </mat-expansion-panel>
+</mat-accordion>

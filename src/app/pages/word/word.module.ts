@@ -9,10 +9,13 @@ import {MatCardModule} from '@angular/material/card';
 import {WordListComponent} from '../../components/word-list/word-list.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
 import {ModalConfirmModule} from '../../components/modal-confirm/modal-confirm.module';
-import {MatSelectModule} from "@angular/material/select";
-import {MatInputModule} from "@angular/material/input";
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {TranslateModule} from '@ngx-translate/core';
+import {ModalNewWordsetComponent} from "../../components/modal-new-wordset/modal-new-wordset.component";
+import {ModalNewWordsetModule} from "../../components/modal-new-wordset/modal-new-wordset.module";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -29,12 +32,17 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatDialogModule,
     ModalNewWordModule,
+    ModalNewWordsetModule,
     ModalConfirmModule,
     MatCardModule,
     MatTableModule,
     MatIconModule,
     MatSelectModule,
-    MatInputModule
+    MatInputModule,
+    MatExpansionModule,
+    TranslateModule.forChild({
+      extend: true
+    })
   ]
 })
 export class WordModule {

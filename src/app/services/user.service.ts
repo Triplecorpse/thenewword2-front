@@ -8,6 +8,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {IUserDto} from '../interfaces/dto/IUserDto';
 import {MetadataService} from './metadata.service';
+import {User} from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,8 @@ export class UserService {
     this.isBrowser = isPlatformBrowser(platformId);
     this.user = this.getUser();
     this.user$.next(this.getUser());
+
+    this.setUserStatic();
   }
 
   getUser$(): Observable<IUser | null> {
@@ -44,6 +47,8 @@ export class UserService {
     }
 
     this.user = user;
+
+    this.setUserStatic();
   }
 
   getUser(): IUser | null {
@@ -139,5 +144,14 @@ export class UserService {
           }
         })
       );
+  }
+
+  private setUserStatic() {
+    User.login = this.user?.login;
+    User.token = this.user?.token;
+    User.email = this.user?.email;
+    User.password = this.user?.password;
+    User.nativeLanguage = this.user?.nativeLanguage;
+    User.learningLanguages = this.user?.learningLanguages;
   }
 }
