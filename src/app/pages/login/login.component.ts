@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.formGroup.valid) {
       this.formGroup.disable();
       this.isLoading = true;
-      this.userService.login(this.formGroup.value)
+      this.userService.login(this.formGroup.value, this.formGroup.value.saveSession)
         .pipe(
           finalize(() => {
             this.formGroup.enable();

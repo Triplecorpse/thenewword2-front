@@ -8,8 +8,6 @@ import {map, switchMap, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {IUserDto} from '../interfaces/dto/IUserDto';
 import {MetadataService} from './metadata.service';
-import {response} from "express";
-import {resolveSrv} from "dns";
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +33,14 @@ export class UserService {
     return this.user$.asObservable();
   }
 
-  setUser(user: IUser) {
+  setUser(user: IUser, saveSession: boolean) {
     if (this.isBrowser) {
-      localStorage.setItem('user', JSON.stringify(user));
+      if (saveSession) {
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('save-session', 'true');
+      } else {
+        sessionStorage.setItem('user', JSON.stringify(user));
+      }
     }
 
     this.user = user;
@@ -56,10 +59,14 @@ export class UserService {
       return JSON.parse(localStorage.getItem('user') as string);
     }
 
+    if (sessionStorage.getItem('user')) {
+      return JSON.parse(sessionStorage.getItem('user') as string);
+    }
+
     return null;
   }
 
-  login(user: IUser): Observable<IUser> {
+  login(user: IUser, saveSession: boolean): Observable<IUser> {
     return this.recaptchaV3Service.execute('importantAction')
       .pipe(
         switchMap(token => this.httpClient.post<IUserDto>('user/login', {...user, token})),
@@ -72,7 +79,7 @@ export class UserService {
           token: res.token
         })),
         tap(res => {
-          this.setUser(res);
+          this.setUser(res, saveSession);
           this.user$.next(this.getUser());
           this.router.navigate(['dashboard']);
         })
@@ -97,6 +104,8 @@ export class UserService {
   logout() {
     if (this.isBrowser) {
       localStorage.removeItem('user');
+      localStorage.removeItem('save-session');
+      sessionStorage.removeItem('user');
       this.user$.next();
       this.router.navigate(['']);
     }
@@ -122,7 +131,7 @@ export class UserService {
           token: res.token
         })),
         tap(newUser => {
-          this.setUser(newUser);
+          this.setUser(newUser, localStorage.getItem('save-session') === 'true');
           this.user$.next(this.getUser());
 
           if (newPassword) {
