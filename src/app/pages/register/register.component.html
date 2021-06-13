@@ -1,20 +1,20 @@
 <div class="general-wrapper">
   <mat-card class="wrapper">
     <h2 style="margin-right: 8px;">{{'REGISTRATION.FORM_HEADER' | translate}}</h2>
-    <form [formGroup]="formGroup" (ngSubmit)="submit()">
+    <form [formGroup]="formGroup" (ngSubmit)="submit(form)" #form="ngForm">
       <div style="display:flex;">
         <div>
           <div style="margin-bottom: 26px;">
             <mat-form-field>
               <input matInput [formControl]="login" [placeholder]="'REGISTRATION.FIELDS.LOGIN.PLACEHOLDER' | translate">
-              <mat-icon matSuffix matTooltip="At least 6 latin letters and numbers long. Cannot be changed after you set it">
+              <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.LOGIN.TOOLTIP' | translate">
                 info_outlined
               </mat-icon>
               <mat-error *ngIf="login.hasError('minlength')">
-                Login should be at least 6 letters long
+                {{'REGISTRATION.FIELDS.LOGIN.ERROR1' | translate}}
               </mat-error>
               <mat-error *ngIf="login.hasError('pattern')">
-                Login should contain alphanumeric characters only
+                {{'REGISTRATION.FIELDS.LOGIN.ERROR2' | translate}}
               </mat-error>
             </mat-form-field>
           </div>
@@ -23,7 +23,7 @@
             <mat-form-field>
               <input matInput type="password" [formControl]="password" [placeholder]="'REGISTRATION.FIELDS.PASSWORD.PLACEHOLDER' | translate">
               <mat-error *ngIf="password.hasError('minlength')">
-                Password should be at least 6 letters long
+                {{'REGISTRATION.FIELDS.PASSWORD.ERROR1' | translate}}
               </mat-error>
             </mat-form-field>
           </div>
@@ -32,7 +32,7 @@
             <mat-form-field>
               <input matInput type="password" [formControl]="passwordRepeat" [placeholder]="'REGISTRATION.FIELDS.PASSWORD_REPEAT.PLACEHOLDER' | translate">
               <mat-error *ngIf="passwordRepeat.hasError('notequal')">
-                Password repeat should be the same as password
+                {{'REGISTRATION.FIELDS.PASSWORD_REPEAT.ERROR1' | translate}}
               </mat-error>
             </mat-form-field>
           </div>
@@ -41,27 +41,27 @@
           <div style="margin-bottom: 26px;">
             <mat-form-field>
               <input matInput [formControl]="email" [placeholder]="'REGISTRATION.FIELDS.EMAIL.PLACEHOLDER' | translate">
-              <mat-icon matSuffix matTooltip="We will use it just for password recovery">
+              <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.EMAIL.TOOLTIP' | translate">
                 info_outlined
               </mat-icon>
               <mat-error *ngIf="email.hasError('email')">
-                This is not a valid email
+                {{'REGISTRATION.FIELDS.EMAIL.ERROR1' | translate}}
               </mat-error>
             </mat-form-field>
           </div>
           <div style="margin-bottom: 16px;">
             <mat-form-field>
               <mat-select [formControl]="nativeLanguage" [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.PLACEHOLDER' | translate">
-                <mat-optgroup label="Recommended languages">
+                <mat-optgroup [label]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.RECOMMENDED_LANGUAGES' | translate">
                   <mat-option *ngFor="let lang of recommendedLanguages" [value]="lang.id">{{lang.nativeName}}</mat-option>
                 </mat-optgroup>
                 <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>
               </mat-select>
-              <mat-icon matSuffix matTooltip="After it is set, it cannot be changed">
+              <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.TOOLTIP' | translate">
                 info_outlined
               </mat-icon>
               <mat-error *ngIf="nativeLanguage.hasError('required')">
-                Native Language is a required field
+                {{'REGISTRATION.FIELDS.NATIVE_LANGUAGE.ERROR1' | translate}}
               </mat-error>
             </mat-form-field>
           </div>
@@ -72,7 +72,7 @@
                           [matTooltip]="getLanguagesValue(learningLanguages.value).join(', ')">
                 <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>
               </mat-select>
-              <mat-icon matSuffix matTooltip="It is needed just for you convenience">
+              <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.TOOLTIP' | translate">
                 info_outlined
               </mat-icon>
             </mat-form-field>
@@ -80,7 +80,10 @@
         </div>
       </div>
       <div style="display:flex; justify-content: space-between">
-        <button mat-raised-button color="primary" type="submit">{{'REGISTRATION.REGISTER' | translate}}</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+          <span *ngIf="!isLoading">{{'REGISTRATION.REGISTER' | translate}}</span>
+          <mat-spinner *ngIf="isLoading" [diameter]="20" color="accent"></mat-spinner>
+        </button>
         <div>
           <label>{{'REGISTRATION.ALREADY_REGISTERED' | translate}}</label>
           <button mat-button color="primary" routerLink="/login">{{'REGISTRATION.GOTO_LOGIN' | translate}}</button>

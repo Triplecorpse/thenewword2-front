@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {catchError} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from './user.service';
-import {MetadataService} from './metadata.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class InterceptorService implements HttpInterceptor {
 
   constructor(private userService: UserService,
               private snackBar: MatSnackBar,
-              private metadataService: MetadataService) {
+              private injector: Injector) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -42,11 +42,16 @@ export class InterceptorService implements HttpInterceptor {
     return next.handle(newReq)
       .pipe(
         catchError(error => {
-          if (error.status === 401) {
-            this.snackBar.open(`Bad credentials or token, please try to relogin`, '', {duration: 10000});
-          } else {
-            this.snackBar.open(`An error '${error.error?.type}' occurred to your request.`, '', {duration: 10000});
-          }
+          const translateService = this.injector.get(TranslateService);
+
+          translateService.get(`ERROR_CODES.${error.error.name}`)
+            .subscribe(message => {
+              if (message) {
+                this.snackBar.open(message, '', {duration: 10000});
+              } else {
+                this.snackBar.open(`An error occurred to your request.`, '', {duration: 10000});
+              }
+            });
 
           return throwError(error);
         })
