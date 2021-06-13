@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
@@ -30,11 +30,13 @@ export class ModalNewWordComponent implements OnInit {
     remarks: new FormControl(''),
     stressLetterIndex: new FormControl()
   });
+  stressLetterIndex: number;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
               private userService: UserService,
               private metadataService: MetadataService,
+              private changeDetection: ChangeDetectorRef,
               @Inject(MAT_DIALOG_DATA) public data: {word: IWord}) { }
 
   ngOnInit(): void {
@@ -91,9 +93,16 @@ export class ModalNewWordComponent implements OnInit {
   }
 
   setStressLetter(i: number) {
-    console.log(i);
+    if (i !== this.stressLetterIndex) {
+      this.stressLetterIndex = i;
+    } else {
+      this.stressLetterIndex = undefined;
+    }
+
     this.formGroup.patchValue({
-      stressLetterIndex: i
+      stressLetterIndex: this.stressLetterIndex
     });
+
+    this.changeDetection.markForCheck();
   }
 }

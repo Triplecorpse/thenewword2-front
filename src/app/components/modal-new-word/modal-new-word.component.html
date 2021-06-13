@@ -31,8 +31,8 @@
       <div style="font-family: monospace">
         <span style="margin-right: 8px">Stress letter:</span>
         <span *ngFor="let letter of getWordSpelling(); index as i" class="spell-letter" (click)="setStressLetter(i)">
-          <span>{{letter}}</span>
-          <span *ngIf="i === formGroup.value.stressLetterIndex">&#769;</span>
+          <span *ngIf="i !== stressLetterIndex">{{letter}}</span>
+          <span *ngIf="i === stressLetterIndex">{{letter}}&#769;</span>
         </span>
       </div>
 
