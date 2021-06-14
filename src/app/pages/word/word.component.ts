@@ -30,7 +30,8 @@ export class WordComponent implements OnInit {
     this.learningLanguages = this.userService.getUser().learningLanguages;
   }
 
-  openNewWordModal() {
+  openNewWordModal(event?: MouseEvent) {
+    event?.stopPropagation();
     this.dialog.open(ModalNewWordComponent)
       .afterClosed()
       .subscribe(() => {

@@ -71,7 +71,9 @@
     "LANGUAGE": "Мова",
     "GENDER": "Рід",
     "SPEECH_PART": "Частина мови",
-    "SEARCH": "Пошук"
+    "WORDSET": "Набір слів",
+    "SEARCH": "Пошук",
+    "EXERCISE_THIS": "Почати вчити цей набір слів"
   },
   "MODAL_WORDSET": {
     "HEADER_ADD": "Додати новий набір слів",
@@ -89,5 +91,25 @@
     "RECAPTCHA_ERROR": "Сталася помилка валідації Recaptcha. Якщо ця помилка повторюватиметься, зверніться за контактами на сайті",
     "USER_NOT_FOUND": "Користувача не знайдено в системі",
     "PASSWORD_CHECK_FAILED": "Користувач є в системі, але пароль до нього не підходить"
+  },
+  "GENDERS": {
+    "MASCULINE": "Чоловічий",
+    "FEMININE": "Жіночий",
+    "NEUTRAL": "Середній"
+  },
+  "SPEECH_PARTS": {
+    "NOUN":  "Іменник",
+    "PRONOUN": "Займенник",
+    "VERB":  "Дієслово",
+    "ADJECTIVE": "Прикметник",
+    "ADVERB":  "Присліник",
+    "PREPOSITION": "Прийменник",
+    "CONJUNCTION":  "Сполучник",
+    "INTERJECTION": "Вигук",
+    "NUMERAL":  "Числівник",
+    "PARTICLE":  "Частина",
+    "PARTICIPLE": "Дієприкметник",
+    "TRANSGRESSIVE":  "Дієприслівник",
+    "ARTICLE": "Артикль"
   }
 }

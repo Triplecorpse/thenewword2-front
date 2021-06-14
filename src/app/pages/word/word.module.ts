@@ -16,6 +16,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import {TranslateModule} from '@ngx-translate/core';
 import {ModalNewWordsetComponent} from "../../components/modal-new-wordset/modal-new-wordset.component";
 import {ModalNewWordsetModule} from "../../components/modal-new-wordset/modal-new-wordset.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -26,24 +27,25 @@ const routes: Routes = [
     WordComponent,
     WordListComponent
   ],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    RouterModule.forChild(routes),
-    MatDialogModule,
-    ModalNewWordModule,
-    ModalNewWordsetModule,
-    ModalConfirmModule,
-    MatCardModule,
-    MatTableModule,
-    MatIconModule,
-    MatSelectModule,
-    MatInputModule,
-    MatExpansionModule,
-    TranslateModule.forChild({
-      extend: true
-    })
-  ]
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        RouterModule.forChild(routes),
+        MatDialogModule,
+        ModalNewWordModule,
+        ModalNewWordsetModule,
+        ModalConfirmModule,
+        MatCardModule,
+        MatTableModule,
+        MatIconModule,
+        MatSelectModule,
+        MatInputModule,
+        MatExpansionModule,
+        TranslateModule.forChild({
+            extend: true
+        }),
+        MatTooltipModule
+    ]
 })
 export class WordModule {
 }

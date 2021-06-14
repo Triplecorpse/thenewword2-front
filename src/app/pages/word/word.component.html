@@ -8,6 +8,27 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-form-field style="margin-left: 8px;">
+      <mat-select [placeholder]="'WORDS.GENDER' | translate">
+        <mat-option *ngFor="let g of metadata.genders" [value]="g.id">
+          {{g.englishName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="margin-left: 8px;">
+      <mat-select [placeholder]="'WORDS.SPEECH_PART' | translate">
+        <mat-option *ngFor="let sp of metadata.speechParts" value="sp.id">
+          {{sp.englishName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="margin-left: 8px;">
+      <mat-select [placeholder]="'WORDS.WORDSET' | translate">
+        <mat-option *ngFor="let sp of metadata.speechParts" value="sp.id">
+          {{sp.englishName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <div>
     <mat-form-field style="margin-left: 8px;">
@@ -16,41 +37,26 @@
     </mat-form-field>
   </div>
 </mat-card>
-<mat-accordion multi>
-  <mat-expansion-panel [expanded]="true">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        Wordset
-      </mat-panel-title>
-      <mat-panel-description>
-        French
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <mat-card style="margin: 8px; display:flex; justify-content: space-between">
-      <div style="display: flex; align-items: center">
-        <button mat-flat-button (click)="openNewWordModal()" color="primary">{{'WORDS.NEW_WORD' | translate}}</button>
-        <mat-form-field style="margin-left: 8px;">
-          <mat-select [placeholder]="'WORDS.GENDER' | translate">
-            <mat-option *ngFor="let g of metadata.genders" [value]="g.id">
-              {{g.englishName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field style="margin-left: 8px;">
-          <mat-select [placeholder]="'WORDS.SPEECH_PART' | translate">
-            <mat-option *ngFor="let sp of metadata.speechParts" value="sp.id">
-              {{sp.englishName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field style="margin-left: 8px;">
-          <input matInput type="text" [placeholder]="'WORDS.SEARCH' | translate">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-      </div>
-    </mat-card>
-    <app-word-list [reload$]="wordListReload$"></app-word-list>
-  </mat-expansion-panel>
-</mat-accordion>
+<div style="margin: 0 8px;">
+  <mat-accordion multi>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header style="display:flex; justify-content: space-between; align-items: center">
+        <mat-panel-title style="display:flex; justify-content: space-between; align-items: center">
+          Wordset
+        </mat-panel-title>
+        <mat-panel-description style="display:flex; justify-content:space-between; align-items: center">
+          French
+          <div style="display:flex; justify-content:space-between; align-items: center">
+            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
+              <mat-icon>school</mat-icon>
+            </button>
+            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.NEW_WORD' | translate">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-word-list [reload$]="wordListReload$"></app-word-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
