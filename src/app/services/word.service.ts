@@ -1,8 +1,8 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {combineLatest, Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {IWord} from '../interfaces/IWord';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {IWordDto} from '../interfaces/dto/IWordDto';
 import {UserService} from './user.service';
 import {Word} from '../models/Word';
@@ -11,7 +11,9 @@ import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {IWordCheck} from '../interfaces/IWordCheck';
 import {IWordCheckDto} from '../interfaces/dto/IWordCheckDto';
 import {MetadataService} from './metadata.service';
-import {IWordMetadata} from "../interfaces/IWordMetadata";
+import {IWordSet} from "../interfaces/IWordSet";
+import {IWordSetDto} from "../interfaces/dto/IWordSetDto";
+import {WordSet} from "../models/WordSet";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,11 @@ export class WordService {
       .pipe(map(wordsDto => wordsDto.map(wordDto => this.wordFromDto(wordDto))));
   }
 
+  getWordSets$(): Observable<IWordSet[]> {
+    return this.httpClient.get<IWordSetDto[]>('wordset/get')
+      .pipe(map(wordSetsDto => wordSetsDto.map(wordSetDto => this.wordSetFromDto(wordSetDto))));
+  }
+
   addOrModifyWord(word: IWord): Observable<void> {
     if (word.dbid) {
       return this.httpClient.put('word/edit', this.dtoFromWord(word))
@@ -45,6 +52,18 @@ export class WordService {
       }));
   }
 
+  addOrModifyWordSet(wordSet: IWordSet): Observable<void> {
+    if (wordSet.id) {
+      return this.httpClient.put('wordset/edit', this.dtoFromWordSet(wordSet))
+        .pipe(map(() => {
+        }));
+    }
+
+    return this.httpClient.post('wordset/add', this.dtoFromWordSet(wordSet))
+      .pipe(map(() => {
+      }));
+  }
+
   remove(id: number): Observable<void> {
     return this.httpClient.delete('word/remove', {params: {id: id.toString()}})
       .pipe(map(() => {}));
@@ -52,6 +71,10 @@ export class WordService {
 
   wordFromDto(wordDto: IWordDto): IWord {
     return new Word(wordDto, this.metadataService.metadata, this.userService.getUser() as IUser);
+  }
+
+  wordSetFromDto(wordSetDto: IWordSetDto): IWordSet {
+    return new WordSet(wordSetDto);
   }
 
   dtoFromWord(word: IWord): IWordDto {
@@ -66,6 +89,16 @@ export class WordService {
       id: word.dbid,
       forms: word.forms,
       gender_id: word.gender?.id
+    };
+  }
+
+  dtoFromWordSet(wordSet: IWordSet): IWordSetDto {
+    return {
+      id: wordSet.id,
+      words: wordSet.words.map(({dbid}) => dbid),
+      name: wordSet.name,
+      original_language_id: wordSet.originalLanguage.id,
+      translated_language_id: wordSet.translatedlanguage.id
     };
   }
 

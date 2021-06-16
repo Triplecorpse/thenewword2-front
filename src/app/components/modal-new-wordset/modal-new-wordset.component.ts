@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
+import {WordService} from "../../services/word.service";
 
 @Component({
   selector: 'app-modal-new-wordset',
@@ -19,12 +20,28 @@ export class ModalNewWordsetComponent implements OnInit {
   learningLanguages = User.learningLanguages;
   nativeLanguage = User.nativeLanguage;
 
-  constructor(private dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: {wordSet: IWordSet}) { }
+  constructor(private wordService: WordService,
+              private dialogRef: MatDialogRef<any>,
+              @Inject(MAT_DIALOG_DATA) public data: {wordSet: IWordSet}) { }
 
   ngOnInit(): void {
   }
 
   saveWordSet() {
+    if (this.formGroup.value) {
+      const form = this.formGroup.value;
+      const wordSetDto = this.wordService.wordSetFromDto({
+        id: this.data?.wordSet.id,
+        words: [],
+        name: form.name,
+        translated_language_id: form.toLanguage,
+        original_language_id: form.fromLanguage
+      });
 
+      this.wordService.addOrModifyWordSet(wordSetDto)
+        .subscribe(() => {
+          this.dialogRef.close(true);
+        });
+    }
   }
 }
