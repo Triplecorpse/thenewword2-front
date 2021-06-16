@@ -28,6 +28,9 @@ export class WordComponent implements OnInit {
   ngOnInit(): void {
     this.metadata = this.metadataService.metadata;
     this.learningLanguages = this.userService.getUser().learningLanguages;
+    this.wordService.getWordSets$().subscribe(w => {
+      console.log(w);
+    });
   }
 
   openNewWordModal(event?: MouseEvent) {

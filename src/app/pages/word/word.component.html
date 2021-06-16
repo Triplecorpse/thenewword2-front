@@ -53,6 +53,12 @@
             <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.NEW_WORD' | translate">
               <mat-icon>add</mat-icon>
             </button>
+            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EDIT' | translate">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="warn" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.DELETE' | translate">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </mat-panel-description>
       </mat-expansion-panel-header>
