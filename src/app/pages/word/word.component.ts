@@ -94,13 +94,15 @@ export class WordComponent implements OnInit {
       });
   }
 
-  openEditWordSetModal($event: MouseEvent, wordSet: IWordSet) {
-    this.dialog.open(ModalNewWordsetComponent, {
-      data: {wordSet}
+  openEditWordSetModal(event: MouseEvent, wordSet: IWordSet) {
+    event.stopPropagation();
+    this.dialog.open<any, IWordSet, IWordSet>(ModalNewWordsetComponent, {
+      data: {...wordSet}
     })
       .afterClosed()
-      .subscribe(() => {
-        this.wordListReload$.next();
+      .subscribe((wordSet: IWordSet) => {
+        const index = this.wordsets.findIndex(ws => ws.id === wordSet.id);
+        this.wordsets[index] = wordSet;
       });
   }
 }

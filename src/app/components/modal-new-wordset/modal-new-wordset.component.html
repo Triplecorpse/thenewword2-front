@@ -1,7 +1,7 @@
 <div>
-  <h2 mat-dialog-title>{{(isEditing ? 'MODAL_WORDSET.HEADER_MODIFY' : 'MODAL_WORDSET.HEADER_ADD') | translate}}</h2>
-  <div>
-    <form [formGroup]="formGroup">
+  <form [formGroup]="formGroup">
+    <h2 mat-dialog-title>{{(isEditing ? 'MODAL_WORDSET.HEADER_MODIFY' : 'MODAL_WORDSET.HEADER_ADD') | translate}}</h2>
+    <div>
       <div>
         <mat-form-field>
           <input matInput [placeholder]="'MODAL_WORDSET.NAME' | translate" formControlName="name">
@@ -27,10 +27,10 @@
           </mat-select>
         </mat-form-field>
       </div>
-    </form>
-  </div>
-  <div>
-    <button mat-flat-button (click)="saveWordSet()" color="primary">{{(isEditing ? 'MODAL_WORDSET.SUBMIT_MODIFY' : 'MODAL_WORDSET.SUBMIT_ADD') | translate}}</button>
-    <button mat-button mat-dialog-close>{{'MODAL_WORDSET.CANCEL' | translate}}</button>
-  </div>
+    </div>
+    <div>
+      <button mat-flat-button (click)="saveWordSet()" type="submit" color="primary">{{(isEditing ? 'MODAL_WORDSET.SUBMIT_MODIFY' : 'MODAL_WORDSET.SUBMIT_ADD') | translate}}</button>
+      <button mat-button mat-dialog-close type="button">{{'MODAL_WORDSET.CANCEL' | translate}}</button>
+    </div>
+  </form>
 </div>

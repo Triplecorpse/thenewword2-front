@@ -52,16 +52,18 @@ export class WordService {
       }));
   }
 
-  addOrModifyWordSet(wordSet: IWordSet): Observable<void> {
+  addOrModifyWordSet(wordSet: IWordSet): Observable<IWordSet> {
     if (wordSet.id) {
-      return this.httpClient.put('wordset/edit', this.dtoFromWordSet(wordSet))
-        .pipe(map(() => {
-        }));
+      return this.httpClient.put<IWordSetDto>('wordset/edit', this.dtoFromWordSet(wordSet))
+        .pipe(
+          map(wordSetDto => this.wordSetFromDto(wordSetDto))
+        );
     }
 
-    return this.httpClient.post('wordset/add', this.dtoFromWordSet(wordSet))
-      .pipe(map(() => {
-      }));
+    return this.httpClient.post<IWordSetDto>('wordset/add', this.dtoFromWordSet(wordSet))
+      .pipe(
+        map(wordSetDto => this.wordSetFromDto(wordSetDto))
+      );
   }
 
   remove(id: number): Observable<void> {
@@ -101,8 +103,8 @@ export class WordService {
     return {
       id: wordSet.id,
       name: wordSet.name,
-      original_language_id: wordSet.originalLanguage.id,
-      translated_language_id: wordSet.translatedlanguage.id
+      original_language_id: wordSet.originalLanguage?.id,
+      translated_language_id: wordSet.translatedlanguage?.id
     };
   }
 
