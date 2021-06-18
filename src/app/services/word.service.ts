@@ -69,6 +69,11 @@ export class WordService {
       .pipe(map(() => {}));
   }
 
+  removeWordset(id: number): Observable<void> {
+    return this.httpClient.delete('wordset/remove', {params: {id: id.toString()}})
+      .pipe(map(() => {}));
+  }
+
   wordFromDto(wordDto: IWordDto): IWord {
     return new Word(wordDto, this.metadataService.metadata, this.userService.getUser() as IUser);
   }
@@ -95,7 +100,6 @@ export class WordService {
   dtoFromWordSet(wordSet: IWordSet): IWordSetDto {
     return {
       id: wordSet.id,
-      words: wordSet.words.map(({dbid}) => dbid),
       name: wordSet.name,
       original_language_id: wordSet.originalLanguage.id,
       translated_language_id: wordSet.translatedlanguage.id

@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {TranslateService} from "@ngx-translate/core";
 
 export interface IModalConfirm {
   header: string;
@@ -21,5 +22,4 @@ export class ModalConfirmComponent implements OnInit {
     this.header = this.data.header;
     this.body = this.data.body;
   }
-
 }

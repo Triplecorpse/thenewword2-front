@@ -22,7 +22,6 @@ export class WordSet implements IWordSet {
   convertToDto(): IWordSetDto {
     return {
       id: this.id,
-      words: this.words.map(({dbid}) => dbid),
       name: this.name,
       original_language_id: this.originalLanguage.id,
       translated_language_id: this.translatedlanguage.id

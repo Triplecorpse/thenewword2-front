@@ -39,13 +39,13 @@
 </mat-card>
 <div style="margin: 0 8px;">
   <mat-accordion multi>
-    <mat-expansion-panel>
+    <mat-expansion-panel *ngFor="let wordset of wordsets" (opened)="wordsetOpened(wordset)">
       <mat-expansion-panel-header style="display:flex; justify-content: space-between; align-items: center">
         <mat-panel-title style="display:flex; justify-content: space-between; align-items: center">
-          Wordset
+          {{wordset.name}}
         </mat-panel-title>
         <mat-panel-description style="display:flex; justify-content:space-between; align-items: center">
-          French
+          {{wordset.translatedlanguage.nativeName}}
           <div style="display:flex; justify-content:space-between; align-items: center">
             <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
               <mat-icon>school</mat-icon>
@@ -53,10 +53,10 @@
             <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.NEW_WORD' | translate">
               <mat-icon>add</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EDIT' | translate">
+            <button mat-mini-fab type="button" (click)="openEditWordSetModal($event, wordset)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EDIT' | translate">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="warn" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.DELETE' | translate">
+            <button mat-mini-fab type="button" (click)="openDeleteWordSetModal($event, wordset)" color="warn" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.DELETE' | translate">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
