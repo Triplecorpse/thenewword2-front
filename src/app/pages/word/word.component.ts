@@ -50,10 +50,10 @@ export class WordComponent implements OnInit {
   }
 
   openNewWordSetModal() {
-    this.dialog.open(ModalNewWordsetComponent)
+    this.dialog.open<any, null, IWordSet>(ModalNewWordsetComponent)
       .afterClosed()
-      .subscribe(() => {
-        this.updateWordSets();
+      .subscribe((wordSet: IWordSet) => {
+        this.wordsets.push(wordSet);
       });
   }
 
