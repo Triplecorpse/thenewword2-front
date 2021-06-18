@@ -12,6 +12,7 @@ import {IWordSet} from "../../interfaces/IWordSet";
 import {IModalConfirm, ModalConfirmComponent} from "../../components/modal-confirm/modal-confirm.component";
 import {filter, switchMap, take} from "rxjs/operators";
 import {TranslateService} from "@ngx-translate/core";
+import {IWord} from "../../interfaces/IWord";
 
 @Component({
   selector: 'app-word',
@@ -42,7 +43,7 @@ export class WordComponent implements OnInit {
 
   openNewWordModal(event?: MouseEvent) {
     event?.stopPropagation();
-    this.dialog.open(ModalNewWordComponent)
+    this.dialog.open<any, null, IWord>(ModalNewWordComponent)
       .afterClosed()
       .subscribe(() => {
         this.wordListReload$.next();
