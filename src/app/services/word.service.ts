@@ -40,14 +40,14 @@ export class WordService {
       .pipe(map(wordSetsDto => wordSetsDto.map(wordSetDto => this.wordSetFromDto(wordSetDto))));
   }
 
-  addOrModifyWord(word: IWord): Observable<void> {
+  addOrModifyWord(word: IWord, wordSetId?: number): Observable<void> {
     if (word.dbid) {
-      return this.httpClient.put('word/edit', this.dtoFromWord(word))
+      return this.httpClient.put('word/edit', this.dtoFromWord(word, wordSetId))
         .pipe(map(() => {
         }));
     }
 
-    return this.httpClient.post('word/add', this.dtoFromWord(word))
+    return this.httpClient.post('word/add', this.dtoFromWord(word, wordSetId))
       .pipe(map(() => {
       }));
   }
@@ -84,7 +84,7 @@ export class WordService {
     return new WordSet(wordSetDto);
   }
 
-  dtoFromWord(word: IWord): IWordDto {
+  dtoFromWord(word: IWord, wordSetId?: number): IWordDto {
     return {
       word: word.word,
       translated_language_id: word.translatedLanguage?.id,
@@ -95,7 +95,9 @@ export class WordService {
       translations: word.translations,
       id: word.dbid,
       forms: word.forms,
-      gender_id: word.gender?.id
+      gender_id: word.gender?.id,
+      transcription: word.transcription,
+      word_set_id: wordSetId
     };
   }
 

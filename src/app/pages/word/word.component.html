@@ -47,10 +47,10 @@
         <mat-panel-description style="display:flex; justify-content:space-between; align-items: center">
           {{wordset.translatedlanguage.nativeName}}
           <div style="display:flex; justify-content:space-between; align-items: center">
-            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
+            <button mat-mini-fab type="button" (click)="openNewWordModal($event, wordset)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
               <mat-icon>school</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openNewWordModal($event)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.NEW_WORD' | translate">
+            <button mat-mini-fab type="button" (click)="openNewWordModal($event, wordset)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.NEW_WORD' | translate">
               <mat-icon>add</mat-icon>
             </button>
             <button mat-mini-fab type="button" (click)="openEditWordSetModal($event, wordset)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EDIT' | translate">

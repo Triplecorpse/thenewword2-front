@@ -38,12 +38,12 @@ export class WordComponent implements OnInit {
     this.wordService.getWordSets$()
       .subscribe(wordsets => {
         this.wordsets = wordsets;
-      })
+      });
   }
 
-  openNewWordModal(event?: MouseEvent) {
+  openNewWordModal(event: MouseEvent, wordset: IWordSet) {
     event?.stopPropagation();
-    this.dialog.open<any, null, IWord>(ModalNewWordComponent)
+    this.dialog.open<any, number, IWord>(ModalNewWordComponent, {data: wordset.id})
       .afterClosed()
       .subscribe(() => {
         this.wordListReload$.next();

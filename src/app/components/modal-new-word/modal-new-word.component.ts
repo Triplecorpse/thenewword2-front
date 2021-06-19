@@ -31,13 +31,15 @@ export class ModalNewWordComponent implements OnInit {
     stressLetterIndex: new FormControl()
   });
   stressLetterIndex: number;
+  idEditing: number;
+  wordSetId: number;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
               private userService: UserService,
               private metadataService: MetadataService,
               private changeDetection: ChangeDetectorRef,
-              @Inject(MAT_DIALOG_DATA) public data: {word: IWord}) { }
+              @Inject(MAT_DIALOG_DATA) public data: IWord | number) { }
 
   ngOnInit(): void {
     this.wordMetadata = {
@@ -50,18 +52,21 @@ export class ModalNewWordComponent implements OnInit {
     this.formGroup.patchValue({
       fromLanguage: this.nativeLanguage.id
     });
-    if (this.data?.word) {
+    if (typeof this.data === 'object') {
       this.isEditing = true;
+      this.idEditing = this.data.dbid;
       this.formGroup.setValue({
-        word: this.data.word.word,
-        translations: this.data.word.translations.join(', '),
-        fromLanguage: this.data.word.originalLanguage.id,
-        toLanguage: this.data.word.translatedLanguage.id,
-        speechPart: this.data.word.speechPart.id,
-        gender: this.data.word.gender.id,
-        forms: this.data.word.forms.join(', '),
-        remarks: this.data.word.remarks
+        word: this.data.word,
+        translations: this.data.translations.join(', '),
+        fromLanguage: this.data.originalLanguage.id,
+        toLanguage: this.data.translatedLanguage.id,
+        speechPart: this.data.speechPart.id,
+        gender: this.data.gender.id,
+        forms: this.data.forms.join(', '),
+        remarks: this.data.remarks
       });
+    } else if (typeof this.data === 'number') {
+      this.wordSetId = this.data;
     }
   }
 
@@ -69,7 +74,8 @@ export class ModalNewWordComponent implements OnInit {
     if (this.formGroup.value) {
       const form = this.formGroup.value;
       const wordDto = this.wordService.wordFromDto({
-        id: this.data?.word.dbid,
+        id: this.idEditing,
+        transcription: form.tramscription,
         word: form.word,
         gender_id: form.gender,
         forms: form.forms.split(','),
@@ -78,7 +84,8 @@ export class ModalNewWordComponent implements OnInit {
         remarks: form.remarks,
         stress_letter_index: 0,
         original_language_id: form.fromLanguage,
-        translated_language_id: form.toLanguage
+        translated_language_id: form.toLanguage,
+        word_set_id: this.wordSetId
       });
 
       this.wordService.addOrModifyWord(wordDto)
