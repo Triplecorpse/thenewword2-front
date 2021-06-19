@@ -1,5 +1,5 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {IWord} from '../interfaces/IWord';
 import {map} from 'rxjs/operators';
@@ -11,9 +11,21 @@ import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {IWordCheck} from '../interfaces/IWordCheck';
 import {IWordCheckDto} from '../interfaces/dto/IWordCheckDto';
 import {MetadataService} from './metadata.service';
-import {IWordSet} from "../interfaces/IWordSet";
-import {IWordSetDto} from "../interfaces/dto/IWordSetDto";
-import {WordSet} from "../models/WordSet";
+import {IWordSet} from '../interfaces/IWordSet';
+import {IWordSetDto} from '../interfaces/dto/IWordSetDto';
+import {WordSet} from '../models/WordSet';
+
+export interface IWordFilterData {
+  word?: string;
+  translations?: string;
+  speech_part_id?: number;
+  gender_id?: number;
+  original_language_id?: number;
+  translated_language_id?: number;
+  remarks?: string;
+  word_set_id?: number;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +42,10 @@ export class WordService {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  getWords$(): Observable<IWord[]> {
-    return this.httpClient.get<IWordDto[]>('word/get')
+  getWords$(filter: IWordFilterData = {}): Observable<IWord[]> {
+    const params = new HttpParams({fromObject: {...filter as any}});
+
+    return this.httpClient.get<IWordDto[]>('word/get', {params})
       .pipe(map(wordsDto => wordsDto.map(wordDto => this.wordFromDto(wordDto))));
   }
 
@@ -68,12 +82,14 @@ export class WordService {
 
   remove(id: number): Observable<void> {
     return this.httpClient.delete('word/remove', {params: {id: id.toString()}})
-      .pipe(map(() => {}));
+      .pipe(map(() => {
+      }));
   }
 
   removeWordset(id: number): Observable<void> {
     return this.httpClient.delete('wordset/remove', {params: {id: id.toString()}})
-      .pipe(map(() => {}));
+      .pipe(map(() => {
+      }));
   }
 
   wordFromDto(wordDto: IWordDto): IWord {

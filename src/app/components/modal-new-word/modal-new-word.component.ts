@@ -39,7 +39,7 @@ export class ModalNewWordComponent implements OnInit {
               private userService: UserService,
               private metadataService: MetadataService,
               private changeDetection: ChangeDetectorRef,
-              @Inject(MAT_DIALOG_DATA) public data: IWord | number) { }
+              @Inject(MAT_DIALOG_DATA) public data: IWord | number | undefined) { }
 
   ngOnInit(): void {
     this.wordMetadata = {
@@ -88,7 +88,7 @@ export class ModalNewWordComponent implements OnInit {
         word_set_id: this.wordSetId
       });
 
-      this.wordService.addOrModifyWord(wordDto)
+      this.wordService.addOrModifyWord(wordDto, this.wordSetId)
         .subscribe(() => {
           this.dialogRef.close(true);
         });

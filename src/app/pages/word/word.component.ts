@@ -8,11 +8,11 @@ import {MetadataService} from '../../services/metadata.service';
 import {UserService} from '../../services/user.service';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {ModalNewWordsetComponent} from '../../components/modal-new-wordset/modal-new-wordset.component';
-import {IWordSet} from "../../interfaces/IWordSet";
-import {IModalConfirm, ModalConfirmComponent} from "../../components/modal-confirm/modal-confirm.component";
-import {filter, switchMap, take} from "rxjs/operators";
-import {TranslateService} from "@ngx-translate/core";
-import {IWord} from "../../interfaces/IWord";
+import {IWordSet} from '../../interfaces/IWordSet';
+import {IModalConfirm, ModalConfirmComponent} from '../../components/modal-confirm/modal-confirm.component';
+import {filter, switchMap, take} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {IWord} from '../../interfaces/IWord';
 
 @Component({
   selector: 'app-word',
@@ -73,7 +73,7 @@ export class WordComponent implements OnInit {
               body: translationResult[1]
             }
           })
-            .afterClosed()
+            .afterClosed();
         }),
         take(1),
         filter(result => !!result),
@@ -85,7 +85,7 @@ export class WordComponent implements OnInit {
   }
 
   wordsetOpened(wordset: IWordSet) {
-    console.log(wordset);
+    this.wordService.getWords$({word_set_id: wordset.id}).subscribe();
   }
 
   private updateWordSets() {
