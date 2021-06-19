@@ -62,7 +62,7 @@
           </div>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <app-word-list [reload$]="wordListReload$"></app-word-list>
+      <app-word-list [reload$]="wordListReload$" [words]="loadedWords[wordset.id]"></app-word-list>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

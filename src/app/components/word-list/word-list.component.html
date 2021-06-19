@@ -1,37 +1,36 @@
-<div *ngIf="words$ | async">
-  <table mat-table [dataSource]="words$ | async" class="mat-elevation-z8">
+<div *ngIf="words">
+  <table mat-table [dataSource]="words" class="mat-elevation-z8">
     <ng-container matColumnDef="word">
-      <th mat-header-cell *matHeaderCellDef>Word</th>
+      <th mat-header-cell *matHeaderCellDef>{{'WORDS.WORD' | translate}}</th>
       <td mat-cell *matCellDef="let element"> {{element.word}} </td>
     </ng-container>
 
-    <!-- Name Column -->
     <ng-container matColumnDef="translations">
-      <th mat-header-cell *matHeaderCellDef>Translations</th>
+      <th mat-header-cell *matHeaderCellDef>{{'WORDS.TRANSLATIONS' | translate}}</th>
       <td mat-cell *matCellDef="let element"> {{element.translations}} </td>
     </ng-container>
 
     <ng-container matColumnDef="from_language">
-      <th mat-header-cell *matHeaderCellDef>Language</th>
+      <th mat-header-cell *matHeaderCellDef>{{'WORDS.LANGUAGE' | translate}}</th>
       <td mat-cell *matCellDef="let element"> {{element.translatedLanguage.englishName}} </td>
     </ng-container>
 
     <ng-container matColumnDef="gender">
-      <th mat-header-cell *matHeaderCellDef>Gender</th>
-      <td mat-cell *matCellDef="let element"> {{element.gender?.englishName}} </td>
+      <th mat-header-cell *matHeaderCellDef>{{'WORDS.GENDER' | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{'GENDERS.' + element.gender?.englishName.toUpperCase() | translate}} </td>
     </ng-container>
 
     <ng-container matColumnDef="speech_part">
-      <th mat-header-cell *matHeaderCellDef>Speech Part</th>
-      <td mat-cell *matCellDef="let element"> {{element.speechPart.englishName}} </td>
+      <th mat-header-cell *matHeaderCellDef>{{'WORDS.SPEECH_PART' | translate}}</th>
+      <td mat-cell *matCellDef="let element"> {{'SPEECH_PARTS.' + element.speechPart?.englishName.toUpperCase() | translate}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <div style="display:flex; justify-content: flex-end">
-          <button mat-icon-button (click)="openEditWordModal(element)"><mat-icon>edit</mat-icon></button>
-          <button mat-icon-button (click)="openDeleteWordModal(element)"><mat-icon>delete</mat-icon></button>
+          <button mat-icon-button (click)="openEditWordModal(element)" [matTooltip]="'WORDS.EDIT_WORD' | translate"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button (click)="openDeleteWordModal(element)" [matTooltip]="'WORDS.DELETE_WORD' | translate"><mat-icon>delete</mat-icon></button>
         </div>
       </td>
     </ng-container>

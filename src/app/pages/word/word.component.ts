@@ -24,6 +24,7 @@ export class WordComponent implements OnInit {
   wordListReload$ = new Subject<void>();
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
+  loadedWords: {[key: number]: IWord[]} = {};
 
   constructor(private dialog: MatDialog,
               private wordService: WordService,
@@ -85,7 +86,12 @@ export class WordComponent implements OnInit {
   }
 
   wordsetOpened(wordset: IWordSet) {
-    this.wordService.getWords$({word_set_id: wordset.id}).subscribe();
+    if (!this.loadedWords[wordset.id]) {
+      this.wordService.getWords$({word_set_id: wordset.id})
+        .subscribe(words => {
+          this.loadedWords[wordset.id] = words;
+        });
+    }
   }
 
   private updateWordSets() {
@@ -101,9 +107,10 @@ export class WordComponent implements OnInit {
       data: {...wordSet}
     })
       .afterClosed()
-      .subscribe((wordSet: IWordSet) => {
-        const index = this.wordsets.findIndex(ws => ws.id === wordSet.id);
-        this.wordsets[index] = wordSet;
+      .pipe(filter(r => !!r))
+      .subscribe((newWordSet: IWordSet) => {
+        const index = this.wordsets.findIndex(ws => ws.id === newWordSet.id);
+        this.wordsets[index] = newWordSet;
       });
   }
 }

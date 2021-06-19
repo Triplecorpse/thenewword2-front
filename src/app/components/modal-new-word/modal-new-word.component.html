@@ -1,13 +1,13 @@
 <div>
-  <h2 mat-dialog-title>{{isEditing ? 'Modify a word' : 'Add new word'}}</h2>
+  <h2 mat-dialog-title>{{(isEditing ? 'MODAL_WORD.HEADER_MODIFY' : 'MODAL_WORD.HEADER_ADD') | translate}}</h2>
   <div>
     <form [formGroup]="formGroup">
       <div>
         <mat-form-field>
-          <input matInput placeholder="Word" formControlName="word">
+          <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word">
         </mat-form-field>
         <mat-form-field>
-          <mat-select placeholder="Language" formControlName="toLanguage">
+          <mat-select [placeholder]="'MODAL_WORD.FROM_LANGUAGE' | translate" formControlName="fromLanguage">
             <mat-option *ngFor="let l of learningLanguages" [value]="l.id">
               {{l.nativeName}}
             </mat-option>
@@ -17,10 +17,10 @@
 
       <div>
         <mat-form-field>
-          <input matInput placeholder="Comma separated translations" formControlName="translations">
+          <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations">
         </mat-form-field>
         <mat-form-field>
-          <mat-select placeholder="Language" formControlName="fromLanguage">
+          <mat-select [placeholder]="'MODAL_WORD.TO_LANGUAGE' | translate" formControlName="toLanguage">
             <mat-option [value]="nativeLanguage.id">
               {{nativeLanguage.nativeName}}
             </mat-option>
@@ -29,7 +29,7 @@
       </div>
 
       <div style="font-family: monospace">
-        <span style="margin-right: 8px">Stress letter:</span>
+        <span style="margin-right: 8px">{{'MODAL_WORD.STRESS_LETTER' | translate}}:</span>
         <span *ngFor="let letter of getWordSpelling(); index as i" class="spell-letter" (click)="setStressLetter(i)">
           <span *ngIf="i !== stressLetterIndex">{{letter}}</span>
           <span *ngIf="i === stressLetterIndex">{{letter}}&#769;</span>
@@ -38,15 +38,15 @@
 
       <div>
         <mat-form-field>
-          <input matInput placeholder="Transcription" formControlName="transcription">
+          <input matInput [placeholder]="'MODAL_WORD.TRANSCRIPTION' | translate" formControlName="transcription">
         </mat-form-field>
       </div>
 
       <div>
         <mat-form-field>
-          <mat-select placeholder="Speech part" formControlName="speechPart">
+          <mat-select [placeholder]="'MODAL_WORD.SPEECH_PART' | translate" formControlName="speechPart">
             <mat-option *ngFor="let sp of wordMetadata.speechParts" [value]="sp.id">
-              {{sp.englishName}}
+              {{"SPEECH_PARTS." + sp.englishName.toUpperCase() | translate}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -54,9 +54,9 @@
 
       <div>
         <mat-form-field>
-          <mat-select placeholder="Gender" formControlName="gender">
+          <mat-select [placeholder]="'MODAL_WORD.GENDER' | translate" formControlName="gender">
             <mat-option *ngFor="let g of wordMetadata.genders" [value]="g.id">
-              {{g.englishName}}
+              {{"GENDERS." + g.englishName.toUpperCase() | translate}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -64,19 +64,19 @@
 
       <div>
         <mat-form-field>
-          <input matInput placeholder="Forms" formControlName="forms">
+          <input matInput [placeholder]="'MODAL_WORD.FORMS' | translate" formControlName="forms">
         </mat-form-field>
       </div>
 
       <div>
         <mat-form-field>
-          <input matInput placeholder="Any remarks" formControlName="remarks">
+          <input matInput [placeholder]="'MODAL_WORD.REMARKS' | translate" formControlName="remarks">
         </mat-form-field>
       </div>
     </form>
   </div>
   <div>
-    <button mat-flat-button (click)="saveWord()" color="primary">{{isEditing ? 'Modify' : 'Save'}}</button>
-    <button mat-button mat-dialog-close>Discard</button>
+    <button mat-flat-button (click)="saveWord()" color="primary">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</button>
+    <button mat-button mat-dialog-close>{{'MODAL_WORD.CANCEL' | translate}}</button>
   </div>
 </div>

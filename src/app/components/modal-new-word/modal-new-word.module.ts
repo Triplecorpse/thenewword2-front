@@ -7,6 +7,7 @@ import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatDialogModule} from '@angular/material/dialog';
+import {TranslateModule} from "@ngx-translate/core";
 
 
 
@@ -19,7 +20,8 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatOptionModule,
         MatSelectModule,
         ReactiveFormsModule,
-        MatDialogModule
+        MatDialogModule,
+        TranslateModule
     ]
 })
 export class ModalNewWordModule { }
