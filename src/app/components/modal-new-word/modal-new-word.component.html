@@ -1,7 +1,7 @@
 <div>
-  <h2 mat-dialog-title>{{(isEditing ? 'MODAL_WORD.HEADER_MODIFY' : 'MODAL_WORD.HEADER_ADD') | translate}}</h2>
-  <div>
-    <form [formGroup]="formGroup">
+  <form [formGroup]="formGroup">
+    <h2 mat-dialog-title>{{(isEditing ? 'MODAL_WORD.HEADER_MODIFY' : 'MODAL_WORD.HEADER_ADD') | translate}}</h2>
+    <div>
       <div>
         <mat-form-field>
           <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word">
@@ -73,10 +73,11 @@
           <input matInput [placeholder]="'MODAL_WORD.REMARKS' | translate" formControlName="remarks">
         </mat-form-field>
       </div>
-    </form>
-  </div>
-  <div>
-    <button mat-flat-button (click)="saveWord()" color="primary">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</button>
-    <button mat-button mat-dialog-close>{{'MODAL_WORD.CANCEL' | translate}}</button>
-  </div>
+    </div>
+    <div>
+      <button mat-flat-button (click)="saveWord()"
+              color="primary">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</button>
+      <button mat-button mat-dialog-close>{{'MODAL_WORD.CANCEL' | translate}}</button>
+    </div>
+  </form>
 </div>
