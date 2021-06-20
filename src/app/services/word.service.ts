@@ -54,16 +54,14 @@ export class WordService {
       .pipe(map(wordSetsDto => wordSetsDto.map(wordSetDto => this.wordSetFromDto(wordSetDto))));
   }
 
-  addOrModifyWord(word: IWord, wordSetId?: number): Observable<void> {
+  addOrModifyWord(word: IWord, wordSetId?: number): Observable<IWord> {
     if (word.dbid) {
-      return this.httpClient.put('word/edit', this.dtoFromWord(word, wordSetId))
-        .pipe(map(() => {
-        }));
+      return this.httpClient.put<IWordDto>('word/edit', this.dtoFromWord(word, wordSetId))
+        .pipe(map(wordDto => this.wordFromDto(wordDto)));
     }
 
-    return this.httpClient.post('word/add', this.dtoFromWord(word, wordSetId))
-      .pipe(map(() => {
-      }));
+    return this.httpClient.post<IWordDto>('word/add', this.dtoFromWord(word, wordSetId))
+      .pipe(map(wordDto => this.wordFromDto(wordDto)));
   }
 
   addOrModifyWordSet(wordSet: IWordSet): Observable<IWordSet> {
@@ -93,7 +91,7 @@ export class WordService {
   }
 
   wordFromDto(wordDto: IWordDto): IWord {
-    return new Word(wordDto, this.metadataService.metadata, this.userService.getUser() as IUser);
+    return new Word(wordDto, this.userService.getUser() as IUser);
   }
 
   wordSetFromDto(wordSetDto: IWordSetDto): IWordSet {

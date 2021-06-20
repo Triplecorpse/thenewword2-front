@@ -7,7 +7,7 @@
           <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word">
         </mat-form-field>
         <mat-form-field>
-          <mat-select [placeholder]="'MODAL_WORD.FROM_LANGUAGE' | translate" formControlName="fromLanguage">
+          <mat-select [placeholder]="'MODAL_WORD.FROM_LANGUAGE' | translate" formControlName="foreignLanguage">
             <mat-option *ngFor="let l of learningLanguages" [value]="l.id">
               {{l.nativeName}}
             </mat-option>
@@ -20,7 +20,7 @@
           <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations">
         </mat-form-field>
         <mat-form-field>
-          <mat-select [placeholder]="'MODAL_WORD.TO_LANGUAGE' | translate" formControlName="toLanguage">
+          <mat-select [placeholder]="'MODAL_WORD.TO_LANGUAGE' | translate" formControlName="nativeLanguage">
             <mat-option [value]="nativeLanguage.id">
               {{nativeLanguage.nativeName}}
             </mat-option>

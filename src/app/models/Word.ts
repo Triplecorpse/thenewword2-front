@@ -22,16 +22,16 @@ export class Word implements IWord {
   userCreated?: IUser;
   transcription: string;
 
-  constructor(wordDto?: IWordDto, wordMetadata?: IWordMetadata, user?: IUser) {
-    wordMetadata = wordMetadata || Metadata;
+  constructor(wordDto?: IWordDto, user?: IUser) {
     user = user || User;
 
-    const speechParts = wordMetadata?.speechParts;
-    const genders = wordMetadata?.genders;
-    const languages = wordMetadata?.languages;
+    const speechParts = Metadata.speechParts;
+    const genders = Metadata.genders;
+    const languages = Metadata.languages;
     this.dbid = wordDto?.id;
     this.word = wordDto?.word;
     this.translations = wordDto?.translations;
+    this.transcription = wordDto?.transcription;
     this.forms = wordDto?.forms;
     this.remarks = wordDto?.remarks;
     this.stressLetterIndex = wordDto?.stress_letter_index;

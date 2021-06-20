@@ -1,13 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, of} from 'rxjs';
 import {IWord} from '../../interfaces/IWord';
 import {WordService} from '../../services/word.service';
 import {MatDialog} from '@angular/material/dialog';
-import {ModalNewWordComponent} from '../modal-new-word/modal-new-word.component';
+import {IWordModalInputData, ModalNewWordComponent} from '../modal-new-word/modal-new-word.component';
 import {IModalConfirm, ModalConfirmComponent} from '../modal-confirm/modal-confirm.component';
-import {filter, switchMap, switchMapTo, take, tap} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
-import {TranslateService} from "@ngx-translate/core";
+import {filter, switchMap, take} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {IWordSet} from '../../interfaces/IWordSet';
 
 @Component({
   selector: 'app-word-list',
@@ -15,9 +15,8 @@ import {TranslateService} from "@ngx-translate/core";
   styleUrls: ['./word-list.component.scss']
 })
 export class WordListComponent implements OnInit {
-  @Input() reload$: Observable<void>;
+  @Input() wordset: IWordSet;
   @Input() words: IWord[];
-  // words$: Observable<IWord[]>;
   displayedColumns: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'actions'];
 
   constructor(private wordService: WordService,
@@ -26,19 +25,23 @@ export class WordListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.words$ = this.wordService.getWords$();
-    // this.reload$?.subscribe(() => {
-    //   this.words$ = this.wordService.getWords$();
-    // });
   }
 
   openEditWordModal(element: IWord) {
-    this.dialog.open(ModalNewWordComponent, {
-      data: {word: element}
+    this.dialog.open<any, IWordModalInputData, IWord>(ModalNewWordComponent, {
+      data: {
+        word: element,
+        wordsetId: this.wordset.id,
+        wordsetLanguage: this.wordset.translatedlanguage
+      }
     })
       .afterClosed()
-      .subscribe(() => {
-        // this.words$ = this.wordService.getWords$();
+      .pipe(
+        filter(r => !!r)
+      )
+      .subscribe((word: IWord) => {
+        const index = this.words.findIndex(w => w.dbid === word.dbid);
+        this.words[index] = word;
       });
   }
 
@@ -64,5 +67,28 @@ export class WordListComponent implements OnInit {
       .subscribe(() => {
         // this.words$ = this.wordService.getWords$();
       });
+  }
+
+  openNewWordModal(event: MouseEvent) {
+    event?.stopPropagation();
+    this.dialog.open<any, IWordModalInputData, IWord>(ModalNewWordComponent,
+      {
+        data: {
+          wordsetLanguage: this.wordset.translatedlanguage,
+          wordsetId: this.wordset.id
+        }
+      }
+    )
+      .afterClosed()
+      .pipe(
+        filter(r => !!r)
+      )
+      .subscribe((word: IWord) => {
+        this.words.push(word);
+      });
+  }
+
+  getDataSource() {
+    return of(this.words);
   }
 }

@@ -17,6 +17,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ModalNewWordsetComponent} from "../../components/modal-new-wordset/modal-new-wordset.component";
 import {ModalNewWordsetModule} from "../../components/modal-new-wordset/modal-new-wordset.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatSortModule} from "@angular/material/sort";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -44,7 +45,8 @@ const routes: Routes = [
         TranslateModule.forChild({
             extend: true
         }),
-        MatTooltipModule
+        MatTooltipModule,
+        MatSortModule
     ]
 })
 export class WordModule {

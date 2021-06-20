@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
-import {combineLatest, Observable, Subject} from 'rxjs';
+import {combineLatest} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalNewWordComponent} from '../../components/modal-new-word/modal-new-word.component';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
@@ -21,7 +21,6 @@ import {IWord} from '../../interfaces/IWord';
 })
 export class WordComponent implements OnInit {
   metadata: IWordMetadata;
-  wordListReload$ = new Subject<void>();
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
   loadedWords: {[key: number]: IWord[]} = {};
@@ -47,7 +46,6 @@ export class WordComponent implements OnInit {
     this.dialog.open<any, number, IWord>(ModalNewWordComponent, {data: wordset.id})
       .afterClosed()
       .subscribe(() => {
-        this.wordListReload$.next();
       });
   }
 
