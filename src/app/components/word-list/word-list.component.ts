@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {combineLatest, of} from 'rxjs';
 import {IWord} from '../../interfaces/IWord';
 import {WordService} from '../../services/word.service';
@@ -8,15 +8,17 @@ import {IModalConfirm, ModalConfirmComponent} from '../modal-confirm/modal-confi
 import {filter, switchMap, take} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWordSet} from '../../interfaces/IWordSet';
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-word-list',
   templateUrl: './word-list.component.html',
   styleUrls: ['./word-list.component.scss']
 })
-export class WordListComponent implements OnInit {
+export class WordListComponent implements OnInit, AfterViewInit {
   @Input() wordset: IWordSet;
   @Input() words: IWord[];
+  @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'actions'];
 
   constructor(private wordService: WordService,
@@ -25,6 +27,21 @@ export class WordListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    this.sort.sortChange
+      .subscribe(sort => {
+        if (sort.active === 'word') {
+          let pos = 1;
+
+          if (sort.direction === 'asc') {
+            pos = -pos;
+          }
+
+          this.words.sort((a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? pos : -pos);
+        }
+      });
   }
 
   openEditWordModal(element: IWord) {
