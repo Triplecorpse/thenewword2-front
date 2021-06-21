@@ -1,20 +1,21 @@
-import {Injectable, Injector} from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {catchError} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from './user.service';
-import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterceptorService implements HttpInterceptor {
+  static errorCodes: {[key: string]: string};
+  unhandledError = 'Сталася невідома помилка при запиті: ';
 
   constructor(private userService: UserService,
               private snackBar: MatSnackBar,
-              private injector: Injector) {
+              @Inject(PLATFORM_ID) private platformId: string) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -42,16 +43,11 @@ export class InterceptorService implements HttpInterceptor {
     return next.handle(newReq)
       .pipe(
         catchError(error => {
-          const translateService = this.injector.get(TranslateService);
-
-          translateService.get(`ERROR_CODES.${error.error.name}`)
-            .subscribe(message => {
-              if (message) {
-                this.snackBar.open(message, '', {duration: 10000});
-              } else {
-                this.snackBar.open(`An error occurred to your request.`, '', {duration: 10000});
-              }
-            });
+          if (InterceptorService.errorCodes && InterceptorService.errorCodes[error?.error?.name]) {
+            this.snackBar.open(InterceptorService.errorCodes[error.error.name], '', {duration: 10000});
+          } else {
+            this.snackBar.open(this.unhandledError + url, '', {duration: 10000});
+          }
 
           return throwError(error);
         })
