@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {catchError} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from './user.service';
+import {APP_BASE_HREF, isPlatformServer} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class InterceptorService implements HttpInterceptor {
 
     if (!req.url.startsWith('http://') && !req.url.startsWith('https://') && !replaceUrlByExclusion) {
       url = `${environment.api}/${url}`;
+    }
+
+    if (replaceUrlByExclusion && isPlatformServer(this.platformId)) {
+      url = `${environment.baseUrl}${url}`;
     }
 
     if (token) {

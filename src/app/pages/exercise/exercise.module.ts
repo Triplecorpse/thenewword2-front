@@ -9,6 +9,11 @@ import {MatButtonModule} from "@angular/material/button";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatSelectModule} from "@angular/material/select";
+import {MatSliderModule} from "@angular/material/slider";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const routes: Routes = [
   {path: '', component: ExerciseComponent}
@@ -28,6 +33,11 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatListModule,
     MatGridListModule,
+    TranslateModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatCheckboxModule,
+    MatTooltipModule,
   ]
 })
 export class ExerciseModule {
