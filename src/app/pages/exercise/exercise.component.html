@@ -27,6 +27,7 @@
     <div>
       <mat-checkbox formControlName="askGender">{{'EXERCISE.ASK_GENDER' | translate}}</mat-checkbox>
       <mat-checkbox formControlName="askForms" style="margin-left: 8px;">{{'EXERCISE.ASK_FORMS' | translate}}</mat-checkbox>
+      <mat-checkbox formControlName="strictMode" style="margin-left: 8px;" [matTooltip]="'EXERCISE.STRICT_TOOLTIP' | translate">{{'EXERCISE.STRICT' | translate}}</mat-checkbox>
     </div>
   </form>
 </mat-card>

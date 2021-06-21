@@ -29,7 +29,8 @@ export class ExerciseComponent implements OnInit {
     threshold: new FormControl(20),
     limit: new FormControl(10),
     askForms: new FormControl(true),
-    askGender: new FormControl(true)
+    askGender: new FormControl(true),
+    strictMode: new FormControl(false)
   });
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
