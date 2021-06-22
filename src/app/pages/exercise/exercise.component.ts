@@ -8,6 +8,7 @@ import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
+import {Metadata} from "../../models/Metadata";
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -46,6 +47,7 @@ export class ExerciseComponent implements OnInit {
   });
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
+  displayedWordsets: { wordsets: IWordSet[]; language: ILanguage }[];
   words: IWord[];
 
   constructor(private wordService: WordService) {
@@ -55,10 +57,31 @@ export class ExerciseComponent implements OnInit {
     this.wordService.getWordSets$()
       .subscribe(wordsets => {
         this.wordsets = wordsets;
+        this.rebuildWordsets()
       });
 
     this.learningLanguages = User.learningLanguages;
     this.filterFormGroup.controls.language.patchValue(this.learningLanguages[0]?.id);
+
+    this.filterFormGroup.controls.wordset.valueChanges
+      .subscribe(value => {
+        const wordset = this.wordsets.find(ws => ws.id === value[0]);
+
+        if (value.length === 0) {
+          this.rebuildWordsets()
+          this.filterFormGroup.controls.language.enable();
+        }
+
+        if (value.length === 1) {
+          this.rebuildWordsets(wordset.translatedlanguage.id);
+        }
+
+        if (value.length) {
+          this.filterFormGroup.controls.limit.patchValue(15);
+          this.filterFormGroup.controls.language.patchValue(wordset.translatedlanguage.id);
+          this.filterFormGroup.controls.language.disable();
+        }
+      });
 
     const backendControlsChange = merge(
       this.filterFormGroup.controls.wordset.valueChanges,
@@ -69,7 +92,7 @@ export class ExerciseComponent implements OnInit {
       debounceTime(1000),
       map(() => ({
         wordset: this.filterFormGroup.value.wordset,
-        language: this.filterFormGroup.value.language,
+        language: this.filterFormGroup.value.language || this.displayedWordsets[0].language.id,
         threshold: this.filterFormGroup.value.threshold,
         limit: this.filterFormGroup.value.limit
       }))
@@ -82,8 +105,6 @@ export class ExerciseComponent implements OnInit {
       .subscribe((words: IWord[]) => {
         this.words = words;
       });
-
-    this.wordService.getWordsToLearn(this.filterFormGroup.value)
   }
 
   submit(word: IWord) {
@@ -113,5 +134,30 @@ export class ExerciseComponent implements OnInit {
   getWordSetTooltip(): string {
     const raw = this.filterFormGroup.value.wordset;
     return this.wordsets?.filter(ws => raw.includes(ws.id)).map(ws => ws.name).join(', ');
+  }
+
+  private rebuildWordsets(languageId?: number) {
+    const uniqLangCodes: number[] = [];
+
+    if (languageId) {
+      uniqLangCodes.push(languageId)
+    } else {
+      this.wordsets.forEach(ws => {
+        if (!uniqLangCodes.includes(ws.translatedlanguage.id)) {
+          uniqLangCodes.push(ws.translatedlanguage.id);
+        }
+      });
+    }
+
+    const uniqLangs: ILanguage[] = uniqLangCodes.map(code => Metadata.languages.find(l => l.id === code));
+
+    this.displayedWordsets = uniqLangs.map((lang: ILanguage) => {
+      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.translatedlanguage.id === lang.id)
+
+      return {
+        language: lang,
+        wordsets
+      }
+    })
   }
 }
