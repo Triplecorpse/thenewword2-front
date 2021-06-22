@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {combineLatest, of} from 'rxjs';
 import {IWord} from '../../interfaces/IWord';
 import {WordService} from '../../services/word.service';
@@ -15,11 +15,13 @@ import {MatSort} from "@angular/material/sort";
   templateUrl: './word-list.component.html',
   styleUrls: ['./word-list.component.scss']
 })
-export class WordListComponent implements OnInit, AfterViewInit {
+export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() wordset: IWordSet;
   @Input() words: IWord[];
+  @Input() readonly: boolean;
+  @Input() hideWordColumn = true;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'actions'];
+  displayedColumns: string[] = ['translations', 'from_language', 'gender', 'speech_part'];
 
   constructor(private wordService: WordService,
               private dialog: MatDialog,
@@ -27,6 +29,17 @@ export class WordListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    if (!this.readonly) {
+      this.displayedColumns.push('actions');
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.hideWordColumn?.currentValue && this.displayedColumns[0] !== 'word') {
+      this.displayedColumns.unshift('word');
+    } else if (changes.hideWordColumn?.currentValue === false && this.displayedColumns[0] === 'word') {
+      this.displayedColumns.shift();
+    }
   }
 
   ngAfterViewInit() {

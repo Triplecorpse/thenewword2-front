@@ -31,3 +31,8 @@
     </div>
   </form>
 </mat-card>
+
+<div style="margin: 0 8px">
+  <app-word-list [words]="words" [readonly]="true" [hideWordColumn]="filterFormGroup.value.allowLearn"></app-word-list>
+</div>
+

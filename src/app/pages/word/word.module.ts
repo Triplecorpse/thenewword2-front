@@ -18,6 +18,7 @@ import {ModalNewWordsetComponent} from "../../components/modal-new-wordset/modal
 import {ModalNewWordsetModule} from "../../components/modal-new-wordset/modal-new-wordset.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSortModule} from "@angular/material/sort";
+import {WordListModule} from "../../components/word-list/word-list.module";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -25,29 +26,26 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    WordComponent,
-    WordListComponent
+    WordComponent
   ],
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        RouterModule.forChild(routes),
-        MatDialogModule,
-        ModalNewWordModule,
-        ModalNewWordsetModule,
-        ModalConfirmModule,
-        MatCardModule,
-        MatTableModule,
-        MatIconModule,
-        MatSelectModule,
-        MatInputModule,
-        MatExpansionModule,
-        TranslateModule.forChild({
-            extend: true
-        }),
-        MatTooltipModule,
-        MatSortModule
-    ]
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    RouterModule.forChild(routes),
+    MatDialogModule,
+    ModalNewWordModule,
+    ModalNewWordsetModule,
+    ModalConfirmModule,
+    TranslateModule.forChild({
+      extend: true
+    }),
+    WordListModule,
+    MatCardModule,
+    MatSelectModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatInputModule
+  ]
 })
 export class WordModule {
 }

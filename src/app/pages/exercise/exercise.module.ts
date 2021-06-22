@@ -14,6 +14,8 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {WordModule} from "../word/word.module";
+import {WordListModule} from "../../components/word-list/word-list.module";
 
 const routes: Routes = [
   {path: '', component: ExerciseComponent}
@@ -38,6 +40,7 @@ const routes: Routes = [
     MatSliderModule,
     MatCheckboxModule,
     MatTooltipModule,
+    WordListModule
   ]
 })
 export class ExerciseModule {

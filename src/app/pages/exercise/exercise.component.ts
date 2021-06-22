@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
-import {debounceTime, switchMap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {merge, of, Subject} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
 import {IWordCheck} from '../../interfaces/IWordCheck';
@@ -46,6 +46,7 @@ export class ExerciseComponent implements OnInit {
   });
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
+  words: IWord[];
 
   constructor(private wordService: WordService) {
   }
@@ -59,16 +60,27 @@ export class ExerciseComponent implements OnInit {
     this.learningLanguages = User.learningLanguages;
     this.filterFormGroup.controls.language.patchValue(this.learningLanguages[0]?.id);
 
-    merge(of(this.filterFormGroup.value), this.filterFormGroup.valueChanges.pipe(debounceTime(1000)))
+    const backendControlsChange = merge(
+      this.filterFormGroup.controls.wordset.valueChanges,
+      this.filterFormGroup.controls.language.valueChanges,
+      this.filterFormGroup.controls.threshold.valueChanges,
+      this.filterFormGroup.controls.limit.valueChanges
+    ).pipe(
+      debounceTime(1000),
+      map(() => ({
+        wordset: this.filterFormGroup.value.wordset,
+        language: this.filterFormGroup.value.language,
+        threshold: this.filterFormGroup.value.threshold,
+        limit: this.filterFormGroup.value.limit
+      }))
+    );
+
+    merge(of(this.filterFormGroup.value), backendControlsChange)
       .pipe(
-        switchMap((filter: IFilterFormValue) => {
-          return this.wordService.getWordsToLearn(filter);
-        })
+        switchMap((filter: IFilterFormValue) => this.wordService.getWordsToLearn(filter))
       )
       .subscribe((words: IWord[]) => {
-        console.log(words);
-        // this.wordsToLearn = words;
-        // this.wordToAsk$.next(words[0]);
+        this.words = words;
       });
 
     this.wordService.getWordsToLearn(this.filterFormGroup.value)
