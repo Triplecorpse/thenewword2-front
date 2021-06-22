@@ -40,7 +40,7 @@ export class ExerciseComponent implements OnInit {
     limit: new FormControl(10),
     askForms: new FormControl(true),
     askGender: new FormControl(true),
-    strictMode: new FormControl(false),
+    typoMode: new FormControl(false),
     askStress: new FormControl(false),
     allowLearn: new FormControl(false)
   });
