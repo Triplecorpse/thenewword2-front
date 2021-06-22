@@ -11,8 +11,6 @@
       </mat-form-field>
       <mat-form-field style="margin-left: 8px">
         <mat-select [placeholder]="'EXERCISE.WORD_SET' | translate" multiple formControlName="wordset" [matTooltip]="getWordSetTooltip()">
-          <mat-option [value]="0">{{'EXERCISE.WORD_SET_ALL' | translate}}</mat-option>
-          <mat-divider></mat-divider>
           <mat-option *ngFor="let wordset of wordsets" [value]="wordset.id">{{wordset.name}}</mat-option>
         </mat-select>
       </mat-form-field>

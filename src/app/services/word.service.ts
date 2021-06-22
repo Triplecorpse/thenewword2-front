@@ -14,6 +14,7 @@ import {MetadataService} from './metadata.service';
 import {IWordSet} from '../interfaces/IWordSet';
 import {IWordSetDto} from '../interfaces/dto/IWordSetDto';
 import {WordSet} from '../models/WordSet';
+import {IFilterFormValue} from "../pages/exercise/exercise.component";
 
 export interface IWordFilterData {
   word?: string;
@@ -124,8 +125,19 @@ export class WordService {
     };
   }
 
-  getWordsToLearn(): Observable<IWord[]> {
-    return this.httpClient.get<{ words: IWordDto[], encoded: string }>('word/exercise')
+  getWordsToLearn(filter: IFilterFormValue): Observable<IWord[]> {
+    const params: {[key: string]: string} = {};
+
+    Object.keys(filter).forEach(key => {
+      if (Array.isArray((filter as any)[key])) {
+        params[key] = (filter as any)[key].join(',');
+      } else {
+        params[key] = (filter as any)[key].toString();
+      }
+
+    });
+
+    return this.httpClient.get<{ words: IWordDto[], encoded: string }>('word/exercise', {params})
       .pipe(map(({words: wordsDto, encoded}) => {
         const words = wordsDto.map(wordDto => this.wordFromDto(wordDto));
 

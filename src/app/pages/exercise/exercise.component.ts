@@ -1,13 +1,23 @@
 import {Component, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
-import {take} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {merge, of, Subject} from 'rxjs';
 import {FormControl, FormGroup} from '@angular/forms';
 import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
+
+export interface IFilterFormValue {
+  wordset: number;
+  language: number;
+  threshold: number;
+  limit: number;
+  askForms: boolean;
+  askGender: boolean;
+  strictMode: boolean;
+}
 
 @Component({
   selector: 'app-exercise',
@@ -47,22 +57,19 @@ export class ExerciseComponent implements OnInit {
     this.learningLanguages = User.learningLanguages;
     this.filterFormGroup.controls.language.patchValue(this.learningLanguages[0]?.id);
 
-    this.filterFormGroup.controls.wordset.valueChanges.subscribe((value: number[]) => {
-      let newValue: number[] = [];
-
-      if (value[0] === 0) {
-        newValue = this.wordsets.map(({id}) => id);
-
-        this.filterFormGroup.controls.wordset.patchValue(newValue);
-      }
-    });
-
-    this.wordService.getWordsToLearn()
-      .pipe(take(1))
-      .subscribe(words => {
-        this.wordsToLearn = words;
-        this.wordToAsk$.next(words[0]);
+    merge(of(this.filterFormGroup.value), this.filterFormGroup.valueChanges.pipe(debounceTime(1000)))
+      .pipe(
+        switchMap((filter: IFilterFormValue) => {
+          return this.wordService.getWordsToLearn(filter);
+        })
+      )
+      .subscribe((words: IWord[]) => {
+        console.log(words);
+        // this.wordsToLearn = words;
+        // this.wordToAsk$.next(words[0]);
       });
+
+    this.wordService.getWordsToLearn(this.filterFormGroup.value)
   }
 
   submit(word: IWord) {
