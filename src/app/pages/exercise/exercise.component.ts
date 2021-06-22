@@ -10,7 +10,7 @@ import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
 
 export interface IFilterFormValue {
-  wordset: number;
+  wordset: number[];
   language: number;
   threshold: number;
   limit: number;
@@ -34,13 +34,15 @@ export class ExerciseComponent implements OnInit {
   });
   allAnswered: boolean;
   filterFormGroup = new FormGroup({
-    wordset: new FormControl(''),
+    wordset: new FormControl([]),
     language: new FormControl(''),
     threshold: new FormControl(20),
     limit: new FormControl(10),
     askForms: new FormControl(true),
     askGender: new FormControl(true),
-    strictMode: new FormControl(false)
+    strictMode: new FormControl(false),
+    askStress: new FormControl(false),
+    allowLearn: new FormControl(false)
   });
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];

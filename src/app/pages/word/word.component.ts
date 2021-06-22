@@ -10,9 +10,10 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {ModalNewWordsetComponent} from '../../components/modal-new-wordset/modal-new-wordset.component';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {IModalConfirm, ModalConfirmComponent} from '../../components/modal-confirm/modal-confirm.component';
-import {filter, switchMap, take} from 'rxjs/operators';
+import {filter, switchMap, take, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-word',
@@ -29,7 +30,8 @@ export class WordComponent implements OnInit {
               private wordService: WordService,
               private metadataService: MetadataService,
               private translateService: TranslateService,
-              private userService: UserService) {
+              private userService: UserService,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -76,10 +78,15 @@ export class WordComponent implements OnInit {
         }),
         take(1),
         filter(result => !!result),
-        switchMap(() => this.wordService.removeWordset(wordset.id))
+        switchMap(() => this.wordService.removeWordset(wordset.id)),
+        tap(() => {
+          const index = this.wordsets.findIndex(ws => ws.id === wordset.id);
+          this.wordsets.splice(index, 1);
+        }),
+        switchMap(() => this.translateService.get('WORDS.REMOVE_WORDSET_SUCCESS', {wordSet: wordset.name}))
       )
-      .subscribe(() => {
-        this.updateWordSets();
+      .subscribe(translation => {
+        this.snackBar.open(translation, '', {duration: 10000});
       });
   }
 

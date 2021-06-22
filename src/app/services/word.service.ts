@@ -134,19 +134,10 @@ export class WordService {
       } else {
         params[key] = (filter as any)[key].toString();
       }
-
     });
 
-    return this.httpClient.get<{ words: IWordDto[], encoded: string }>('word/exercise', {params})
-      .pipe(map(({words: wordsDto, encoded}) => {
-        const words = wordsDto.map(wordDto => this.wordFromDto(wordDto));
-
-        if (this.isBrowser) {
-          sessionStorage.setItem('wordsToLearn', encoded);
-        }
-
-        return words;
-      }));
+    return this.httpClient.get<IWordDto[]>('word/exercise', {params})
+      .pipe(map(wordsDto => wordsDto.map(wordDto => this.wordFromDto(wordDto))));
   }
 
   checkWord(word: IWord): Observable<IWordCheck> {
