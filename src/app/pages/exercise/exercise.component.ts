@@ -70,6 +70,7 @@ export class ExerciseComponent implements OnInit {
         if (value.length === 0) {
           this.rebuildWordsets()
           this.filterFormGroup.controls.language.enable();
+          this.filterFormGroup.controls.limit.patchValue(10);
         }
 
         if (value.length === 1) {
@@ -77,7 +78,10 @@ export class ExerciseComponent implements OnInit {
         }
 
         if (value.length) {
-          this.filterFormGroup.controls.limit.patchValue(15);
+          const selectedWordSets = this.wordsets.filter(ws => value.includes(ws.id));
+          const wordCount = selectedWordSets
+            .reduce((prev: number, curr: IWordSet) => prev + curr.wordsCount, 0);
+          this.filterFormGroup.controls.limit.patchValue(wordCount);
           this.filterFormGroup.controls.language.patchValue(wordset.translatedlanguage.id);
           this.filterFormGroup.controls.language.disable();
         }

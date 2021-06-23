@@ -7,4 +7,5 @@ export interface IWordSet {
   words: IWord[];
   originalLanguage: ILanguage;
   translatedlanguage: ILanguage;
+  wordsCount: number;
 }

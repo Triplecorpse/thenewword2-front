@@ -10,13 +10,14 @@ export class WordSet implements IWordSet {
   words: Word[] = [];
   originalLanguage: ILanguage;
   translatedlanguage: ILanguage;
+  wordsCount: number;
 
   constructor(wordSetDto?: IWordSetDto) {
     this.id = wordSetDto?.id;
     this.name = wordSetDto?.name;
-    this.originalLanguage = Metadata.languages.find(({id}) => id === wordSetDto.original_language_id);
-    this.translatedlanguage = Metadata.languages.find(({id}) => id === wordSetDto.translated_language_id);
-    // TODO: this.words = wordSetDto?.words?.map(wordDto => new Word(wordDto)) || [];
+    this.originalLanguage = Metadata.languages.find(({id}) => id === wordSetDto?.original_language_id);
+    this.translatedlanguage = Metadata.languages.find(({id}) => id === wordSetDto?.translated_language_id);
+    this.wordsCount = wordSetDto?.words_count;
   }
 
   convertToDto(): IWordSetDto {
