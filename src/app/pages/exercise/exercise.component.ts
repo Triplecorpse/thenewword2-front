@@ -27,6 +27,9 @@ export interface IFilterFormValue {
 })
 export class ExerciseComponent implements OnInit {
   private lastAskedId = 0;
+  rightWords: IWordCheck[];
+  wrongWords: IWordCheck[];
+  skippedWords: IWordCheck[];
   askedWords: IWordCheck[] = [];
   wordToAsk$ = new Subject<IWord>();
   exerciseFormGroup = new FormGroup({
@@ -38,10 +41,10 @@ export class ExerciseComponent implements OnInit {
     language: new FormControl(''),
     threshold: new FormControl(20),
     limit: new FormControl(10),
-    askForms: new FormControl(true),
-    askGender: new FormControl(true),
+    askForms: new FormControl({value: false, disabled: true}),
+    askGender: new FormControl({value: false, disabled: true}),
     typoMode: new FormControl(false),
-    askStress: new FormControl(false),
+    askStress: new FormControl({value: false, disabled: true}),
     allowLearn: new FormControl(false)
   });
   learningLanguages: ILanguage[];

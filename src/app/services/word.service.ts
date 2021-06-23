@@ -150,7 +150,8 @@ export class WordService {
       .pipe(map(response => ({
         isRight: response.right,
         vault: this.wordFromDto(response.vault),
-        you: this.wordFromDto(response.you)
+        you: this.wordFromDto(response.you),
+        status: 'right'
       })));
   }
 }

@@ -50,23 +50,24 @@
 </ng-container>
 <ng-template #exercise>
   <mat-card style="margin: 8px">
-    <form [formGroup]="exerciseFormGroup">
-      <mat-form-field>
-        <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus>
-      </mat-form-field>
-      <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit">{{'EXERCISE.OK' | translate}}</button>
-      <button style="margin-left: 8px;" mat-button type="button">{{'EXERCISE.SKIP' | translate}}</button>
-    </form>
-    <p>{{'EXERCISE.TRANSLATION'  | translate}}: а-ба-ба-га-ла-ма-га</p>
+    <div style="display: flex; justify-content: space-between">
+      <form [formGroup]="exerciseFormGroup">
+        <mat-form-field>
+          <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus>
+        </mat-form-field>
+        <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit">{{'EXERCISE.OK' | translate}}</button>
+        <button style="margin-left: 8px;" mat-button type="button">{{'EXERCISE.SKIP' | translate}}</button>
+      </form>
+      <div>
+        <button mat-flat-button color="primary" disabled>{{'EXERCISE.MARK_AS_TYPO' | translate}}</button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <p style="margin-top: 8px">{{'EXERCISE.TRANSLATION'  | translate}}: а-ба-ба-га-ла-ма-га</p>
   </mat-card>
   <mat-card style="margin: 8px">
       <mat-selection-list [multiple]="false">
         <div mat-subheader>{{'EXERCISE.RIGHT' | translate}}</div>
-        <mat-list-option [value]="'alal'">
-          <mat-icon mat-list-icon style="color: green">check</mat-icon>
-          <div mat-line>al</div>
-          <div mat-line>alal</div>
-        </mat-list-option>
         <mat-list-option [value]="'alal'">
           <mat-icon mat-list-icon style="color: green">check</mat-icon>
           <div mat-line>al</div>
@@ -79,18 +80,8 @@
           <div mat-line>al</div>
           <div mat-line>alal</div>
         </mat-list-option>
-        <mat-list-option [value]="'alal'">
-          <mat-icon mat-list-icon style="color: red">clear</mat-icon>
-          <div mat-line>al</div>
-          <div mat-line>alal</div>
-        </mat-list-option>
         <mat-divider></mat-divider>
         <div mat-subheader>{{'EXERCISE.SKIPPED' | translate}}</div>
-        <mat-list-option [value]="'alal'">
-          <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
-          <div mat-line>al</div>
-          <div mat-line>alal</div>
-        </mat-list-option>
         <mat-list-option [value]="'alal'">
           <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
           <div mat-line>al</div>
