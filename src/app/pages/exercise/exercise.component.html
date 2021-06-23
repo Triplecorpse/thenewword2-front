@@ -1,40 +1,102 @@
-<mat-card style="margin: 8px">
-  <form [formGroup]="filterFormGroup" (ngSubmit)="filterFormSubmit()">
-    <div style="display:flex; align-items: center">
+<ng-container *ngIf="!isExercising; else exercise">
+  <mat-card style="margin: 8px">
+    <form [formGroup]="filterFormGroup" (ngSubmit)="filterFormSubmit()">
+      <div style="display:flex; align-items: center">
+        <div>
+          <button mat-flat-button color="warn" type="submit">{{'EXERCISE.START' | translate}}</button>
+        </div>
+        <mat-form-field style="margin-left: 8px">
+          <mat-select [placeholder]="'EXERCISE.LANGUAGE' | translate" formControlName="language">
+            <mat-option *ngFor="let language of learningLanguages"
+                        [value]="language.id">{{language.nativeName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field style="margin-left: 8px">
+          <mat-select [placeholder]="'EXERCISE.WORD_SET' | translate" multiple formControlName="wordset"
+                      [matTooltip]="getWordSetTooltip()">
+            <mat-optgroup *ngFor="let displayedWordset of displayedWordsets"
+                          [label]="displayedWordset.language.nativeName">
+              <mat-option *ngFor="let wordset of displayedWordset.wordsets"
+                          [value]="wordset.id">{{wordset.name}}</mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </mat-form-field>
+        <div style="display: flex; flex-direction: column; width: 200px; margin-left: 8px">
+          <mat-label style="margin-left: 8px;">{{'EXERCISE.UNLEARNED_THRESHOLD' | translate}}</mat-label>
+          <mat-slider [min]="0" [max]="100" [step]="1" formControlName="threshold"></mat-slider>
+        </div>
+        <mat-form-field style="margin-left: 8px">
+          <input matInput type="number" [placeholder]="'EXERCISE.LIMIT' | translate" formControlName="limit">
+        </mat-form-field>
+      </div>
       <div>
-        <button mat-flat-button color="warn" type="submit">{{'EXERCISE.START' | translate}}</button>
+        <mat-checkbox formControlName="askGender">{{'EXERCISE.ASK_GENDER' | translate}}</mat-checkbox>
+        <mat-checkbox formControlName="askForms"
+                      style="margin-left: 8px;">{{'EXERCISE.ASK_FORMS' | translate}}</mat-checkbox>
+        <mat-checkbox formControlName="askStress"
+                      style="margin-left: 8px;">{{'EXERCISE.ASK_STRESS' | translate}}</mat-checkbox>
+        <mat-checkbox formControlName="typoMode"
+                      style="margin-left: 8px;">{{'EXERCISE.TYPO_MODE' | translate}}</mat-checkbox>
+        <mat-checkbox formControlName="allowLearn"
+                      style="margin-left: 8px;">{{'EXERCISE.ALLOW_LEARN' | translate}}</mat-checkbox>
       </div>
-      <mat-form-field style="margin-left: 8px">
-        <mat-select [placeholder]="'EXERCISE.LANGUAGE' | translate" formControlName="language">
-          <mat-option *ngFor="let language of learningLanguages" [value]="language.id">{{language.nativeName}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field style="margin-left: 8px">
-        <mat-select [placeholder]="'EXERCISE.WORD_SET' | translate" multiple formControlName="wordset" [matTooltip]="getWordSetTooltip()">
-          <mat-optgroup *ngFor="let displayedWordset of displayedWordsets" [label]="displayedWordset.language.nativeName">
-            <mat-option *ngFor="let wordset of displayedWordset.wordsets" [value]="wordset.id">{{wordset.name}}</mat-option>
-          </mat-optgroup>
-        </mat-select>
-      </mat-form-field>
-      <div style="display: flex; flex-direction: column; width: 200px; margin-left: 8px">
-        <mat-label style="margin-left: 8px;">{{'EXERCISE.UNLEARNED_THRESHOLD' | translate}}</mat-label>
-        <mat-slider [min]="0" [max]="100" [step]="1" formControlName="threshold"></mat-slider>
-      </div>
-      <mat-form-field style="margin-left: 8px">
-        <input matInput type="number" [placeholder]="'EXERCISE.LIMIT' | translate" formControlName="limit">
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-checkbox formControlName="askGender">{{'EXERCISE.ASK_GENDER' | translate}}</mat-checkbox>
-      <mat-checkbox formControlName="askForms" style="margin-left: 8px;">{{'EXERCISE.ASK_FORMS' | translate}}</mat-checkbox>
-      <mat-checkbox formControlName="askStress" style="margin-left: 8px;">{{'EXERCISE.ASK_STRESS' | translate}}</mat-checkbox>
-      <mat-checkbox formControlName="typoMode" style="margin-left: 8px;">{{'EXERCISE.TYPO_MODE' | translate}}</mat-checkbox>
-      <mat-checkbox formControlName="allowLearn" style="margin-left: 8px;">{{'EXERCISE.ALLOW_LEARN' | translate}}</mat-checkbox>
-    </div>
-  </form>
-</mat-card>
+    </form>
+  </mat-card>
 
-<div style="margin: 0 8px">
-  <app-word-list [words]="words" [readonly]="true" [hideWordColumn]="filterFormGroup.value.allowLearn"></app-word-list>
-</div>
+  <div style="margin: 0 8px">
+    <app-word-list [words]="words" [readonly]="true"
+                   [hideWordColumn]="filterFormGroup.value.allowLearn"></app-word-list>
+  </div>
+</ng-container>
+<ng-template #exercise>
+  <mat-card style="margin: 8px">
+    <form [formGroup]="exerciseFormGroup">
+      <mat-form-field>
+        <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus>
+      </mat-form-field>
+      <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit">{{'EXERCISE.OK' | translate}}</button>
+      <button style="margin-left: 8px;" mat-button type="button">{{'EXERCISE.SKIP' | translate}}</button>
+    </form>
+    <p>{{'EXERCISE.TRANSLATION'  | translate}}: а-ба-ба-га-ла-ма-га</p>
+  </mat-card>
+  <mat-card style="margin: 8px">
+      <mat-selection-list [multiple]="false">
+        <div mat-subheader>{{'EXERCISE.RIGHT' | translate}}</div>
+        <mat-list-option [value]="'alal'">
+          <mat-icon mat-list-icon style="color: green">check</mat-icon>
+          <div mat-line>al</div>
+          <div mat-line>alal</div>
+        </mat-list-option>
+        <mat-list-option [value]="'alal'">
+          <mat-icon mat-list-icon style="color: green">check</mat-icon>
+          <div mat-line>al</div>
+          <div mat-line>alal</div>
+        </mat-list-option>
+        <mat-divider></mat-divider>
+        <div mat-subheader>{{'EXERCISE.WRONG' | translate}}</div>
+        <mat-list-option [value]="'alal'">
+          <mat-icon mat-list-icon style="color: red">clear</mat-icon>
+          <div mat-line>al</div>
+          <div mat-line>alal</div>
+        </mat-list-option>
+        <mat-list-option [value]="'alal'">
+          <mat-icon mat-list-icon style="color: red">clear</mat-icon>
+          <div mat-line>al</div>
+          <div mat-line>alal</div>
+        </mat-list-option>
+        <mat-divider></mat-divider>
+        <div mat-subheader>{{'EXERCISE.SKIPPED' | translate}}</div>
+        <mat-list-option [value]="'alal'">
+          <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
+          <div mat-line>al</div>
+          <div mat-line>alal</div>
+        </mat-list-option>
+        <mat-list-option [value]="'alal'">
+          <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
+          <div mat-line>al</div>
+          <div mat-line>alal</div>
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-card>
+</ng-template>
 

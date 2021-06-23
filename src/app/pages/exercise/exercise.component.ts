@@ -26,11 +26,10 @@ export interface IFilterFormValue {
   styleUrls: ['./exercise.component.scss']
 })
 export class ExerciseComponent implements OnInit {
-  private wordsToLearn: IWord[] = [];
   private lastAskedId = 0;
   askedWords: IWordCheck[] = [];
   wordToAsk$ = new Subject<IWord>();
-  formGroup = new FormGroup({
+  exerciseFormGroup = new FormGroup({
     word: new FormControl()
   });
   allAnswered: boolean;
@@ -49,6 +48,7 @@ export class ExerciseComponent implements OnInit {
   wordsets: IWordSet[];
   displayedWordsets: { wordsets: IWordSet[]; language: ILanguage }[];
   words: IWord[];
+  isExercising: boolean;
 
   constructor(private wordService: WordService) {
   }
@@ -112,27 +112,27 @@ export class ExerciseComponent implements OnInit {
   }
 
   submit(word: IWord) {
-    if (this.formGroup.value) {
-      word.word = this.formGroup.value.word;
-      this.wordService.checkWord(word)
-        .subscribe(result => {
-          this.askedWords.push(result);
-          this.lastAskedId++;
-
-          if (this.wordsToLearn[this.lastAskedId]) {
-            this.wordToAsk$.next(this.wordsToLearn[this.lastAskedId]);
-            this.formGroup.setValue({
-              word: ''
-            });
-          } else {
-            this.allAnswered = true;
-          }
-        });
-    }
+    // if (this.exerciseFormGroup.value) {
+    //   word.word = this.exerciseFormGroup.value.word;
+    //   this.wordService.checkWord(word)
+    //     .subscribe(result => {
+    //       this.askedWords.push(result);
+    //       this.lastAskedId++;
+    //
+    //       if (this.wordsToLearn[this.lastAskedId]) {
+    //         this.wordToAsk$.next(this.wordsToLearn[this.lastAskedId]);
+    //         this.exerciseFormGroup.setValue({
+    //           word: ''
+    //         });
+    //       } else {
+    //         this.allAnswered = true;
+    //       }
+    //     });
+    // }
   }
 
   filterFormSubmit() {
-
+    this.isExercising = true;
   }
 
   getWordSetTooltip(): string {
