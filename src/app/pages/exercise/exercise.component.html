@@ -51,19 +51,19 @@
 <ng-template #exercise>
   <mat-card style="margin: 8px">
     <div style="display: flex; justify-content: space-between">
-      <form [formGroup]="exerciseFormGroup">
+      <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()">
         <mat-form-field>
           <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus>
         </mat-form-field>
         <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit">{{'EXERCISE.OK' | translate}}</button>
-        <button style="margin-left: 8px;" mat-button type="button">{{'EXERCISE.SKIP' | translate}}</button>
+        <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)">{{'EXERCISE.SKIP' | translate}}</button>
       </form>
       <div>
         <button mat-flat-button color="primary" disabled>{{'EXERCISE.MARK_AS_TYPO' | translate}}</button>
       </div>
     </div>
     <mat-divider></mat-divider>
-    <p style="margin-top: 8px">{{'EXERCISE.TRANSLATION'  | translate}}: а-ба-ба-га-ла-ма-га</p>
+    <p style="margin-top: 8px">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk.translations.join(', ')}}</p>
   </mat-card>
   <mat-card style="margin: 8px">
       <mat-selection-list [multiple]="false">

@@ -3,7 +3,7 @@ import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 import {merge, of, Subject} from 'rxjs';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
@@ -32,8 +32,9 @@ export class ExerciseComponent implements OnInit {
   skippedWords: IWordCheck[];
   askedWords: IWordCheck[] = [];
   wordToAsk$ = new Subject<IWord>();
+  wordToAsk: IWord;
   exerciseFormGroup = new FormGroup({
-    word: new FormControl()
+    word: new FormControl('', Validators.required)
   });
   allAnswered: boolean;
   filterFormGroup = new FormGroup({
@@ -114,7 +115,41 @@ export class ExerciseComponent implements OnInit {
       });
   }
 
-  submit(word: IWord) {
+  exerciseFormSubmit(skipCheck?: boolean) {
+    if (!this.exerciseFormGroup.valid && !skipCheck) {
+      return;
+    }
+
+    const word: IWordCheck = {
+      isRight: this.wordToAsk.word === this.exerciseFormGroup.controls.word.value,
+      you: {...this.wordToAsk, word: this.exerciseFormGroup.controls.word.value},
+      vault: this.wordToAsk,
+      status: skipCheck
+        ? 'skipped'
+        : this.wordToAsk.word === this.exerciseFormGroup.controls.word.value
+          ? 'right'
+          : 'wrong'
+    }
+
+    if (skipCheck) {
+      this.skippedWords.push(word);
+    } else if (word.isRight) {
+      this.rightWords.push(word)
+    } else if (!word.isRight) {
+      this.wrongWords.push(word)
+    }
+
+    this.wordService.checkWord({...this.wordToAsk, word: this.exerciseFormGroup.controls.word.value})
+      .subscribe(response => {
+        console.log(response);
+      });
+
+
+
+    if (this.words.length) {
+      this.wordToAsk = this.words.shift();
+      this.exerciseFormGroup.controls.word.setValue('');
+    }
     // if (this.exerciseFormGroup.value) {
     //   word.word = this.exerciseFormGroup.value.word;
     //   this.wordService.checkWord(word)
@@ -136,6 +171,7 @@ export class ExerciseComponent implements OnInit {
 
   filterFormSubmit() {
     this.isExercising = true;
+    this.wordToAsk = this.words.shift();
   }
 
   getWordSetTooltip(): string {
