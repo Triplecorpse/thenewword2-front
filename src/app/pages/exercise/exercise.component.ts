@@ -2,13 +2,16 @@ import {Component, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
-import {merge, of, Subject} from 'rxjs';
+import {merge, Observable, of, Subject} from 'rxjs';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
 import {Metadata} from "../../models/Metadata";
+import {Change} from "../../interfaces/dto/IWordCheckDto";
+import {DomSanitizer} from "@angular/platform-browser";
+import {TranslateService} from "@ngx-translate/core";
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -26,12 +29,10 @@ export interface IFilterFormValue {
   styleUrls: ['./exercise.component.scss']
 })
 export class ExerciseComponent implements OnInit {
-  private lastAskedId = 0;
-  rightWords: IWordCheck[];
-  wrongWords: IWordCheck[];
-  skippedWords: IWordCheck[];
+  rightWords: IWordCheck[] = [];
+  wrongWords: IWordCheck[] = [];
+  skippedWords: IWordCheck[] = [];
   askedWords: IWordCheck[] = [];
-  wordToAsk$ = new Subject<IWord>();
   wordToAsk: IWord;
   exerciseFormGroup = new FormGroup({
     word: new FormControl('', Validators.required)
@@ -53,8 +54,11 @@ export class ExerciseComponent implements OnInit {
   displayedWordsets: { wordsets: IWordSet[]; language: ILanguage }[];
   words: IWord[];
   isExercising: boolean;
+  startButtonDisabled = true;
 
-  constructor(private wordService: WordService) {
+  constructor(private wordService: WordService,
+              private translateService: TranslateService,
+              private domSanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
@@ -97,6 +101,9 @@ export class ExerciseComponent implements OnInit {
       this.filterFormGroup.controls.threshold.valueChanges,
       this.filterFormGroup.controls.limit.valueChanges
     ).pipe(
+      tap(() => {
+        this.startButtonDisabled = true;
+      }),
       debounceTime(1000),
       map(() => ({
         wordset: this.filterFormGroup.value.wordset,
@@ -111,6 +118,10 @@ export class ExerciseComponent implements OnInit {
         switchMap((filter: IFilterFormValue) => this.wordService.getWordsToLearn(filter))
       )
       .subscribe((words: IWord[]) => {
+        if (words.length) {
+          this.startButtonDisabled = false;
+        }
+
         this.words = words;
       });
   }
@@ -120,53 +131,43 @@ export class ExerciseComponent implements OnInit {
       return;
     }
 
-    const word: IWordCheck = {
-      isRight: this.wordToAsk.word === this.exerciseFormGroup.controls.word.value,
-      you: {...this.wordToAsk, word: this.exerciseFormGroup.controls.word.value},
-      vault: this.wordToAsk,
-      status: skipCheck
-        ? 'skipped'
-        : this.wordToAsk.word === this.exerciseFormGroup.controls.word.value
-          ? 'right'
-          : 'wrong'
-    }
-
-    if (skipCheck) {
-      this.skippedWords.push(word);
-    } else if (word.isRight) {
-      this.rightWords.push(word)
-    } else if (!word.isRight) {
-      this.wrongWords.push(word)
-    }
-
     this.wordService.checkWord({...this.wordToAsk, word: this.exerciseFormGroup.controls.word.value})
       .subscribe(response => {
-        console.log(response);
+        let htmlString = '';
+        let errors = 0;
+
+        response.diff.forEach((part) => {
+          let htmlPart = part.value;
+
+          if (part.added) {
+            htmlPart = `<span style="background-color: lightgreen">${part.value}</span>`;
+            errors += part.value.length;
+          }
+
+          if (part.removed) {
+            htmlPart = `<span style="background-color: lightcoral">${part.value}</span>`;
+            errors += part.value.length;
+          }
+
+          htmlString += htmlPart;
+        });
+
+        response.errQuantity = Math.abs(errors);
+        response.formattedString = this.domSanitizer.bypassSecurityTrustHtml(htmlString);
+
+        if (skipCheck) {
+          this.skippedWords.push(response);
+        } else if (response.isRight) {
+          this.rightWords.push(response)
+        } else if (!response.isRight) {
+          this.wrongWords.push(response)
+        }
       });
-
-
 
     if (this.words.length) {
       this.wordToAsk = this.words.shift();
       this.exerciseFormGroup.controls.word.setValue('');
     }
-    // if (this.exerciseFormGroup.value) {
-    //   word.word = this.exerciseFormGroup.value.word;
-    //   this.wordService.checkWord(word)
-    //     .subscribe(result => {
-    //       this.askedWords.push(result);
-    //       this.lastAskedId++;
-    //
-    //       if (this.wordsToLearn[this.lastAskedId]) {
-    //         this.wordToAsk$.next(this.wordsToLearn[this.lastAskedId]);
-    //         this.exerciseFormGroup.setValue({
-    //           word: ''
-    //         });
-    //       } else {
-    //         this.allAnswered = true;
-    //       }
-    //     });
-    // }
   }
 
   filterFormSubmit() {
@@ -177,6 +178,13 @@ export class ExerciseComponent implements OnInit {
   getWordSetTooltip(): string {
     const raw = this.filterFormGroup.value.wordset;
     return this.wordsets?.filter(ws => raw.includes(ws.id)).map(ws => ws.name).join(', ');
+  }
+
+  getErrorText(errorQuantity: number): Observable<string> {
+    const lastDigit = errorQuantity % 10;
+
+    return this.translateService.get(`EXERCISE.MISTAKES.${lastDigit}`)
+      .pipe(map(errorLabel => `(${errorQuantity} ${errorLabel})`));
   }
 
   private rebuildWordsets(languageId?: number) {

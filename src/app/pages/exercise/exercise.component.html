@@ -3,7 +3,7 @@
     <form [formGroup]="filterFormGroup" (ngSubmit)="filterFormSubmit()">
       <div style="display:flex; align-items: center">
         <div>
-          <button mat-flat-button color="warn" type="submit">{{'EXERCISE.START' | translate}}</button>
+          <button [disabled]="startButtonDisabled" mat-flat-button color="warn" type="submit">{{'EXERCISE.START' | translate}}</button>
         </div>
         <mat-form-field style="margin-left: 8px">
           <mat-select [placeholder]="'EXERCISE.LANGUAGE' | translate" formControlName="language">
@@ -45,7 +45,7 @@
 
   <div style="margin: 0 8px">
     <app-word-list [words]="words" [readonly]="true"
-                   [hideWordColumn]="filterFormGroup.value.allowLearn"></app-word-list>
+                   [hideWordColumn]="!filterFormGroup.value.allowLearn"></app-word-list>
   </div>
 </ng-container>
 <ng-template #exercise>
@@ -67,25 +67,29 @@
   </mat-card>
   <mat-card style="margin: 8px">
       <mat-selection-list [multiple]="false">
-        <div mat-subheader>{{'EXERCISE.RIGHT' | translate}}</div>
-        <mat-list-option [value]="'alal'">
+        <div mat-subheader *ngIf="rightWords.length">{{'EXERCISE.RIGHT' | translate}}</div>
+        <mat-list-option [value]="word.you.dbid" *ngFor="let word of rightWords">
           <mat-icon mat-list-icon style="color: green">check</mat-icon>
-          <div mat-line>al</div>
-          <div mat-line>alal</div>
+          <div mat-line>{{word.you.word}}</div>
         </mat-list-option>
         <mat-divider></mat-divider>
-        <div mat-subheader>{{'EXERCISE.WRONG' | translate}}</div>
-        <mat-list-option [value]="'alal'">
+        <div mat-subheader *ngIf="wrongWords.length">{{'EXERCISE.WRONG' | translate}}</div>
+        <mat-list-option [value]="word.you.dbid" *ngFor="let word of wrongWords">
           <mat-icon mat-list-icon style="color: red">clear</mat-icon>
-          <div mat-line>al</div>
-          <div mat-line>alal</div>
+          <div mat-line>
+            <span [innerHTML]="word.formattedString"></span>
+            <span style="display:inline-block; margin-left: 8px; color: gray; font-style: italic; font-size: smaller">
+              <span>{{getErrorText(word.errQuantity) | async}}</span>
+              <span *ngIf="word.errQuantity <= 2">. {{'EXERCISE.CAN_BE_TYPO' | translate}}</span>
+            </span>
+          </div>
+          <div mat-line>{{word.vault.word}}</div>
         </mat-list-option>
         <mat-divider></mat-divider>
-        <div mat-subheader>{{'EXERCISE.SKIPPED' | translate}}</div>
-        <mat-list-option [value]="'alal'">
+        <div mat-subheader *ngIf="skippedWords.length">{{'EXERCISE.SKIPPED' | translate}}</div>
+        <mat-list-option [value]="word.you.dbid" *ngFor="let word of skippedWords">
           <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
-          <div mat-line>al</div>
-          <div mat-line>alal</div>
+          <div mat-line>{{word.you.word}}</div>
         </mat-list-option>
       </mat-selection-list>
     </mat-card>

@@ -19,7 +19,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() wordset: IWordSet;
   @Input() words: IWord[];
   @Input() readonly: boolean;
-  @Input() hideWordColumn = true;
+  @Input() hideWordColumn = false;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['translations', 'from_language', 'gender', 'speech_part'];
 
@@ -32,13 +32,17 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
     if (!this.readonly) {
       this.displayedColumns.push('actions');
     }
+
+    if (this.hideWordColumn === false && this.displayedColumns[0] !== 'word') {
+      this.displayedColumns.unshift('word');
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hideWordColumn?.currentValue && this.displayedColumns[0] !== 'word') {
-      this.displayedColumns.unshift('word');
-    } else if (changes.hideWordColumn?.currentValue === false && this.displayedColumns[0] === 'word') {
+    if (changes.hideWordColumn?.currentValue && this.displayedColumns[0] === 'word') {
       this.displayedColumns.shift();
+    } else if (changes.hideWordColumn?.currentValue === false && this.displayedColumns[0] !== 'word') {
+      this.displayedColumns.unshift('word');
     }
   }
 

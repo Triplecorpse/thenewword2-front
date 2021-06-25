@@ -4,6 +4,7 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MetadataService} from '../../services/metadata.service';
 import {IUser} from '../../interfaces/IUser';
+import {Metadata} from "../../models/Metadata";
 
 @Component({
   selector: 'app-user-settings',
@@ -33,7 +34,8 @@ export class UserSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.languages = this.metadataService.languages;
+    this.languages = Metadata.languages
+      .sort((a, b) => a.englishName > b.englishName ? 1 : -1);
     this.formGroup.valueChanges
       .subscribe(val => {
         this.languageSections = this.languages

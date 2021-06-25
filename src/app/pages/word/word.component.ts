@@ -54,7 +54,9 @@ export class WordComponent implements OnInit {
   openNewWordSetModal() {
     this.dialog.open<any, null, IWordSet>(ModalNewWordsetComponent)
       .afterClosed()
+      .pipe(filter(result => !!result))
       .subscribe((wordSet: IWordSet) => {
+        console.log(wordSet);
         this.wordsets.push(wordSet);
       });
   }
@@ -97,13 +99,6 @@ export class WordComponent implements OnInit {
           this.loadedWords[wordset.id] = words;
         });
     }
-  }
-
-  private updateWordSets() {
-    this.wordService.getWordSets$()
-      .subscribe(wordsets => {
-        this.wordsets = wordsets;
-      });
   }
 
   openEditWordSetModal(event: MouseEvent, wordSet: IWordSet) {

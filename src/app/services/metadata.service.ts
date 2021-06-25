@@ -41,9 +41,7 @@ export class MetadataService implements CanActivate {
         tap(result => {
           this.languages = result.languages
             .map(l => new Language(l))
-            .sort((a, b) => {
-              return a.nativeName > b.nativeName ? 1 : -1;
-            });
+            .sort((a, b) => a.nativeName > b.nativeName ? 1 : -1);
           this.speechParts = result.speechParts.map(sp => new SpeechPart(sp));
           this.genders = result.genders.map(g => new Gender(g));
           this.metadata = {
