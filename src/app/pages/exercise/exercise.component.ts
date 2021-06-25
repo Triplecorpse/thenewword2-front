@@ -131,7 +131,10 @@ export class ExerciseComponent implements OnInit {
       return;
     }
 
-    this.wordService.checkWord({...this.wordToAsk, word: this.exerciseFormGroup.controls.word.value})
+    this.wordService.checkWord({
+      ...this.wordToAsk,
+      word: this.exerciseFormGroup.controls.word.value
+    }, {}, skipCheck)
       .subscribe(response => {
         let htmlString = '';
         let errors = 0;

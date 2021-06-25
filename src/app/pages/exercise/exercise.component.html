@@ -89,7 +89,7 @@
         <div mat-subheader *ngIf="skippedWords.length">{{'EXERCISE.SKIPPED' | translate}}</div>
         <mat-list-option [value]="word.you.dbid" *ngFor="let word of skippedWords">
           <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
-          <div mat-line>{{word.you.word}}</div>
+          <div mat-line>{{word.vault.word}}</div>
         </mat-list-option>
       </mat-selection-list>
     </mat-card>
