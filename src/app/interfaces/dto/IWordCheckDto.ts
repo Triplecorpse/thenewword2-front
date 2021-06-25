@@ -9,8 +9,9 @@ export interface Change {
 
 export interface IWordCheckDto {
   status: 'right' | 'wrong' | 'skipped';
-  right: boolean,
-  you: IWordDto,
-  vault: IWordDto,
-  diff?: Change[]
+  right: boolean;
+  you: IWordDto;
+  vault: IWordDto;
+  diff?: Change[];
+  stat_id?: number;
 }

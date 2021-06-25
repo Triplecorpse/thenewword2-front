@@ -141,19 +141,26 @@ export class WordService {
       .pipe(map(wordsDto => wordsDto.map(wordDto => this.wordFromDto(wordDto))));
   }
 
-  checkWord(word: IWord, settings?: {[key: string]: string}, skipCheck?: boolean): Observable<IWordCheck> {
+  checkWord(word: IWord,
+            settings?: {[key: string]: string},
+            skipCheck?: boolean,
+            fixingId?: number,
+            prevValue?: 'skipped' | 'wrong'): Observable<IWordCheck> {
     return this.httpClient.post<IWordCheckDto>('word/exercise',
       {
         skipped: skipCheck,
         settings: {},
-        word: this.dtoFromWord(word)
+        word: this.dtoFromWord(word),
+        fixingId,
+        prevValue
       })
       .pipe(map(response => ({
         isRight: response.right,
         vault: this.wordFromDto(response.vault),
         you: this.wordFromDto(response.you),
         status: response.status,
-        diff: response.diff
+        diff: response.diff,
+        statId: response.stat_id
       })));
   }
 }

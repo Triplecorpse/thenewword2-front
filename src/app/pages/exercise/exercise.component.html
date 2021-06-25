@@ -65,8 +65,9 @@
     <mat-divider></mat-divider>
     <p style="margin-top: 8px">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk.translations.join(', ')}}</p>
   </mat-card>
+  <p style="margin: 8px; font-style: italic; color: gray">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
   <mat-card style="margin: 8px">
-      <mat-selection-list [multiple]="false">
+      <mat-selection-list [multiple]="false" (selectionChange)="listSelection($event)">
         <div mat-subheader *ngIf="rightWords.length">{{'EXERCISE.RIGHT' | translate}}</div>
         <mat-list-option [value]="word.you.dbid" *ngFor="let word of rightWords">
           <mat-icon mat-list-icon style="color: green">check</mat-icon>
@@ -74,7 +75,7 @@
         </mat-list-option>
         <mat-divider></mat-divider>
         <div mat-subheader *ngIf="wrongWords.length">{{'EXERCISE.WRONG' | translate}}</div>
-        <mat-list-option [value]="word.you.dbid" *ngFor="let word of wrongWords">
+        <mat-list-option [value]="word" *ngFor="let word of wrongWords">
           <mat-icon mat-list-icon style="color: red">clear</mat-icon>
           <div mat-line>
             <span [innerHTML]="word.formattedString"></span>
@@ -87,7 +88,7 @@
         </mat-list-option>
         <mat-divider></mat-divider>
         <div mat-subheader *ngIf="skippedWords.length">{{'EXERCISE.SKIPPED' | translate}}</div>
-        <mat-list-option [value]="word.you.dbid" *ngFor="let word of skippedWords">
+        <mat-list-option [value]="word" *ngFor="let word of skippedWords">
           <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
           <div mat-line>{{word.vault.word}}</div>
         </mat-list-option>

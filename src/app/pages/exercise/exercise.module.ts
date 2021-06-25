@@ -6,7 +6,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatListModule} from "@angular/material/list";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {TranslateModule} from "@ngx-translate/core";
@@ -25,23 +25,24 @@ const routes: Routes = [
   declarations: [
     ExerciseComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatCardModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatListModule,
-    MatGridListModule,
-    TranslateModule,
-    MatSelectModule,
-    MatSliderModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    WordListModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatCardModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatListModule,
+        MatGridListModule,
+        TranslateModule,
+        MatSelectModule,
+        MatSliderModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        WordListModule,
+        FormsModule
+    ]
 })
 export class ExerciseModule {
 }

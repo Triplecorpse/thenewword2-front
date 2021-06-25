@@ -10,4 +10,5 @@ export interface IWordCheck {
   diff?: Change[];
   errQuantity?: number;
   formattedString?: SafeHtml;
+  statId?: number;
 }

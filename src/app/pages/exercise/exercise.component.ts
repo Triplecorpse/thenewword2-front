@@ -1,17 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
-import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
-import {merge, Observable, of, Subject} from 'rxjs';
+import {debounceTime, map, switchMap, tap} from 'rxjs/operators';
+import {merge, Observable, of} from 'rxjs';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
 import {Metadata} from "../../models/Metadata";
-import {Change} from "../../interfaces/dto/IWordCheckDto";
 import {DomSanitizer} from "@angular/platform-browser";
 import {TranslateService} from "@ngx-translate/core";
+import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -131,10 +131,16 @@ export class ExerciseComponent implements OnInit {
       return;
     }
 
+    const prevWordCheck: IWordCheck = [
+      ...this.wrongWords,
+      ...this.skippedWords
+    ]
+      .find(word => word.vault.dbid === this.wordToAsk.dbid);
+
     this.wordService.checkWord({
       ...this.wordToAsk,
       word: this.exerciseFormGroup.controls.word.value
-    }, {}, skipCheck)
+    }, {}, skipCheck, prevWordCheck?.statId, prevWordCheck?.status as 'skipped' | 'wrong')
       .subscribe(response => {
         let htmlString = '';
         let errors = 0;
@@ -154,7 +160,6 @@ export class ExerciseComponent implements OnInit {
 
           htmlString += htmlPart;
         });
-
         response.errQuantity = Math.abs(errors);
         response.formattedString = this.domSanitizer.bypassSecurityTrustHtml(htmlString);
 
@@ -164,6 +169,15 @@ export class ExerciseComponent implements OnInit {
           this.rightWords.push(response)
         } else if (!response.isRight) {
           this.wrongWords.push(response)
+        }
+
+        console.log(prevWordCheck);
+        if (prevWordCheck?.status === 'skipped') {
+          this.skippedWords = this.skippedWords.filter(sw => sw.vault.dbid !== prevWordCheck.vault.dbid);
+        }
+
+        if (prevWordCheck?.status === 'wrong') {
+          this.wrongWords = this.wrongWords.filter(sw => sw.vault.dbid !== prevWordCheck.vault.dbid);
         }
       });
 
@@ -213,5 +227,16 @@ export class ExerciseComponent implements OnInit {
         wordsets
       }
     })
+  }
+
+  listSelection($event: MatSelectionListChange) {
+    const selected: IWordCheck = $event.option.value;
+
+    if ((selected.status === 'skipped' || selected.errQuantity <= 2) && !this.words.length) {
+      this.wordToAsk = selected.vault;
+      this.exerciseFormGroup.setValue({
+        word: ''
+      });
+    }
   }
 }
