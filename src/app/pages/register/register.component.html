@@ -52,10 +52,12 @@
           <div style="margin-bottom: 16px;">
             <mat-form-field>
               <mat-select formControlName="nativeLanguages" [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.PLACEHOLDER' | translate" multiple>
-                <mat-optgroup [label]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.RECOMMENDED_LANGUAGES' | translate">
+                <mat-optgroup [label]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.RECOMMENDED_LANGUAGES' | translate">
                   <mat-option *ngFor="let lang of recommendedLanguages" [value]="lang.id">{{lang.nativeName}}</mat-option>
                 </mat-optgroup>
-                <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>
+                <mat-optgroup [label]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.OTHER_LANGUAGES' | translate">
+                  <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>
+                </mat-optgroup>
               </mat-select>
               <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.TOOLTIP' | translate">
                 info_outlined
