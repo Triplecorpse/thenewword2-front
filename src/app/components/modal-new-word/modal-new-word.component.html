@@ -21,8 +21,8 @@
         </mat-form-field>
         <mat-form-field>
           <mat-select [placeholder]="'MODAL_WORD.TO_LANGUAGE' | translate" formControlName="nativeLanguage">
-            <mat-option [value]="nativeLanguage.id">
-              {{nativeLanguage.nativeName}}
+            <mat-option [value]="language.id" *ngFor="let language of nativeLanguages">
+              {{language.nativeName}}
             </mat-option>
           </mat-select>
         </mat-form-field>

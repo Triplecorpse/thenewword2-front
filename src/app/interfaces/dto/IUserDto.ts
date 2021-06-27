@@ -3,7 +3,7 @@ export interface IUserDto {
     password?: string;
     new_password?: string;
     email?: string;
-    native_language?: number;
+    native_languages?: number[];
     learning_languages?: number[];
     token?: string;
 }

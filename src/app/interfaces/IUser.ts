@@ -5,6 +5,6 @@ export interface IUser {
   token?: string;
   email?: string;
   password?: string;
-  nativeLanguage?: ILanguage;
+  nativeLanguages?: ILanguage[];
   learningLanguages?: ILanguage[];
 }

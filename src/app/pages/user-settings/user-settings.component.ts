@@ -52,8 +52,8 @@ export class UserSettingsComponent implements OnInit {
       });
     this.formGroup.setValue({
       login: this.userService.getUser().login,
-      nativeLanguage: this.userService.getUser().nativeLanguage.id,
-      learningLanguages: this.userService.getUser().learningLanguages.map(lang => lang.id),
+      nativeLanguage: this.userService.getUser().nativeLanguages.map(({id}) => id),
+      learningLanguages: this.userService.getUser().learningLanguages.map(({id}) => id),
       email: this.formGroup.value.email || '',
       oldPassword: this.formGroup.value.oldPassword || '',
       newPassword: this.formGroup.value.newPassword || '',

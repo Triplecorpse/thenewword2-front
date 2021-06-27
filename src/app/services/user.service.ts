@@ -79,7 +79,7 @@ export class UserService {
           login: res.login,
           email: res.email,
           password: res.password,
-          nativeLanguage: this.metadataService.languages.find(lang => lang.id === res.native_language),
+          nativeLanguage: this.metadataService.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: this.metadataService.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token
         })),
@@ -94,8 +94,8 @@ export class UserService {
   register(user: IUser): Observable<void> {
     const userDto: IUserDto = {
       login: user.login,
-      learning_languages: user.learningLanguages?.map(l => l.id),
-      native_language: user.nativeLanguage.id,
+      learning_languages: user.learningLanguages?.map(({id}) => id),
+      native_languages: user.nativeLanguages.map(({id}) => id),
       email: user.email,
       password: user.password
     };
@@ -131,7 +131,7 @@ export class UserService {
           login: res.login,
           email: res.email,
           password: res.password,
-          nativeLanguage: this.metadataService.languages.find(lang => lang.id === res.native_language),
+          nativeLanguage: this.metadataService.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: this.metadataService.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token
         })),
@@ -151,7 +151,7 @@ export class UserService {
     User.token = this.user?.token;
     User.email = this.user?.email;
     User.password = this.user?.password;
-    User.nativeLanguage = this.user?.nativeLanguage;
+    User.nativeLanguages = this.user?.nativeLanguages;
     User.learningLanguages = this.user?.learningLanguages;
   }
 }

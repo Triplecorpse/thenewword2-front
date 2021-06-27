@@ -10,7 +10,7 @@
 
       <div>
         <mat-form-field>
-          <mat-select [placeholder]="'MODAL_WORDSET.FROM_LANGUAGE' | translate" formControlName="toLanguage">
+          <mat-select [placeholder]="'MODAL_WORDSET.FROM_LANGUAGE' | translate" formControlName="foreignLanguage">
             <mat-option *ngFor="let l of learningLanguages" [value]="l.id">
               {{l.nativeName}}
             </mat-option>
@@ -20,9 +20,9 @@
 
       <div>
         <mat-form-field>
-          <mat-select [placeholder]="'MODAL_WORDSET.TO_LANGUAGE' | translate" formControlName="fromLanguage">
-            <mat-option [value]="nativeLanguage.id">
-              {{nativeLanguage.nativeName}}
+          <mat-select [placeholder]="'MODAL_WORDSET.TO_LANGUAGE' | translate" formControlName="nativeLanguage">
+            <mat-option [value]="language.id" *ngFor="let language of nativeLanguages">
+              {{language.nativeName}}
             </mat-option>
           </mat-select>
         </mat-form-field>

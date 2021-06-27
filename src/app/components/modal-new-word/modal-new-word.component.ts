@@ -23,7 +23,7 @@ export interface IWordModalInputData {
 export class ModalNewWordComponent implements OnInit {
   isEditing = false;
   wordMetadata: IWordMetadata;
-  nativeLanguage: ILanguage;
+  nativeLanguages: ILanguage[];
   learningLanguages: ILanguage[];
   formGroup = new FormGroup({
     word: new FormControl('', Validators.required),
@@ -56,11 +56,11 @@ export class ModalNewWordComponent implements OnInit {
       speechParts: this.metadataService.speechParts
     };
 
-    this.nativeLanguage = this.userService.getUser().nativeLanguage;
+    this.nativeLanguages = this.userService.getUser().nativeLanguages;
     this.learningLanguages = this.userService.getUser().learningLanguages;
 
     this.formGroup.patchValue({
-      nativeLanguage: this.nativeLanguage.id
+      nativeLanguage: this.nativeLanguages.map(({id}) => id)
     });
 
     if (!!this.data.word) {

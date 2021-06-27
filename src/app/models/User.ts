@@ -5,6 +5,6 @@ export class User {
   static token: string;
   static email: string;
   static password: string;
-  static nativeLanguage: ILanguage;
+  static nativeLanguages: ILanguage[];
   static learningLanguages: ILanguage[];
 }

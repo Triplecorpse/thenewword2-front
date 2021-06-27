@@ -14,11 +14,11 @@ export class ModalNewWordsetComponent implements OnInit {
   isEditing = false;
   formGroup = new FormGroup({
     name: new FormControl('', Validators.required),
-    toLanguage: new FormControl('', Validators.required),
-    fromLanguage: new FormControl(User.nativeLanguage.id, Validators.required)
+    foreignLanguage: new FormControl([], Validators.required),
+    nativeLanguage: new FormControl(User.nativeLanguages[0].id, Validators.required)
   });
   learningLanguages = User.learningLanguages;
-  nativeLanguage = User.nativeLanguage;
+  nativeLanguages = User.nativeLanguages;
 
   constructor(private wordService: WordService,
               private dialogRef: MatDialogRef<any>,
@@ -30,12 +30,12 @@ export class ModalNewWordsetComponent implements OnInit {
     if (this.isEditing) {
       this.formGroup.patchValue({
         name: this.data.name,
-        toLanguage: this.data.translatedlanguage.id,
-        fromLanguage: this.data.originalLanguage.id,
+        foreignLanguage: this.data.translatedlanguage.id,
+        nativeLanguage: this.data.originalLanguage.id,
       });
 
-      this.formGroup.controls.toLanguage.disable();
-      this.formGroup.controls.fromLanguage.disable();
+      this.formGroup.controls.foreignLanguage.disable();
+      this.formGroup.controls.nativeLanguage.disable();
     }
   }
 
@@ -45,8 +45,8 @@ export class ModalNewWordsetComponent implements OnInit {
       const wordSetDto = this.wordService.wordSetFromDto({
         id: this.data?.id,
         name: form.name,
-        translated_language_id: form.toLanguage,
-        original_language_id: form.fromLanguage
+        translated_language_id: form.foreignLanguage,
+        original_language_id: form.nativeLanguage
       });
 
       this.wordService.addOrModifyWordSet(wordSetDto)
