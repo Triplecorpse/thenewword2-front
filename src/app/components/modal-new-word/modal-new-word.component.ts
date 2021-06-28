@@ -8,6 +8,7 @@ import {UserService} from '../../services/user.service';
 import {MetadataService} from '../../services/metadata.service';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {Language} from '../../models/Language';
+import {Metadata} from "../../models/Metadata";
 
 export interface IWordModalInputData {
   word?: IWord;
@@ -26,11 +27,11 @@ export class ModalNewWordComponent implements OnInit {
   wordMetadata: IWordMetadata;
   nativeLanguages: ILanguage[];
   learningLanguages: ILanguage[];
+  nativeLanguage: ILanguage;
+  foreignLanguage: ILanguage;
   formGroup = new FormGroup({
     word: new FormControl('', Validators.required),
     translations: new FormControl('', Validators.required),
-    foreignLanguage: new FormControl('', Validators.required),
-    nativeLanguage: new FormControl('', Validators.required),
     transcription: new FormControl(''),
     speechPart: new FormControl(''),
     gender: new FormControl(''),
@@ -41,6 +42,7 @@ export class ModalNewWordComponent implements OnInit {
   stressLetterIndex: number;
   idEditing: number;
   wordSetId: number;
+  isShownMore: boolean;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
@@ -52,28 +54,24 @@ export class ModalNewWordComponent implements OnInit {
 
   ngOnInit(): void {
     this.wordMetadata = {
-      languages: this.metadataService.languages,
-      genders: this.metadataService.genders,
-      speechParts: this.metadataService.speechParts
+      languages: Metadata.languages,
+      genders: Metadata.genders,
+      speechParts: Metadata.speechParts
     };
 
     this.nativeLanguages = this.userService.getUser().nativeLanguages;
     this.learningLanguages = this.userService.getUser().learningLanguages;
 
-    this.formGroup.patchValue({
-      nativeLanguage: this.nativeLanguages.map(({id}) => id)
-    });
-
     if (!!this.data.word) {
       this.isEditing = true;
       this.idEditing = this.data.word.dbid;
       this.stressLetterIndex = this.data.word.stressLetterIndex;
+      this.nativeLanguage = this.data.word.translatedLanguage;
+      this.foreignLanguage = this.data.word.originalLanguage;
       this.formGroup.patchValue({
         word: this.data.word.word,
         translations: this.data.word.translations.join(', '),
         transcription: this.data.word.transcription,
-        foreignLanguage: this.data.word.originalLanguage.id,
-        nativeLanguage: this.data.word.translatedLanguage.id,
         speechPart: this.data.word.speechPart.id,
         gender: this.data.word.gender.id,
         forms: this.data.word.forms.join(', '),
@@ -86,15 +84,11 @@ export class ModalNewWordComponent implements OnInit {
     }
 
     if (!!this.data.wordsetForeignLanguage) {
-      this.formGroup.patchValue({
-        foreignLanguage: this.data.wordsetForeignLanguage.id
-      });
+      this.nativeLanguage = this.data.wordsetNativeLanguage;
     }
 
     if (!!this.data.wordsetNativeLanguage) {
-      this.formGroup.patchValue({
-        nativeLanguage: this.data.wordsetNativeLanguage.id
-      });
+      this.foreignLanguage = this.data.wordsetForeignLanguage;
     }
   }
 
@@ -111,8 +105,8 @@ export class ModalNewWordComponent implements OnInit {
         speech_part_id: form.speechPart,
         remarks: form.remarks,
         stress_letter_index: this.stressLetterIndex,
-        original_language_id: form.foreignLanguage,
-        translated_language_id: form.nativeLanguage,
+        original_language_id: this.foreignLanguage.id,
+        translated_language_id: this.nativeLanguage.id,
         word_set_id: this.wordSetId
       });
 
