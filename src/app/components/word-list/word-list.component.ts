@@ -66,7 +66,8 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
       data: {
         word: element,
         wordsetId: this.wordset.id,
-        wordsetLanguage: this.wordset.translatedlanguage
+        wordsetForeignLanguage: this.wordset.translatedlanguage,
+        wordsetNativeLanguage: this.wordset.originalLanguage
       }
     })
       .afterClosed()
@@ -108,7 +109,8 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
     this.dialog.open<any, IWordModalInputData, IWord>(ModalNewWordComponent,
       {
         data: {
-          wordsetLanguage: this.wordset.translatedlanguage,
+          wordsetForeignLanguage: this.wordset.translatedlanguage,
+          wordsetNativeLanguage: this.wordset.originalLanguage,
           wordsetId: this.wordset.id
         }
       }

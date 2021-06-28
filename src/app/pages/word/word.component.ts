@@ -56,7 +56,6 @@ export class WordComponent implements OnInit {
       .afterClosed()
       .pipe(filter(result => !!result))
       .subscribe((wordSet: IWordSet) => {
-        console.log(wordSet);
         this.wordsets.push(wordSet);
       });
   }

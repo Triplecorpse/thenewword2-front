@@ -12,7 +12,8 @@ import {Language} from '../../models/Language';
 export interface IWordModalInputData {
   word?: IWord;
   wordsetId?: number;
-  wordsetLanguage?: Language;
+  wordsetNativeLanguage?: Language;
+  wordsetForeignLanguage?: Language;
 }
 
 @Component({
@@ -84,9 +85,15 @@ export class ModalNewWordComponent implements OnInit {
       this.wordSetId = this.data.wordsetId;
     }
 
-    if (!!this.data.wordsetLanguage) {
+    if (!!this.data.wordsetForeignLanguage) {
       this.formGroup.patchValue({
-        foreignLanguage: this.data.wordsetLanguage.id
+        foreignLanguage: this.data.wordsetForeignLanguage.id
+      });
+    }
+
+    if (!!this.data.wordsetNativeLanguage) {
+      this.formGroup.patchValue({
+        nativeLanguage: this.data.wordsetNativeLanguage.id
       });
     }
   }
