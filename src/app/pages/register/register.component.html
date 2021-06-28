@@ -16,6 +16,9 @@
               <mat-error *ngIf="formGroup?.controls?.login?.hasError('pattern')">
                 {{'REGISTRATION.FIELDS.LOGIN.ERROR2' | translate}}
               </mat-error>
+              <mat-error *ngIf="formGroup?.controls?.login?.hasError('http')">
+                {{'REGISTRATION.FIELDS.LOGIN.ERROR3' | translate}}
+              </mat-error>
             </mat-form-field>
           </div>
 

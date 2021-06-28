@@ -10,6 +10,7 @@ import {MetadataService} from '../../services/metadata.service';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TranslateService} from "@ngx-translate/core";
 import {Metadata} from "../../models/Metadata";
+import {AsyncValidatorService} from "../../services/async-validator.service";
 
 @Component({
   selector: 'app-register',
@@ -22,7 +23,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     login: new FormControl('', [Validators.required, Validators.minLength(6), Validators.pattern(/^[A-Za-z0-9]+$/)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     passwordRepeat: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    email: new FormControl('', Validators.email),
+    email: new FormControl('', [Validators.email]),
     nativeLanguages: new FormControl([], Validators.required),
     learningLanguages: new FormControl([], Validators.required)
   });
@@ -34,7 +35,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
               private wordService: WordService,
               private metadataService: MetadataService,
               private snackBar: MatSnackBar,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private asyncValidatorsService: AsyncValidatorService) {
   }
 
   ngOnInit(): void {

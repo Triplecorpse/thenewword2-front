@@ -15,7 +15,7 @@ export class UserSettingsComponent implements OnInit {
   languages: ILanguage[] = [];
   formGroup = new FormGroup({
     login: new FormControl({value: '', disabled: true}),
-    nativeLanguage: new FormControl({value: '', disabled: true}),
+    nativeLanguages: new FormControl({value: '', disabled: true}),
     learningLanguages: new FormControl(),
     email: new FormControl('', Validators.email),
     oldPassword: new FormControl('', Validators.required),
@@ -29,8 +29,7 @@ export class UserSettingsComponent implements OnInit {
     letters: {text: string, currentBadgeSize: 'small' | 'large'}[]
   }[];
 
-  constructor(private userService: UserService,
-              private metadataService: MetadataService) {
+  constructor(private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -52,7 +51,7 @@ export class UserSettingsComponent implements OnInit {
       });
     this.formGroup.setValue({
       login: this.userService.getUser().login,
-      nativeLanguage: this.userService.getUser().nativeLanguages.map(({id}) => id),
+      nativeLanguages: this.userService.getUser().nativeLanguages.map(({id}) => id),
       learningLanguages: this.userService.getUser().learningLanguages.map(({id}) => id),
       email: this.formGroup.value.email || '',
       oldPassword: this.formGroup.value.oldPassword || '',

@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {IUserDto} from '../interfaces/dto/IUserDto';
 import {MetadataService} from './metadata.service';
 import {User} from '../models/User';
+import {Metadata} from "../models/Metadata";
 
 @Injectable({
   providedIn: 'root'
@@ -79,8 +80,8 @@ export class UserService {
           login: res.login,
           email: res.email,
           password: res.password,
-          nativeLanguage: this.metadataService.languages.filter(lang => res.native_languages.includes(lang.id)),
-          learningLanguages: this.metadataService.languages.filter(lang => res.learning_languages.includes(lang.id)),
+          nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
+          learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token
         })),
         tap(res => {
@@ -131,8 +132,8 @@ export class UserService {
           login: res.login,
           email: res.email,
           password: res.password,
-          nativeLanguage: this.metadataService.languages.filter(lang => res.native_languages.includes(lang.id)),
-          learningLanguages: this.metadataService.languages.filter(lang => res.learning_languages.includes(lang.id)),
+          nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
+          learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token
         })),
         tap(newUser => {

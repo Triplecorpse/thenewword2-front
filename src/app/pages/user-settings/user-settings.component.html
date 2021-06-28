@@ -5,7 +5,7 @@
       <h3 matCardTitle>User settings</h3>
       <div>
         <mat-form-field>
-          <input matInput placeholder="Login" disabled formControlName="login">
+          <input matInput placeholder="Login" formControlName="login">
         </mat-form-field>
         <p>
           This is login that is user to enter your account. It cannot be changed.
@@ -14,7 +14,7 @@
 
       <div>
         <mat-form-field>
-          <mat-select placeholder="Native Language" formControlName="nativeLanguage">
+          <mat-select placeholder="Native Languages" formControlName="nativeLanguages" multiple>
             <mat-option *ngFor="let l of languages" [value]="l.id">
               {{l.englishName}}
             </mat-option>
