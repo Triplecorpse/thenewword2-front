@@ -34,6 +34,7 @@ export class ExerciseComponent implements OnInit {
   skippedWords: IWordCheck[] = [];
   askedWords: IWordCheck[] = [];
   wordToAsk: IWord;
+  exerciseFinished: boolean;
   exerciseFormGroup = new FormGroup({
     word: new FormControl('', Validators.required)
   });
@@ -171,7 +172,6 @@ export class ExerciseComponent implements OnInit {
           this.wrongWords.push(response)
         }
 
-        console.log(prevWordCheck);
         if (prevWordCheck?.status === 'skipped') {
           this.skippedWords = this.skippedWords.filter(sw => sw.vault.dbid !== prevWordCheck.vault.dbid);
         }
@@ -184,6 +184,12 @@ export class ExerciseComponent implements OnInit {
     if (this.words.length) {
       this.wordToAsk = this.words.shift();
       this.exerciseFormGroup.controls.word.setValue('');
+    } else {
+      this.exerciseFormGroup.setValue({
+        word: ''
+      });
+      this.exerciseFormGroup.controls.word.disable();
+      this.wordToAsk = null;
     }
   }
 
@@ -237,6 +243,11 @@ export class ExerciseComponent implements OnInit {
       this.exerciseFormGroup.setValue({
         word: ''
       });
+      this.exerciseFormGroup.controls.word.enable();
     }
+  }
+
+  isAnythingToRecall(): boolean {
+    return !!this.skippedWords.length || !!this.wrongWords.filter(ww => ww.errQuantity <= 2).length;
   }
 }

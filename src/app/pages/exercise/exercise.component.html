@@ -55,23 +55,22 @@
         <mat-form-field>
           <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus>
         </mat-form-field>
-        <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit">{{'EXERCISE.OK' | translate}}</button>
-        <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)">{{'EXERCISE.SKIP' | translate}}</button>
+        <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit" [disabled]="!wordToAsk">{{'EXERCISE.OK' | translate}}</button>
+        <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)" [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
       </form>
-      <div>
-        <button mat-flat-button color="primary" disabled>{{'EXERCISE.MARK_AS_TYPO' | translate}}</button>
-      </div>
     </div>
     <mat-divider></mat-divider>
-    <p style="margin-top: 8px">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk.translations.join(', ')}}</p>
+    <p style="margin-top: 8px" *ngIf="wordToAsk">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk?.translations.join(', ')}}<span *ngIf="!wordToAsk">...</span></p>
+    <p style="margin-top: 8px" *ngIf="!wordToAsk && isAnythingToRecall()">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
+    <p style="margin-top: 8px" *ngIf="!wordToAsk && !isAnythingToRecall()">{{'EXERCISE.FINISHED' | translate}}</p>
   </mat-card>
-  <p style="margin: 8px; font-style: italic; color: gray">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
   <mat-card style="margin: 8px">
       <mat-selection-list [multiple]="false" (selectionChange)="listSelection($event)">
         <div mat-subheader *ngIf="rightWords.length">{{'EXERCISE.RIGHT' | translate}}</div>
         <mat-list-option [value]="word.you.dbid" *ngFor="let word of rightWords">
           <mat-icon mat-list-icon style="color: green">check</mat-icon>
-          <div mat-line>{{word.you.word}}</div>
+          <div mat-line>{{word.vault.word}}</div>
+          <div mat-line>{{word.vault.translations.join(', ')}}</div>
         </mat-list-option>
         <mat-divider></mat-divider>
         <div mat-subheader *ngIf="wrongWords.length">{{'EXERCISE.WRONG' | translate}}</div>
@@ -85,12 +84,13 @@
             </span>
           </div>
           <div mat-line>{{word.vault.word}}</div>
+          <div mat-line>{{word.vault.translations.join(', ')}}</div>
         </mat-list-option>
         <mat-divider></mat-divider>
         <div mat-subheader *ngIf="skippedWords.length">{{'EXERCISE.SKIPPED' | translate}}</div>
         <mat-list-option [value]="word" *ngFor="let word of skippedWords">
           <mat-icon mat-list-icon style="color: gray">call_missed_outgoing</mat-icon>
-          <div mat-line>{{word.vault.word}}</div>
+          <div mat-line>{{word.vault.translations.join(', ')}}</div>
         </mat-list-option>
       </mat-selection-list>
     </mat-card>
