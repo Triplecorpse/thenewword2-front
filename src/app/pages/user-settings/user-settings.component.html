@@ -1,77 +1,66 @@
+<h2 style="margin: 16px 0 16px 16px;">{{'SETTINGS.HEADER' | translate}}</h2>
 <div style="display:flex;">
-  <h2 style="margin: 16px 0 16px 16px;">Settings</h2>
   <form [formGroup]="formGroup" (ngSubmit)="submit()">
     <mat-card style="margin: 16px;">
-      <h3 matCardTitle>User settings</h3>
+      <h3 matCardTitle>{{'SETTINGS.USER_SETTINGS.HEADER' | translate}}</h3>
       <div>
         <mat-form-field>
-          <input matInput placeholder="Login" formControlName="login">
+          <input matInput [placeholder]="'SETTINGS.USER_SETTINGS.LOGIN' | translate" formControlName="login">
         </mat-form-field>
-        <p>
-          This is login that is user to enter your account. It cannot be changed.
-        </p>
       </div>
 
       <div>
         <mat-form-field>
-          <mat-select placeholder="Native Languages" formControlName="nativeLanguages" multiple>
+          <mat-select [placeholder]="'SETTINGS.USER_SETTINGS.NATIVE_LANGUAGES' | translate" formControlName="nativeLanguages" multiple>
             <mat-option *ngFor="let l of languages" [value]="l.id">
               {{l.englishName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <p>
-          This is your native language. It is set to ask the translations from your native language to a foreign one.
-          Once set it cannot be changed.
-        </p>
       </div>
 
       <div>
         <mat-form-field>
-          <mat-select multiple placeholder="Learning Languages" formControlName="learningLanguages"
+          <mat-select multiple [placeholder]="'SETTINGS.USER_SETTINGS.LEARNING_LANGUAGES' | translate" formControlName="learningLanguages"
                       [matTooltip]="learningLanguagesTooltip">
             <mat-option *ngFor="let l of languages" [value]="l.id">
               {{l.englishName}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <p>
-          These are languages you learn. They are used to limit the language list just for your convenience.
-        </p>
       </div>
     </mat-card>
     <mat-card style="margin: 16px;">
-      <h3 matCardTitle>Security settings</h3>
+      <h3 matCardTitle>{{'SETTINGS.SECURITY_SETTINGS.HEADER' | translate}}</h3>
       <div>
         <mat-form-field>
-          <input matInput placeholder="New Password" type="password" formControlName="newPassword">
+          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.OLD_PASSWORD' | translate" type="password" formControlName="oldPassword">
         </mat-form-field>
       </div>
 
       <div>
         <mat-form-field>
-          <input matInput placeholder="New Password Repeat" type="password" formControlName="newPasswordRepeat">
+          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD' | translate" type="password" formControlName="newPassword">
         </mat-form-field>
       </div>
 
       <div>
         <mat-form-field>
-          <input matInput placeholder="Email" formControlName="email">
+          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD_REPEAT' | translate" type="password" formControlName="newPasswordRepeat">
         </mat-form-field>
-        <p>
-          This is your email. It is used to recover your password.
-        </p>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.EMAIL' | translate" formControlName="email">
+        </mat-form-field>
       </div>
     </mat-card>
     <mat-card style="margin: 16px;">
-      <h3 matCardTitle>Keyboard settings</h3>
-      <h4 matCardTitle style="color: red;">Note: this section is under construction</h4>
-      <p>You can place here language-specific letters like Umlauts for German. Those buttons will appear next to each
-        word field and you'll have no need to install foreign keyboard</p>
-      <p>You can input even phrases - if you need to</p>
-      <p>No need to keep lower- and uppercase. You can switch right in the input</p>
+      <h3 matCardTitle>{{'SETTINGS.KEYBOARD_SETTINGS.HEADER' | translate}}</h3>
+      <p>{{'SETTINGS.KEYBOARD_SETTINGS.DESCRIPTION' | translate}}</p>
       <mat-card-content>
-        <div *ngFor="let section of languageSections">
+        <mat-card *ngFor="let section of languageSections" style="margin-bottom: 8px;">
           <h4>{{section.lang.englishName}}</h4>
           <div>
             <button mat-flat-button
@@ -89,12 +78,12 @@
             </button>
           </div>
           <mat-form-field>
-            <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}" (keydown.enter)="addLetter(section.lang.id)">
-            <button mat-button matSuffix mat-icon-button type="button" (keydown.enter)="addLetter(section.lang.id)" (click)="addLetter(section.lang.id)">
+            <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}" (keydown.enter)="addLetter($event, section.lang.id)">
+            <button mat-button matSuffix mat-icon-button type="button" (keydown.enter)="addLetter($event, section.lang.id)" (click)="addLetter($event, section.lang.id)">
               <mat-icon>check</mat-icon>
             </button>
           </mat-form-field>
-        </div>
+        </mat-card>
       </mat-card-content>
     </mat-card>
 

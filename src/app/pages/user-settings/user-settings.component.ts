@@ -76,7 +76,8 @@ export class UserSettingsComponent implements OnInit {
     }
   }
 
-  addLetter(id: number) {
+  addLetter(event: MouseEvent, id: number) {
+    event.stopPropagation();
     const section = this.languageSections.find(sec => sec.lang.id === id);
 
     if (section.model) {
