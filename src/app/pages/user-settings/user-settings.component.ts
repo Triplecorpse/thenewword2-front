@@ -4,7 +4,8 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUser} from '../../interfaces/IUser';
 import {Metadata} from '../../models/Metadata';
-import {merge} from "rxjs";
+import {merge} from 'rxjs';
+import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-settings',
@@ -26,7 +27,7 @@ export class UserSettingsComponent implements OnInit {
   languageSections: {
     lang: ILanguage,
     model: string,
-    letters: {text: string, currentBadgeSize: 'small' | 'large'}[]
+    letters: { text: string, currentBadgeSize: 'small' | 'large' }[]
   }[];
 
   constructor(private userService: UserService) {
@@ -60,22 +61,22 @@ export class UserSettingsComponent implements OnInit {
     });
 
     merge(
-      this.formGroup.controls.learningLanguages.valueChanges,
-      this.formGroup.controls.email.valueChanges
+      this.formGroup.controls.learningLanguages.valueChanges
+        .pipe(map(v => ({learningLanguages: v})))
     )
-  }
+      .pipe(
+        filter(() => this.formGroup.valid),
+        debounceTime(1000),
+        switchMap((value) => {
+          const user: IUser = {
+            learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
+          };
 
-  submit() {
-    if (this.formGroup.valid) {
-      const user: IUser = {
-        learningLanguages: this.languages.filter(lang => this.formGroup.value.learningLanguages.includes(lang.id)),
-        email: this.formGroup.value.email,
-        password: this.formGroup.value.oldPassword,
-        login: this.userService.getUser().login
-      };
-
-      this.userService.update(user, this.formGroup.value.newPassword).subscribe();
-    }
+          return this.userService.update(user, this.formGroup.value.newPassword);
+        })
+      )
+      .subscribe(result => {
+      });
   }
 
   addLetter(event: MouseEvent, id: number) {
