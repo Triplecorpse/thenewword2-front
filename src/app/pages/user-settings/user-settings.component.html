@@ -34,12 +34,6 @@
       <h3 matCardTitle>{{'SETTINGS.SECURITY_SETTINGS.HEADER' | translate}}</h3>
       <div>
         <mat-form-field>
-          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.OLD_PASSWORD' | translate" type="password" formControlName="oldPassword">
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-form-field>
           <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD' | translate" type="password" formControlName="newPassword">
         </mat-form-field>
       </div>
@@ -54,6 +48,16 @@
         <mat-form-field>
           <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.EMAIL' | translate" formControlName="email">
         </mat-form-field>
+      </div>
+      <div style="display:flex; justify-content: flex-end">
+        <mat-form-field>
+          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.OLD_PASSWORD' | translate" type="password" formControlName="oldPassword">
+        </mat-form-field>
+        <div style="display:flex; align-items: center">
+          <button mat-flat-button color="primary" style="margin-right: 16px; margin-left: 8px;" type="submit">
+            {{'SETTINGS.SECURITY_SETTINGS.SAVE' | translate}}
+          </button>
+        </div>
       </div>
     </mat-card>
     <mat-card style="margin: 16px;">
@@ -86,15 +90,5 @@
         </mat-card>
       </mat-card-content>
     </mat-card>
-
-    <div style="display:flex; justify-content: flex-end">
-      <mat-form-field>
-        <input matInput placeholder="Current Password" type="password" formControlName="oldPassword">
-      </mat-form-field>
-      <div style="display:flex; align-items: center">
-        <button mat-flat-button color="primary" style="margin-right: 16px; margin-left: 8px;" type="submit">Save
-        </button>
-      </div>
-    </div>
   </form>
 </div>

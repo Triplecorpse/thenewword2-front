@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/user.service';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MetadataService} from '../../services/metadata.service';
 import {IUser} from '../../interfaces/IUser';
-import {Metadata} from "../../models/Metadata";
+import {Metadata} from '../../models/Metadata';
+import {merge} from "rxjs";
 
 @Component({
   selector: 'app-user-settings',
@@ -58,9 +58,11 @@ export class UserSettingsComponent implements OnInit {
       newPassword: this.formGroup.value.newPassword || '',
       newPasswordRepeat: this.formGroup.value.newPasswordRepeat || '',
     });
-    this.formGroup.value.learningLanguages.forEach((langId: number) => {
 
-    });
+    merge(
+      this.formGroup.controls.learningLanguages.valueChanges,
+      this.formGroup.controls.email.valueChanges
+    )
   }
 
   submit() {
