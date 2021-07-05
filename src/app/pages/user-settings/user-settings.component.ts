@@ -4,7 +4,7 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUser} from '../../interfaces/IUser';
 import {Metadata} from '../../models/Metadata';
-import {merge, Subject} from 'rxjs';
+import {EMPTY, merge, Subject} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 
 interface ILanguageSection {
@@ -16,7 +16,7 @@ interface ILanguageSection {
 
 export interface ISymbol {
   lang: ILanguage;
-  letter: string;
+  letters: string[];
   action: 'add' | 'remove';
 }
 
@@ -75,17 +75,26 @@ export class UserSettingsComponent implements OnInit {
       .pipe(
         filter(() => this.settingsFormGroup.valid),
         debounceTime(1000),
-        tap(value => {
+        switchMap<any, any>((value: {learningLanguages?: number[]; languageSections?: ILanguageSection}) => {
           console.log(value);
+          if (value.learningLanguages) {
+            const user: IUser = {
+              learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
+            };
+
+            return this.userService.update(user, this.settingsFormGroup.value.newPassword);
+          }
+
+          if (value.languageSections) {
+            return this.userService.updateKeyboardSettings({
+              lang: value.languageSections.lang,
+              action: value.languageSections.action,
+              letters: value.languageSections.letters.map(({text}) => text)
+            });
+          }
+
+          return EMPTY;
         })
-        // switchMap((value) => {
-        //   console.log(value);
-        //   const user: IUser = {
-        //     learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
-        //   };
-        //
-        //   return this.userService.update(user, this.settingsFormGroup.value.newPassword);
-        // })
       )
       .subscribe(result => {
       });

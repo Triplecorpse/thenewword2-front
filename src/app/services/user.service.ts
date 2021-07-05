@@ -9,9 +9,9 @@ import {Router} from '@angular/router';
 import {IUserDto} from '../interfaces/dto/IUserDto';
 import {MetadataService} from './metadata.service';
 import {User} from '../models/User';
-import {Metadata} from "../models/Metadata";
-import {ISymbol} from "../pages/user-settings/user-settings.component";
-import {ISymbolDto} from "../interfaces/dto/ISymbolDto";
+import {Metadata} from '../models/Metadata';
+import {ISymbol} from '../pages/user-settings/user-settings.component';
+import {ISymbolDto} from '../interfaces/dto/ISymbolDto';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +79,7 @@ export class UserService {
       .pipe(
         switchMap(token => this.httpClient.post<IUserDto>('user/login', {...user, token})),
         map<IUserDto, IUser>(res => ({
+          id: res.id,
           login: res.login,
           email: res.email,
           password: res.password,
@@ -121,6 +122,7 @@ export class UserService {
 
   update(user: IUser, newPassword?: string): Observable<IUser> {
     const userDto: IUserDto = {
+      id: this.getUser()?.id,
       email: user.email || undefined,
       password: user.password,
       new_password: newPassword,
@@ -154,8 +156,8 @@ export class UserService {
       action: setting.action,
       user_id: this.user.id,
       language_id: setting.lang.id,
-      symbol: setting.letter
-    }
+      symbols: setting.letters
+    };
 
     this.httpClient.post('user/modify-keyboard-settings', settingDto)
       .subscribe(result => {
@@ -170,6 +172,6 @@ export class UserService {
     User.password = this.user?.password;
     User.nativeLanguages = this.user?.nativeLanguages;
     User.learningLanguages = this.user?.learningLanguages;
-    User.id = this.user.id;
+    User.id = this.user?.id;
   }
 }
