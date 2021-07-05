@@ -1,94 +1,108 @@
 <h2 style="margin: 16px 0 16px 16px;">{{'SETTINGS.HEADER' | translate}}</h2>
-<div style="display:flex;">
-  <form [formGroup]="formGroup">
-    <mat-card style="margin: 16px;">
-      <h3 matCardTitle>{{'SETTINGS.USER_SETTINGS.HEADER' | translate}}</h3>
-      <div>
-        <mat-form-field>
-          <input matInput [placeholder]="'SETTINGS.USER_SETTINGS.LOGIN' | translate" formControlName="login">
-        </mat-form-field>
-      </div>
+<form [formGroup]="settingsFormGroup">
+  <mat-card style="margin: 16px;">
+    <h3 matCardTitle>{{'SETTINGS.USER_SETTINGS.HEADER' | translate}}</h3>
+    <div>
+      <mat-form-field>
+        <input matInput [placeholder]="'SETTINGS.USER_SETTINGS.LOGIN' | translate" formControlName="login">
+      </mat-form-field>
+    </div>
 
-      <div>
-        <mat-form-field>
-          <mat-select [placeholder]="'SETTINGS.USER_SETTINGS.NATIVE_LANGUAGES' | translate" formControlName="nativeLanguages" multiple>
-            <mat-option *ngFor="let l of languages" [value]="l.id">
-              {{l.englishName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+    <div>
+      <mat-form-field>
+        <mat-select [placeholder]="'SETTINGS.USER_SETTINGS.NATIVE_LANGUAGES' | translate"
+                    formControlName="nativeLanguages" multiple>
+          <mat-option *ngFor="let l of languages" [value]="l.id">
+            {{l.englishName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-      <div>
-        <mat-form-field>
-          <mat-select multiple [placeholder]="'SETTINGS.USER_SETTINGS.LEARNING_LANGUAGES' | translate" formControlName="learningLanguages"
-                      [matTooltip]="learningLanguagesTooltip">
-            <mat-option *ngFor="let l of languages" [value]="l.id">
-              {{l.englishName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </mat-card>
-    <mat-card style="margin: 16px;">
-      <h3 matCardTitle>{{'SETTINGS.SECURITY_SETTINGS.HEADER' | translate}}</h3>
-      <div>
-        <mat-form-field>
-          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD' | translate" type="password" formControlName="newPassword">
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-form-field>
-          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD_REPEAT' | translate" type="password" formControlName="newPasswordRepeat">
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-form-field>
-          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.EMAIL' | translate" formControlName="email">
-        </mat-form-field>
-      </div>
-      <div style="display:flex; justify-content: flex-end">
-        <mat-form-field>
-          <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.OLD_PASSWORD' | translate" type="password" formControlName="oldPassword">
-        </mat-form-field>
-        <div style="display:flex; align-items: center">
-          <button mat-flat-button color="primary" style="margin-right: 16px; margin-left: 8px;" type="submit">
-            {{'SETTINGS.SECURITY_SETTINGS.SAVE' | translate}}
+    <div>
+      <mat-form-field>
+        <mat-select multiple [placeholder]="'SETTINGS.USER_SETTINGS.LEARNING_LANGUAGES' | translate"
+                    formControlName="learningLanguages"
+                    [matTooltip]="learningLanguagesTooltip">
+          <mat-option *ngFor="let l of languages" [value]="l.id">
+            {{l.englishName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-card>
+  <mat-card style="margin: 16px;">
+    <h3 matCardTitle>{{'SETTINGS.KEYBOARD_SETTINGS.HEADER' | translate}}</h3>
+    <p>{{'SETTINGS.KEYBOARD_SETTINGS.DESCRIPTION' | translate}}</p>
+    <mat-card-content>
+      <mat-card *ngFor="let section of languageSections" style="margin-bottom: 8px;">
+        <h4>{{section.lang.englishName}}</h4>
+        <div>
+          <button mat-flat-button
+                  color="primary"
+                  *ngFor="let letter of section.letters; let bi = index"
+                  matBadge="✖"
+                  matBadgeColor="warn"
+                  [matBadgeSize]="letter.currentBadgeSize"
+                  (mousemove)="changeBadgeSize(section.lang.id, bi, 'large')"
+                  (mouseout)="changeBadgeSize(section.lang.id, bi, 'small')"
+                  (click)="removeLetter(section.lang.id, bi)"
+                  type="button"
+                  style="margin: 8px 16px 8px 0">
+            {{letter.text}}
           </button>
         </div>
+        <mat-form-field>
+          <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}"
+                 (keydown.enter)="addLetter($event, section.lang.id)">
+          <button mat-button matSuffix mat-icon-button type="button"
+                  (keydown.enter)="addLetter($event, section.lang.id)" (click)="addLetter($event, section.lang.id)">
+            <mat-icon>check</mat-icon>
+          </button>
+        </mat-form-field>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+</form>
+<form [formGroup]="securityFormGroup">
+  <mat-card style="margin: 16px;">
+    <h3 matCardTitle>{{'SETTINGS.SECURITY_SETTINGS.HEADER' | translate}}</h3>
+    <div style="display: flex; width: 100%; justify-content: space-between">
+      <div>
+        <div>
+          <mat-form-field>
+            <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD' | translate" type="password"
+                   formControlName="newPassword">
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field>
+            <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.NEW_PASSWORD_REPEAT' | translate" type="password"
+                   formControlName="newPasswordRepeat">
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field>
+            <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.EMAIL' | translate" formControlName="email">
+          </mat-form-field>
+        </div>
       </div>
-    </mat-card>
-    <mat-card style="margin: 16px;">
-      <h3 matCardTitle>{{'SETTINGS.KEYBOARD_SETTINGS.HEADER' | translate}}</h3>
-      <p>{{'SETTINGS.KEYBOARD_SETTINGS.DESCRIPTION' | translate}}</p>
-      <mat-card-content>
-        <mat-card *ngFor="let section of languageSections" style="margin-bottom: 8px;">
-          <h4>{{section.lang.englishName}}</h4>
-          <div>
-            <button mat-flat-button
-                    color="primary"
-                    *ngFor="let letter of section.letters; let bi = index"
-                    matBadge="✖"
-                    matBadgeColor="warn"
-                    [matBadgeSize]="letter.currentBadgeSize"
-                    (mousemove)="changeBadgeSize(section.lang.id, bi, 'large')"
-                    (mouseout)="changeBadgeSize(section.lang.id, bi, 'small')"
-                    (click)="removeLetter(section.lang.id, bi)"
-                    type="button"
-                    style="margin: 8px 16px 8px 0">
-              {{letter.text}}
+      <div style="display: flex; align-items: flex-end; justify-content: flex-end; margin-left: 8px;">
+        <div style="display:flex; justify-content: flex-end">
+          <mat-form-field>
+            <input matInput [placeholder]="'SETTINGS.SECURITY_SETTINGS.OLD_PASSWORD' | translate" type="password"
+                   formControlName="oldPassword">
+          </mat-form-field>
+          <div style="display:flex; align-items: center">
+            <button mat-flat-button color="primary" style="margin-right: 16px; margin-left: 8px;" type="submit">
+              {{'SETTINGS.SECURITY_SETTINGS.SAVE' | translate}}
             </button>
           </div>
-          <mat-form-field>
-            <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}" (keydown.enter)="addLetter($event, section.lang.id)">
-            <button mat-button matSuffix mat-icon-button type="button" (keydown.enter)="addLetter($event, section.lang.id)" (click)="addLetter($event, section.lang.id)">
-              <mat-icon>check</mat-icon>
-            </button>
-          </mat-form-field>
-        </mat-card>
-      </mat-card-content>
-    </mat-card>
-  </form>
-</div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</form>
+

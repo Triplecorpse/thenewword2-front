@@ -4,8 +4,21 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUser} from '../../interfaces/IUser';
 import {Metadata} from '../../models/Metadata';
-import {merge} from 'rxjs';
-import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
+import {merge, Subject} from 'rxjs';
+import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
+
+interface ILanguageSection {
+  lang: ILanguage;
+  model: string;
+  letters: { text: string, currentBadgeSize: 'small' | 'large' }[];
+  action?: 'add' | 'remove';
+}
+
+export interface ISymbol {
+  lang: ILanguage;
+  letter: string;
+  action: 'add' | 'remove';
+}
 
 @Component({
   selector: 'app-user-settings',
@@ -13,22 +26,21 @@ import {debounceTime, filter, map, switchMap} from 'rxjs/operators';
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent implements OnInit {
+  private languageSectionsChange = new Subject<ILanguageSection>();
   languages: ILanguage[] = [];
-  formGroup = new FormGroup({
+  settingsFormGroup = new FormGroup({
     login: new FormControl({value: '', disabled: true}),
     nativeLanguages: new FormControl({value: '', disabled: true}),
-    learningLanguages: new FormControl(),
+    learningLanguages: new FormControl()
+  });
+  securityFormGroup = new FormGroup({
     email: new FormControl('', Validators.email),
     oldPassword: new FormControl('', Validators.required),
     newPassword: new FormControl(),
     newPasswordRepeat: new FormControl()
   });
   learningLanguagesTooltip: string;
-  languageSections: {
-    lang: ILanguage,
-    model: string,
-    letters: { text: string, currentBadgeSize: 'small' | 'large' }[]
-  }[];
+  languageSections: ILanguageSection[];
 
   constructor(private userService: UserService) {
   }
@@ -36,7 +48,7 @@ export class UserSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.languages = Metadata.languages
       .sort((a, b) => a.englishName > b.englishName ? 1 : -1);
-    this.formGroup.valueChanges
+    this.settingsFormGroup.valueChanges
       .subscribe(val => {
         this.languageSections = this.languages
           .filter(lang => val.learningLanguages.includes(lang.id))
@@ -50,30 +62,30 @@ export class UserSettingsComponent implements OnInit {
           .map(lang => lang.englishName)
           .join(', ');
       });
-    this.formGroup.setValue({
+    this.settingsFormGroup.setValue({
       login: this.userService.getUser().login,
       nativeLanguages: this.userService.getUser().nativeLanguages.map(({id}) => id),
-      learningLanguages: this.userService.getUser().learningLanguages.map(({id}) => id),
-      email: this.formGroup.value.email || '',
-      oldPassword: this.formGroup.value.oldPassword || '',
-      newPassword: this.formGroup.value.newPassword || '',
-      newPasswordRepeat: this.formGroup.value.newPasswordRepeat || '',
+      learningLanguages: this.userService.getUser().learningLanguages.map(({id}) => id)
     });
 
     merge(
-      this.formGroup.controls.learningLanguages.valueChanges
-        .pipe(map(v => ({learningLanguages: v})))
+      this.settingsFormGroup.controls.learningLanguages.valueChanges.pipe(map(v => ({learningLanguages: v}))),
+      this.languageSectionsChange.pipe(map(v => ({languageSections: v})))
     )
       .pipe(
-        filter(() => this.formGroup.valid),
+        filter(() => this.settingsFormGroup.valid),
         debounceTime(1000),
-        switchMap((value) => {
-          const user: IUser = {
-            learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
-          };
-
-          return this.userService.update(user, this.formGroup.value.newPassword);
+        tap(value => {
+          console.log(value);
         })
+        // switchMap((value) => {
+        //   console.log(value);
+        //   const user: IUser = {
+        //     learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
+        //   };
+        //
+        //   return this.userService.update(user, this.settingsFormGroup.value.newPassword);
+        // })
       )
       .subscribe(result => {
       });
@@ -87,6 +99,8 @@ export class UserSettingsComponent implements OnInit {
       section.letters.push({text: section.model, currentBadgeSize: 'small'});
       section.model = '';
     }
+
+    this.languageSectionsChange.next({...section, action: 'add'});
   }
 
   changeBadgeSize(id: number, bi: number, desiredSize: 'small' | 'large') {
@@ -99,5 +113,7 @@ export class UserSettingsComponent implements OnInit {
   removeLetter(id: number, bi: number) {
     const section = this.languageSections.find(sec => sec.lang.id === id);
     section.letters.splice(bi, 1);
+
+    this.languageSectionsChange.next({...section, action: 'remove'});
   }
 }
