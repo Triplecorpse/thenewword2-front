@@ -133,6 +133,7 @@ export class UserService {
     return this.httpClient.post<IUserDto>('user/modify', userDto)
       .pipe(
         map<IUserDto, IUser>(res => ({
+          id: res.id,
           login: res.login,
           email: res.email,
           password: res.password,
@@ -151,7 +152,7 @@ export class UserService {
       );
   }
 
-  updateKeyboardSettings(setting: ISymbol) {
+  updateKeyboardSettings(setting: ISymbol): Observable<ISymbol> {
     const settingDto: ISymbolDto = {
       action: setting.action,
       user_id: this.user.id,
@@ -159,10 +160,12 @@ export class UserService {
       symbols: setting.letters
     };
 
-    this.httpClient.post('user/modify-keyboard-settings', settingDto)
-      .subscribe(result => {
-        console.log(result);
-      });
+    return this.httpClient.post<ISymbolDto>('user/modify-keyboard-settings', settingDto)
+      .pipe(map((value: ISymbolDto) => ({
+        letters: value.symbols,
+        lang: Metadata.languages.find(l => l.id === value.language_id),
+        action: value.action
+      })));
   }
 
   private setUserStatic() {

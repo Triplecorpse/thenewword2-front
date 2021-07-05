@@ -5,7 +5,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUser} from '../../interfaces/IUser';
 import {Metadata} from '../../models/Metadata';
 import {EMPTY, merge, Subject} from 'rxjs';
-import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, switchMapTo, tap} from 'rxjs/operators';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {TranslateService} from "@ngx-translate/core";
 
 interface ILanguageSection {
   lang: ILanguage;
@@ -42,7 +44,9 @@ export class UserSettingsComponent implements OnInit {
   learningLanguagesTooltip: string;
   languageSections: ILanguageSection[];
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,
+              private snackBar: MatSnackBar,
+              private translateService: TranslateService) {
   }
 
   ngOnInit(): void {
@@ -75,14 +79,16 @@ export class UserSettingsComponent implements OnInit {
       .pipe(
         filter(() => this.settingsFormGroup.valid),
         debounceTime(1000),
-        switchMap<any, any>((value: {learningLanguages?: number[]; languageSections?: ILanguageSection}) => {
-          console.log(value);
+        switchMap<any, any>((value: { learningLanguages?: number[]; languageSections?: ILanguageSection }) => {
           if (value.learningLanguages) {
             const user: IUser = {
               learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
             };
 
-            return this.userService.update(user, this.settingsFormGroup.value.newPassword);
+            return this.userService.update(user, this.settingsFormGroup.value.newPassword)
+              .pipe(
+                switchMapTo(this.translateService.get('SETTINGS.USER_SETTINGS.RESPONSES.USER_UPDATED'))
+              );
           }
 
           if (value.languageSections) {
@@ -90,13 +96,38 @@ export class UserSettingsComponent implements OnInit {
               lang: value.languageSections.lang,
               action: value.languageSections.action,
               letters: value.languageSections.letters.map(({text}) => text)
-            });
+            })
+              .pipe(
+                switchMap((result: ISymbol) => {
+                  if (result.action === 'add') {
+                    return this.translateService
+                      .get(
+                        'SETTINGS.KEYBOARD_SETTINGS.RESPONSES.KEY_ADDED',
+                        {
+                          letter: result.letters.join(', '),
+                          language: result.lang.nativeName
+                        });
+                  } else if (result.action === 'remove') {
+                    return this.translateService
+                      .get(
+                        'SETTINGS.KEYBOARD_SETTINGS.RESPONSES.KEY_REMOVED',
+                        {
+                          letter: result.letters.join(', '),
+                          language: result.lang.nativeName
+                        });
+                  }
+
+                  return EMPTY;
+                })
+              );
           }
 
           return EMPTY;
-        })
+        }),
+        filter(result => !!result)
       )
       .subscribe(result => {
+        this.snackBar.open(result as string, '', {duration: 10000});
       });
   }
 
