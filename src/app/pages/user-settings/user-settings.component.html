@@ -64,7 +64,7 @@
     </mat-card-content>
   </mat-card>
 </form>
-<form [formGroup]="securityFormGroup">
+<form [formGroup]="securityFormGroup" (ngSubmit)="securityFormSubmit()">
   <mat-card style="margin: 16px;">
     <h3 matCardTitle>{{'SETTINGS.SECURITY_SETTINGS.HEADER' | translate}}</h3>
     <div style="display: flex; width: 100%; justify-content: space-between">

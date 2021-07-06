@@ -127,7 +127,7 @@ export class UserService {
       password: user.password,
       new_password: newPassword,
       login: user.login,
-      learning_languages: user.learningLanguages.map(lang => lang.id)
+      learning_languages: user.learningLanguages?.map(lang => lang.id)
     };
 
     return this.httpClient.post<IUserDto>('user/modify', userDto)
@@ -144,10 +144,6 @@ export class UserService {
         tap(newUser => {
           this.setUser(newUser, localStorage.getItem('save-session') === 'true');
           this.user$.next(this.getUser());
-
-          if (newPassword) {
-            this.logout();
-          }
         })
       );
   }

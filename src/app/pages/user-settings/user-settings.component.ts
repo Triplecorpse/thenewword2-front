@@ -38,8 +38,8 @@ export class UserSettingsComponent implements OnInit {
   securityFormGroup = new FormGroup({
     email: new FormControl('', Validators.email),
     oldPassword: new FormControl('', Validators.required),
-    newPassword: new FormControl(),
-    newPasswordRepeat: new FormControl()
+    newPassword: new FormControl('', Validators.minLength(6)),
+    newPasswordRepeat: new FormControl('', Validators.minLength(6))
   });
   learningLanguagesTooltip: string;
   languageSections: ILanguageSection[];
@@ -152,8 +152,22 @@ export class UserSettingsComponent implements OnInit {
 
   removeLetter(id: number, bi: number) {
     const section = this.languageSections.find(sec => sec.lang.id === id);
+    const letter = section.letters[bi];
     section.letters.splice(bi, 1);
 
-    this.languageSectionsChange.next({...section, action: 'remove'});
+    this.languageSectionsChange.next({...section, action: 'remove', letters: [letter]});
+  }
+
+  securityFormSubmit() {
+    if (this.securityFormGroup.valid) {
+      this.userService.update({
+        password: this.securityFormGroup.value.oldPassword,
+        email: this.securityFormGroup.value.email
+      }, this.securityFormGroup.value.newPassword)
+        .pipe(switchMapTo(this.translateService.get('SETTINGS.SECURITY_SETTINGS.RESPONSES.USER_UPDATED')))
+        .subscribe(result => {
+          this.snackBar.open(result as string, '', {duration: 10000});
+        })
+    }
   }
 }
