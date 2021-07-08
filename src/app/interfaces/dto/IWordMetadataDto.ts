@@ -1,3 +1,6 @@
+import {ISymbol} from "../ISymbol";
+import {ISymbolDto} from "./ISymbolDto";
+
 export interface ISpeechPartDto {
   id: number;
   name: string;
@@ -20,4 +23,5 @@ export interface IWordMetadataDto {
   speechParts: ISpeechPartDto[];
   genders: IGenderDto[];
   languages: ILanguageDto[];
+  symbols: ISymbolDto[];
 }

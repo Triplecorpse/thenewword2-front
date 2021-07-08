@@ -47,11 +47,16 @@ export class MetadataService implements CanActivate {
           this.metadata = {
             genders: this.genders,
             speechParts: this.speechParts,
-            languages: this.languages
+            languages: this.languages,
+            symbols: result.symbols.map(s => ({
+              lang: this.languages.find(l => l.id === s.language_id),
+              letters: s.symbols
+            }))
           };
           Metadata.languages = this.languages;
           Metadata.genders = this.genders;
           Metadata.speechParts = this.speechParts;
+          Metadata.symbols = this.metadata.symbols;
         }),
         map(_ => true)
       );

@@ -56,7 +56,8 @@ export class ModalNewWordComponent implements OnInit {
     this.wordMetadata = {
       languages: Metadata.languages,
       genders: Metadata.genders,
-      speechParts: Metadata.speechParts
+      speechParts: Metadata.speechParts,
+      symbols: Metadata.symbols
     };
 
     this.nativeLanguages = this.userService.getUser().nativeLanguages;

@@ -8,18 +8,13 @@ import {EMPTY, merge, Subject} from 'rxjs';
 import {debounceTime, filter, map, switchMap, switchMapTo, tap} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TranslateService} from "@ngx-translate/core";
+import {ISymbol} from "../../interfaces/ISymbol";
 
 interface ILanguageSection {
   lang: ILanguage;
   model: string;
   letters: { text: string, currentBadgeSize: 'small' | 'large' }[];
   action?: 'add' | 'remove';
-}
-
-export interface ISymbol {
-  lang: ILanguage;
-  letters: string[];
-  action: 'add' | 'remove';
 }
 
 @Component({
@@ -43,6 +38,7 @@ export class UserSettingsComponent implements OnInit {
   });
   learningLanguagesTooltip: string;
   languageSections: ILanguageSection[];
+  defaultKeys: { [key: number]: string[] } = {};
 
   constructor(private userService: UserService,
               private snackBar: MatSnackBar,
@@ -70,6 +66,9 @@ export class UserSettingsComponent implements OnInit {
       login: this.userService.getUser().login,
       nativeLanguages: this.userService.getUser().nativeLanguages.map(({id}) => id),
       learningLanguages: this.userService.getUser().learningLanguages.map(({id}) => id)
+    });
+    Metadata.symbols.forEach(symbol => {
+      this.defaultKeys[symbol.lang.id] = symbol.letters;
     });
 
     merge(

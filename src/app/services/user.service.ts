@@ -10,8 +10,8 @@ import {IUserDto} from '../interfaces/dto/IUserDto';
 import {MetadataService} from './metadata.service';
 import {User} from '../models/User';
 import {Metadata} from '../models/Metadata';
-import {ISymbol} from '../pages/user-settings/user-settings.component';
 import {ISymbolDto} from '../interfaces/dto/ISymbolDto';
+import {ISymbol} from "../interfaces/ISymbol";
 
 @Injectable({
   providedIn: 'root'

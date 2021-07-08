@@ -13,6 +13,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
 import {MatBadgeModule} from "@angular/material/badge";
 import {TranslateModule} from "@ngx-translate/core";
+import {MatChipsModule} from "@angular/material/chips";
 
 const routes: Routes = [
   {path: '', component: UserSettingsComponent}
@@ -36,7 +37,8 @@ const routes: Routes = [
         MatIconModule,
         FormsModule,
         MatBadgeModule,
-        TranslateModule
+        TranslateModule,
+        MatChipsModule
     ]
 })
 export class UserSettingsModule {
