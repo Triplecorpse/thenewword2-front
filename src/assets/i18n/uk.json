@@ -111,7 +111,9 @@
     "SUBMIT_ADD": "Додати",
     "SUBMIT_MODIFY": "Змінити",
     "CANCEL": "Повернутися",
-    "EXPAND": "Показати більше"
+    "EXPAND": "Показати більше",
+    "USE_SHIFT": "<span style=\"padding: 2px 3px; font-size: smaller; border: 1px solid lightgray; border-radius: 5px\">Shift</span> для зміни реєстру",
+    "USE_ALT": "<span style=\"padding: 2px 3px; font-size: smaller; border: 1px solid lightgray; border-radius: 5px\">Alt</span> + <span style=\"padding: 2px 3px; font-size: smaller; border: 1px solid lightgray; border-radius: 5px\">цифра</span> для вставки символа"
   },
   "EXERCISE": {
     "START": "Почати",

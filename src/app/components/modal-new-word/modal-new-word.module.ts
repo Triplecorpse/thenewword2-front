@@ -10,22 +10,27 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {TranslateModule} from "@ngx-translate/core";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDividerModule} from "@angular/material/divider";
+import {MatChipsModule} from "@angular/material/chips";
+import {SafePipe} from "../../services/safe.pipe";
+import {MatBadgeModule} from "@angular/material/badge";
 
 
 
 @NgModule({
-  declarations: [ModalNewWordComponent],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    TranslateModule,
-    MatIconModule,
-    MatDividerModule
-  ]
+    declarations: [ModalNewWordComponent, SafePipe],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatInputModule,
+        MatOptionModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        TranslateModule,
+        MatIconModule,
+        MatDividerModule,
+        MatChipsModule,
+        MatBadgeModule
+    ]
 })
 export class ModalNewWordModule { }

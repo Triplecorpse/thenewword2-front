@@ -41,7 +41,7 @@
             <h4>{{section.lang.englishName}}</h4>
             <mat-form-field>
               <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}"
-                     (keydown.enter)="addLetter($event, section.lang.id)">
+                     maxlength="1" (keydown.enter)="addLetter($event, section.lang.id)">
               <button mat-button matSuffix mat-icon-button type="button"
                       (keydown.enter)="addLetter($event, section.lang.id)" (click)="addLetter($event, section.lang.id)">
                 <mat-icon>check</mat-icon>
@@ -55,7 +55,7 @@
                 {{symbol}}
               </mat-chip>
             </mat-chip-list>
-            <p>{{'SETTINGS.KEYBOARD_SETTINGS.ADDITIONAL_KEYS' | translate}}</p>
+            <p *ngIf="section.letters?.length">{{'SETTINGS.KEYBOARD_SETTINGS.ADDITIONAL_KEYS' | translate}}</p>
             <button mat-flat-button
                     color="primary"
                     *ngFor="let letter of section.letters; let bi = index"
@@ -71,7 +71,6 @@
             </button>
           </div>
         </div>
-
       </mat-card>
     </mat-card-content>
   </mat-card>

@@ -43,6 +43,10 @@ export class ModalNewWordComponent implements OnInit {
   idEditing: number;
   wordSetId: number;
   isShownMore: boolean;
+  symbols: string[];
+  shiftPressed: boolean;
+  shiftWasPressed: boolean;
+  numberStore: string = '';
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
@@ -91,6 +95,8 @@ export class ModalNewWordComponent implements OnInit {
     if (!!this.data.wordsetNativeLanguage) {
       this.foreignLanguage = this.data.wordsetForeignLanguage;
     }
+
+    this.symbols = Metadata.symbols.find(s => s.lang.id === this.foreignLanguage.id)?.letters || [];
   }
 
   saveWord() {
@@ -134,5 +140,39 @@ export class ModalNewWordComponent implements OnInit {
     });
 
     this.changeDetection.markForCheck();
+  }
+
+  modKey($event: KeyboardEvent) {
+    this.shiftPressed = $event.getModifierState('Shift');
+  }
+
+  listenNumber($event: KeyboardEvent) {
+    const altPressed = $event.getModifierState('Alt');
+    const digits = '0123456789';
+    const match = $event.code.match(/\d{1}/);
+    const digit = match && match[0];
+
+    this.shiftWasPressed = $event.getModifierState('Shift');
+
+    if (digit && digits.includes(digit) && altPressed) {
+      this.numberStore += digit;
+    }
+  }
+
+  clearNumberStore($event: KeyboardEvent) {
+    const altPressed = $event.getModifierState('Alt');
+
+    if (this.numberStore && !altPressed) {
+      const index = +this.numberStore - 1;
+      const symbol = this.symbols[index]
+        ? this.shiftWasPressed
+          ? this.symbols[index].toUpperCase()
+          : this.symbols[index]
+        : '';
+
+      this.formGroup.controls.word.patchValue(this.formGroup.controls.word.value + symbol);
+      this.numberStore = '';
+      this.shiftWasPressed = false;
+    }
   }
 }
