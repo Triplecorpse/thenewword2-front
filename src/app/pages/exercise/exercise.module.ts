@@ -16,6 +16,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {WordModule} from "../word/word.module";
 import {WordListModule} from "../../components/word-list/word-list.module";
+import {SymbolsModule} from "../../components/symbols/symbols.module";
 
 const routes: Routes = [
   {path: '', component: ExerciseComponent}
@@ -41,7 +42,8 @@ const routes: Routes = [
         MatCheckboxModule,
         MatTooltipModule,
         WordListModule,
-        FormsModule
+        FormsModule,
+        SymbolsModule
     ]
 })
 export class ExerciseModule {

@@ -50,19 +50,26 @@
 </ng-container>
 <ng-template #exercise>
   <mat-card style="margin: 8px">
-    <div style="display: flex; justify-content: space-between">
-      <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()">
-        <mat-form-field>
-          <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus>
-        </mat-form-field>
-        <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit" [disabled]="!wordToAsk">{{'EXERCISE.OK' | translate}}</button>
-        <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)" [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
-      </form>
+    <div style="display:flex;">
+      <div style="width: 500px;">
+        <div style="display: flex; justify-content: space-between">
+          <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()">
+            <mat-form-field>
+              <input matInput [placeholder]="'EXERCISE.WORD' | translate" formControlName="word" autofocus (focusin)="symbolsDisabled = false" (focusout)="symbolsDisabled = true" #wordControl>
+            </mat-form-field>
+            <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit" [disabled]="!wordToAsk">{{'EXERCISE.OK' | translate}}</button>
+            <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)" [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
+          </form>
+        </div>
+
+        <p style="margin-top: 8px; border-top: 1px solid lightgray; padding-top: 8px;" *ngIf="wordToAsk">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk?.translations.join(', ')}}<span *ngIf="!wordToAsk">...</span></p>
+        <p style="margin-top: 8px" *ngIf="!wordToAsk && isAnythingToRecall()">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
+        <p style="margin-top: 8px" *ngIf="!wordToAsk && !isAnythingToRecall()">{{'EXERCISE.FINISHED' | translate}}</p>
+      </div>
+      <div style="margin-left: 8px;">
+        <app-symbols [language]="language" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
+      </div>
     </div>
-    <mat-divider></mat-divider>
-    <p style="margin-top: 8px" *ngIf="wordToAsk">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk?.translations.join(', ')}}<span *ngIf="!wordToAsk">...</span></p>
-    <p style="margin-top: 8px" *ngIf="!wordToAsk && isAnythingToRecall()">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
-    <p style="margin-top: 8px" *ngIf="!wordToAsk && !isAnythingToRecall()">{{'EXERCISE.FINISHED' | translate}}</p>
   </mat-card>
   <mat-card style="margin: 8px">
       <mat-selection-list [multiple]="false" (selectionChange)="listSelection($event)">

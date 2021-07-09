@@ -56,6 +56,10 @@ export class ExerciseComponent implements OnInit {
   words: IWord[];
   isExercising: boolean;
   startButtonDisabled = true;
+  symbolsDisabled: boolean;
+  language: ILanguage;
+
+  @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
 
   constructor(private wordService: WordService,
               private translateService: TranslateService,
@@ -196,6 +200,7 @@ export class ExerciseComponent implements OnInit {
   filterFormSubmit() {
     this.isExercising = true;
     this.wordToAsk = this.words.shift();
+    this.language = this.wordToAsk.originalLanguage;
   }
 
   getWordSetTooltip(): string {
@@ -249,5 +254,17 @@ export class ExerciseComponent implements OnInit {
 
   isAnythingToRecall(): boolean {
     return !!this.skippedWords.length || !!this.wrongWords.filter(ww => ww.errQuantity <= 2).length;
+  }
+
+  setSymbol(symbol: string) {
+    const selectionStart = this.wordControl.nativeElement.selectionStart;
+    const selectionEnd = this.wordControl.nativeElement.selectionEnd;
+    const newString1 = this.exerciseFormGroup.controls.word.value.slice(0, selectionStart);
+    const newString2 = this.exerciseFormGroup.controls.word.value.slice(selectionEnd);
+    const newString = `${newString1}${symbol}${newString2}`;
+
+    this.exerciseFormGroup.controls.word.patchValue(newString);
+    this.wordControl.nativeElement.setSelectionRange(selectionStart + 1, selectionStart + 1);
+    this.wordControl.nativeElement.focus();
   }
 }

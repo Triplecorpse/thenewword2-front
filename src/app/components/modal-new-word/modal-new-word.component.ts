@@ -43,9 +43,9 @@ export class ModalNewWordComponent implements OnInit {
   idEditing: number;
   wordSetId: number;
   isShownMore: boolean;
+  symbolsDisabled: boolean;
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
-  symbolsDisabled: boolean;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
