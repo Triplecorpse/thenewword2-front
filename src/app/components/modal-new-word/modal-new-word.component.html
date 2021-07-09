@@ -1,5 +1,5 @@
 <div>
-  <form [formGroup]="formGroup" (keydown)="modKey($event)" (keyup)="modKey($event)">
+  <form [formGroup]="formGroup">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <h2 mat-dialog-title style="margin-bottom: 0;">{{(isEditing ? 'MODAL_WORD.HEADER_MODIFY' : 'MODAL_WORD.HEADER_ADD') | translate}}</h2>
 
@@ -13,23 +13,13 @@
 
     <div>
       <mat-form-field>
-        <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" (keydown)="listenNumber($event)" (keyup)="clearNumberStore($event)">
+        <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" #wordControl (focusin)="symbolsDisabled = false" (focusout)="symbolsDisabled = true">
       </mat-form-field>
       <mat-form-field style="margin-left: 8px;">
         <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations">
       </mat-form-field>
       <mat-divider style="margin: 0 0 8px 0"></mat-divider>
-      <div style="margin-bottom: 8px; width: 400px;">
-        <p [innerHTML]="'MODAL_WORD.USE_SHIFT' | translate | safe : 'html'"></p>
-        <p [innerHTML]="'MODAL_WORD.USE_ALT' | translate | safe : 'html'"></p>
-        <mat-chip-list *ngIf="symbols">
-          <mat-chip *ngFor="let symbol of symbols; let i = index" [matBadge]="i + 1" style="margin: 16px;">
-            <span style="font-family: monospace">
-              {{shiftPressed ? symbol.toUpperCase() : symbol}}
-            </span>
-          </mat-chip>
-        </mat-chip-list>
-      </div>
+      <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
 
       <div style="display: flex">
         <button mat-flat-button (click)="saveWord()"

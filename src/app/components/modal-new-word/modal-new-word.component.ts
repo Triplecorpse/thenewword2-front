@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
@@ -43,10 +43,9 @@ export class ModalNewWordComponent implements OnInit {
   idEditing: number;
   wordSetId: number;
   isShownMore: boolean;
-  symbols: string[];
-  shiftPressed: boolean;
-  shiftWasPressed: boolean;
-  numberStore: string = '';
+
+  @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
+  symbolsDisabled: boolean;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
@@ -95,8 +94,6 @@ export class ModalNewWordComponent implements OnInit {
     if (!!this.data.wordsetNativeLanguage) {
       this.foreignLanguage = this.data.wordsetForeignLanguage;
     }
-
-    this.symbols = Metadata.symbols.find(s => s.lang.id === this.foreignLanguage.id)?.letters || [];
   }
 
   saveWord() {
@@ -142,37 +139,15 @@ export class ModalNewWordComponent implements OnInit {
     this.changeDetection.markForCheck();
   }
 
-  modKey($event: KeyboardEvent) {
-    this.shiftPressed = $event.getModifierState('Shift');
-  }
+  setSymbol(symbol: string) {
+    const selectionStart = this.wordControl.nativeElement.selectionStart;
+    const selectionEnd = this.wordControl.nativeElement.selectionEnd;
+    const newString1 = this.formGroup.controls.word.value.slice(0, selectionStart);
+    const newString2 = this.formGroup.controls.word.value.slice(selectionEnd);
+    const newString = `${newString1}${symbol}${newString2}`;
 
-  listenNumber($event: KeyboardEvent) {
-    const altPressed = $event.getModifierState('Alt');
-    const digits = '0123456789';
-    const match = $event.code.match(/\d{1}/);
-    const digit = match && match[0];
-
-    this.shiftWasPressed = $event.getModifierState('Shift');
-
-    if (digit && digits.includes(digit) && altPressed) {
-      this.numberStore += digit;
-    }
-  }
-
-  clearNumberStore($event: KeyboardEvent) {
-    const altPressed = $event.getModifierState('Alt');
-
-    if (this.numberStore && !altPressed) {
-      const index = +this.numberStore - 1;
-      const symbol = this.symbols[index]
-        ? this.shiftWasPressed
-          ? this.symbols[index].toUpperCase()
-          : this.symbols[index]
-        : '';
-
-      this.formGroup.controls.word.patchValue(this.formGroup.controls.word.value + symbol);
-      this.numberStore = '';
-      this.shiftWasPressed = false;
-    }
+    this.formGroup.controls.word.patchValue(newString);
+    this.wordControl.nativeElement.setSelectionRange(selectionStart + 1, selectionStart + 1);
+    this.wordControl.nativeElement.focus();
   }
 }

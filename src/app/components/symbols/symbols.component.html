@@ -1,0 +1,12 @@
+<div style="margin-bottom: 8px; width: 400px;">
+  <p [innerHTML]="'MODAL_WORD.USE_SHIFT' | translate | safe : 'html'" class="description" [class.gray]="disabled"></p>
+  <p [innerHTML]="'MODAL_WORD.USE_ALT' | translate | safe : 'html'" class="description" [class.gray]="disabled"></p>
+  <mat-chip-list *ngIf="symbols">
+    <mat-chip *ngFor="let symbol of symbols; let i = index" [matBadge]="i + 1" style="margin: 16px;"
+              [matBadgeHidden]="!altPressed" [disabled]="disabled" (click)="emitLetter(symbol)">
+      <span style="font-family: monospace">
+        {{shiftPressed ? symbol.toUpperCase() : symbol}}
+      </span>
+    </mat-chip>
+  </mat-chip-list>
+</div>
