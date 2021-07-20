@@ -67,6 +67,7 @@ export class ExerciseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //TODO: check if any on-going exercise
     this.wordService.getWordSets$()
       .subscribe(wordsets => {
         this.wordsets = wordsets;
@@ -198,9 +199,12 @@ export class ExerciseComponent implements OnInit {
   }
 
   filterFormSubmit() {
-    this.isExercising = true;
-    this.wordToAsk = this.words.shift();
-    this.language = this.wordToAsk.originalLanguage;
+    this.wordService.setExercise(this.words)
+      .subscribe(() => {
+        this.isExercising = true;
+        this.wordToAsk = this.words.shift();
+        this.language = this.wordToAsk.originalLanguage;
+      })
   }
 
   getWordSetTooltip(): string {

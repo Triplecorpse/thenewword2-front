@@ -146,7 +146,7 @@ export class WordService {
             skipCheck?: boolean,
             fixingId?: number,
             prevValue?: 'skipped' | 'wrong'): Observable<IWordCheck> {
-    return this.httpClient.post<IWordCheckDto>('word/exercise',
+    return this.httpClient.post<IWordCheckDto>('word/set-stat',
       {
         skipped: skipCheck,
         settings: {},
@@ -162,5 +162,9 @@ export class WordService {
         diff: response.diff,
         statId: response.stat_id
       })));
+  }
+
+  setExercise(words: IWord[]): Observable<void> {
+    return this.httpClient.post<void>('word/set-exercise', words.map(({dbid}) => dbid));
   }
 }
