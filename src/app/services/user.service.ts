@@ -85,7 +85,8 @@ export class UserService {
           password: res.password,
           nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
-          token: res.token
+          token: res.token,
+          refresh: res.refresh
         })),
         tap(res => {
           this.setUser(res, saveSession);
@@ -139,7 +140,8 @@ export class UserService {
           password: res.password,
           nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
-          token: res.token
+          token: res.token,
+          refresh: this.user.refresh
         })),
         tap(newUser => {
           this.setUser(newUser, localStorage.getItem('save-session') === 'true');
