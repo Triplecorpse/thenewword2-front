@@ -11,4 +11,5 @@ export interface IWordDto {
   remarks?: string;
   stress_letter_index?: number;
   word_set_id?: number;
+  user_created_id?: number;
 }

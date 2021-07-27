@@ -59,7 +59,7 @@ export class WordService {
     let request = this.httpClient.post<IWordDto>('word/add', this.dtoFromWord(word, wordSetId));
 
     if (idSubscribing) {
-      request = this.httpClient.post<IWordDto>('word/add', {id_subscribing: idSubscribing});
+      request = this.httpClient.post<IWordDto>('word/add', {id_subscribing: idSubscribing, word_set_id: wordSetId});
     }
 
     if (word.dbid) {
@@ -96,7 +96,7 @@ export class WordService {
   }
 
   wordFromDto(wordDto: IWordDto): IWord {
-    return new Word(wordDto, this.userService.getUser() as IUser);
+    return new Word(wordDto);
   }
 
   wordSetFromDto(wordSetDto: IWordSetDto): IWordSet {

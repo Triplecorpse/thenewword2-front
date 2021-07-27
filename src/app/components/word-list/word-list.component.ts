@@ -9,6 +9,7 @@ import {filter, switchMap, take} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {MatSort} from "@angular/material/sort";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-word-list',
@@ -24,6 +25,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   displayedColumns: string[] = ['translations', 'from_language', 'gender', 'speech_part'];
 
   constructor(private wordService: WordService,
+              private userService: UserService,
               private dialog: MatDialog,
               private translateService: TranslateService) {
   }
@@ -126,5 +128,11 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
 
   getDataSource() {
     return of(this.words);
+  }
+
+  checkAuthority(element: IWord): boolean {
+    const user = this.userService.getUser();
+
+    return user.id === element.userCreated?.id;
   }
 }
