@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {combineLatest} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {ModalNewWordComponent} from '../../components/modal-new-word/modal-new-word.component';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
 import {MetadataService} from '../../services/metadata.service';
 import {UserService} from '../../services/user.service';
@@ -15,6 +14,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 
 @Component({
   selector: 'app-word',
@@ -26,6 +26,7 @@ export class WordComponent implements OnInit {
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
   loadedWords: {[key: number]: IWord[]} = {};
+  showUserSearch = false;
 
   constructor(private dialog: MatDialog,
               private wordService: WordService,
@@ -109,5 +110,10 @@ export class WordComponent implements OnInit {
 
   exercise(event: MouseEvent, wordset: IWordSet) {
     this.router.navigate(['exercise'], {queryParams: {wordset: wordset.id}})
+  }
+
+  poolChange(event: MatSlideToggleChange) {
+    this.showUserSearch = event.checked;
+    console.log(event);
   }
 }

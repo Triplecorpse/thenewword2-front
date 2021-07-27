@@ -19,6 +19,7 @@ import {ModalNewWordsetModule} from "../../components/modal-new-wordset/modal-ne
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSortModule} from "@angular/material/sort";
 import {WordListModule} from "../../components/word-list/word-list.module";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -45,7 +46,8 @@ const routes: Routes = [
         MatIconModule,
         MatExpansionModule,
         MatInputModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatSlideToggleModule
     ]
 })
 export class WordModule {

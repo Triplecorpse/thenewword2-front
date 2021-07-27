@@ -1,19 +1,29 @@
-<mat-card style="margin: 8px; display:flex; justify-content: space-between">
-  <div style="display: flex; align-items: center">
-    <button mat-flat-button (click)="openNewWordSetModal()" color="primary">{{'WORDS.NEW_WORDSET' | translate}}</button>
-    <mat-form-field style="margin-left: 8px;">
-      <mat-select [placeholder]="'WORDS.LANGUAGE' | translate">
-        <mat-option *ngFor="let l of learningLanguages" [value]="l.id" [style.direction.rtl]="l.rtl">
-          {{l.nativeName}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<mat-card style="margin: 8px">
+  <div style="display:flex; justify-content: space-between">
+    <div style="display: flex; align-items: center">
+      <button mat-flat-button (click)="openNewWordSetModal()" color="primary">{{'WORDS.NEW_WORDSET' | translate}}</button>
+      <mat-form-field style="margin-left: 8px;">
+        <mat-select [placeholder]="'WORDS.LANGUAGE' | translate">
+          <mat-option *ngFor="let l of learningLanguages" [value]="l.id" [style.direction.rtl]="l.rtl">
+            {{l.nativeName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field style="margin-left: 8px;" *ngIf="showUserSearch">
+        <input matInput type="text" [placeholder]="'WORDS.SEARCH_BY_USER' | translate">
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field style="margin-left: 8px;">
+        <input matInput type="text" [placeholder]="'WORDS.SEARCH' | translate">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
   </div>
   <div>
-    <mat-form-field style="margin-left: 8px;">
-      <input matInput type="text" [placeholder]="'WORDS.SEARCH' | translate">
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
+    <mat-slide-toggle (change)="poolChange($event)">{{'WORDS.SHOW_POOL' | translate}}</mat-slide-toggle>
   </div>
 </mat-card>
 <div style="margin: 0 8px;">
@@ -26,13 +36,19 @@
         <mat-panel-description style="display:flex; justify-content:space-between; align-items: center">
           {{wordset.translatedlanguage.nativeName}}
           <div style="display:flex; justify-content:space-between; align-items: center">
-            <button mat-mini-fab type="button" (click)="exercise($event, wordset)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
+            <button mat-mini-fab type="button" (click)="exercise($event, wordset)" color="primary"
+                    style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
+                    [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
               <mat-icon>school</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openEditWordSetModal($event, wordset)" color="primary" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.EDIT' | translate">
+            <button mat-mini-fab type="button" (click)="openEditWordSetModal($event, wordset)" color="primary"
+                    style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
+                    [matTooltip]="'WORDS.EDIT' | translate">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openDeleteWordSetModal($event, wordset)" color="warn" style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;" [matTooltip]="'WORDS.DELETE' | translate">
+            <button mat-mini-fab type="button" (click)="openDeleteWordSetModal($event, wordset)" color="warn"
+                    style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
+                    [matTooltip]="'WORDS.DELETE' | translate">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
