@@ -1,10 +1,10 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
-import {Observable, ReplaySubject} from 'rxjs';
+import {EMPTY, iif, Observable, of, ReplaySubject} from 'rxjs';
 import {IUser} from '../interfaces/IUser';
-import {HttpClient} from '@angular/common/http';
+import {HttpBackend, HttpClient} from '@angular/common/http';
 import {ReCaptchaV3Service} from 'ng-recaptcha';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap, switchMapTo, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {IUserDto} from '../interfaces/dto/IUserDto';
 import {MetadataService} from './metadata.service';
@@ -12,13 +12,14 @@ import {User} from '../models/User';
 import {Metadata} from '../models/Metadata';
 import {ISymbolDto} from '../interfaces/dto/ISymbolDto';
 import {ISymbol} from "../interfaces/ISymbol";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private user$ = new ReplaySubject<IUser | null>(1);
-  private user: IUser | null = null;
+  private httpStandAloneClient: HttpClient;
   isServer: boolean;
   isBrowser: boolean;
 
@@ -26,11 +27,12 @@ export class UserService {
               private httpClient: HttpClient,
               private recaptchaV3Service: ReCaptchaV3Service,
               private metadataService: MetadataService,
-              private router: Router) {
+              private router: Router,
+              private handler: HttpBackend) {
     this.isServer = isPlatformServer(platformId);
     this.isBrowser = isPlatformBrowser(platformId);
-    this.user = this.getUser();
     this.user$.next(this.getUser());
+    this.httpStandAloneClient = new HttpClient(handler);
 
     this.setUserStatic();
   }
@@ -49,8 +51,6 @@ export class UserService {
       }
     }
 
-    this.user = user;
-
     this.setUserStatic();
   }
 
@@ -59,16 +59,12 @@ export class UserService {
       return null;
     }
 
-    if (this.user) {
-      return this.user;
-    }
-
     if (localStorage.getItem('user')) {
-      return JSON.parse(localStorage.getItem('user') as string);
+      return JSON.parse(localStorage.getItem('user'));
     }
 
     if (sessionStorage.getItem('user')) {
-      return JSON.parse(sessionStorage.getItem('user') as string);
+      return JSON.parse(sessionStorage.getItem('user'));
     }
 
     return null;
@@ -111,6 +107,25 @@ export class UserService {
       );
   }
 
+  refreshTokenIfRequired(): Observable<void> {
+    if (this.isBrowser) {
+      const {token, refresh} = this.getUser() ? this.getUser() : {}!;
+      const tokenPayload = JSON.parse(atob(token?.split('.')[1]));
+      const isExpired = tokenPayload.exp * 1000 <= Date.now();
+      const getNewToken = this.httpStandAloneClient.post<{ refresh: string, token: string }>(`${environment.api}/user/refresh`, {refresh, user_id: this.getUser()?.id})
+        .pipe(
+          tap(({token, refresh}) => {
+            this.setUser({...this.getUser(), token, refresh}, localStorage.getItem('save-session') === 'true')
+          }),
+          switchMapTo(of(null))
+        )
+
+      return iif(() => isExpired, getNewToken, of(null));
+    }
+
+    return of(null);
+  }
+
   logout() {
     if (this.isBrowser) {
       localStorage.removeItem('user');
@@ -141,7 +156,7 @@ export class UserService {
           nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token,
-          refresh: this.user.refresh
+          refresh: this.getUser()?.refresh
         })),
         tap(newUser => {
           this.setUser(newUser, localStorage.getItem('save-session') === 'true');
@@ -153,7 +168,7 @@ export class UserService {
   updateKeyboardSettings(setting: ISymbol): Observable<ISymbol> {
     const settingDto: ISymbolDto = {
       action: setting.action,
-      user_id: this.user.id,
+      user_id: this.getUser()?.id,
       language_id: setting.lang.id,
       symbols: setting.letters
     };
@@ -167,12 +182,12 @@ export class UserService {
   }
 
   private setUserStatic() {
-    User.login = this.user?.login;
-    User.token = this.user?.token;
-    User.email = this.user?.email;
-    User.password = this.user?.password;
-    User.nativeLanguages = this.user?.nativeLanguages;
-    User.learningLanguages = this.user?.learningLanguages;
-    User.id = this.user?.id;
+    const user = this.getUser();
+    User.login = user?.login;
+    User.email = user?.email;
+    User.password = user?.password;
+    User.nativeLanguages = user?.nativeLanguages;
+    User.learningLanguages = user?.learningLanguages;
+    User.id = user?.id;
   }
 }
