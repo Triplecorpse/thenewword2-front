@@ -167,4 +167,11 @@ export class WordService {
   setExercise(words: IWord[]): Observable<void> {
     return this.httpClient.post<void>('word/set-exercise', words.map(({dbid}) => dbid));
   }
+
+  findByUserInput(word: IWord): Observable<IWord[]> {
+    return this.httpClient.post<IWordDto[]>('word/find', {word: word.word, foreign_language: word.originalLanguage.id, native_language: word.translatedLanguage.id})
+      .pipe(
+        map(wordDtos => wordDtos.map(wdto => this.wordFromDto(wdto)))
+      );
+  }
 }

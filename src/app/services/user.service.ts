@@ -110,9 +110,17 @@ export class UserService {
   refreshTokenIfRequired(): Observable<void> {
     if (this.isBrowser) {
       const {token, refresh} = this.getUser() ? this.getUser() : {}!;
+
+      if (!token || !refresh) {
+        return of(null);
+      }
+
       const tokenPayload = JSON.parse(atob(token?.split('.')[1]));
       const isExpired = tokenPayload.exp * 1000 <= Date.now();
-      const getNewToken = this.httpStandAloneClient.post<{ refresh: string, token: string }>(`${environment.api}/user/refresh`, {refresh, user_id: this.getUser()?.id})
+      const getNewToken = this.httpStandAloneClient.post<{ refresh: string, token: string }>(`${environment.api}/user/refresh`, {
+        refresh,
+        user_id: this.getUser()?.id
+      })
         .pipe(
           tap(({token, refresh}) => {
             this.setUser({...this.getUser(), token, refresh}, localStorage.getItem('save-session') === 'true')

@@ -44,8 +44,11 @@ export class ModalNewWordComponent implements OnInit {
   wordSetId: number;
   isShownMore: boolean;
   symbolsDisabled: boolean;
+  translationsAutocomplete: IWord[] = [];
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
+  @ViewChild('translationsControl', {read: ElementRef}) private translationsControl: ElementRef;
+  actionDisabled = false;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
@@ -149,5 +152,26 @@ export class ModalNewWordComponent implements OnInit {
     this.formGroup.controls.word.patchValue(newString);
     this.wordControl.nativeElement.setSelectionRange(selectionStart + 1, selectionStart + 1);
     this.wordControl.nativeElement.focus();
+  }
+
+  wordFocusOut() {
+    this.symbolsDisabled = true;
+    this.formGroup.controls.translations.disable();
+    this.actionDisabled = true;
+    this.wordService.findByUserInput({
+      word: this.formGroup.value.word,
+      originalLanguage: this.foreignLanguage,
+      translatedLanguage: this.nativeLanguage
+    })
+      .subscribe((result) => {
+        this.translationsAutocomplete = result
+        this.formGroup.controls.translations.enable();
+        this.translationsControl.nativeElement.focus();
+        this.actionDisabled = false;
+      })
+  }
+
+  displayFn(word: IWord): string {
+    return word.translations?.join(', ') || '';
   }
 }
