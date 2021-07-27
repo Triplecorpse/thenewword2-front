@@ -17,13 +17,14 @@
       </mat-form-field>
       <mat-form-field style="margin-left: 8px;">
         <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations" #translationsControl [matAutocomplete]="auto">
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="wordSelected($event)">
           <mat-option *ngFor="let option of translationsAutocomplete" [value]="option">
             <span style="font-weight: bold; font-style: italic" *ngIf="option.speechPart">{{'SPEECH_PARTS.' + option.speechPart.englishName.toUpperCase() | translate}}: </span>
             {{option.translations.join(', ')}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+      <mat-icon style="color: green" *ngIf="selectedWord">fiber_manual_record</mat-icon>
       <mat-divider style="margin: 0 0 8px 0"></mat-divider>
       <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
 

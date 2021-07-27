@@ -55,14 +55,18 @@ export class WordService {
       .pipe(map(wordSetsDto => wordSetsDto.map(wordSetDto => this.wordSetFromDto(wordSetDto))));
   }
 
-  addOrModifyWord(word: IWord, wordSetId?: number): Observable<IWord> {
-    if (word.dbid) {
-      return this.httpClient.put<IWordDto>('word/edit', this.dtoFromWord(word, wordSetId))
-        .pipe(map(wordDto => this.wordFromDto(wordDto)));
+  addOrModifyWord(word: IWord, wordSetId?: number, idSubscribing?: number): Observable<IWord> {
+    let request = this.httpClient.post<IWordDto>('word/add', this.dtoFromWord(word, wordSetId));
+
+    if (idSubscribing) {
+      request = this.httpClient.post<IWordDto>('word/add', {id_subscribing: idSubscribing});
     }
 
-    return this.httpClient.post<IWordDto>('word/add', this.dtoFromWord(word, wordSetId))
-      .pipe(map(wordDto => this.wordFromDto(wordDto)));
+    if (word.dbid) {
+      request = this.httpClient.put<IWordDto>('word/edit', this.dtoFromWord(word, wordSetId));
+    }
+
+    return request.pipe(map(wordDto => this.wordFromDto(wordDto)));
   }
 
   addOrModifyWordSet(wordSet: IWordSet): Observable<IWordSet> {
