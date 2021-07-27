@@ -14,6 +14,7 @@ import {filter, switchMap, take, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-word',
@@ -31,7 +32,8 @@ export class WordComponent implements OnInit {
               private metadataService: MetadataService,
               private translateService: TranslateService,
               private userService: UserService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -40,14 +42,6 @@ export class WordComponent implements OnInit {
     this.wordService.getWordSets$()
       .subscribe(wordsets => {
         this.wordsets = wordsets;
-      });
-  }
-
-  openNewWordModal(event: MouseEvent, wordset: IWordSet) {
-    event?.stopPropagation();
-    this.dialog.open<any, number, IWord>(ModalNewWordComponent, {data: wordset.id})
-      .afterClosed()
-      .subscribe(() => {
       });
   }
 
@@ -111,5 +105,9 @@ export class WordComponent implements OnInit {
         const index = this.wordsets.findIndex(ws => ws.id === newWordSet.id);
         this.wordsets[index] = newWordSet;
       });
+  }
+
+  exercise(event: MouseEvent, wordset: IWordSet) {
+    this.router.navigate(['exercise'], {queryParams: {wordset: wordset.id}})
   }
 }

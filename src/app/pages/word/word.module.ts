@@ -28,24 +28,25 @@ const routes: Routes = [
   declarations: [
     WordComponent
   ],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    RouterModule.forChild(routes),
-    MatDialogModule,
-    ModalNewWordModule,
-    ModalNewWordsetModule,
-    ModalConfirmModule,
-    TranslateModule.forChild({
-      extend: true
-    }),
-    WordListModule,
-    MatCardModule,
-    MatSelectModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatInputModule
-  ]
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        RouterModule.forChild(routes),
+        MatDialogModule,
+        ModalNewWordModule,
+        ModalNewWordsetModule,
+        ModalConfirmModule,
+        TranslateModule.forChild({
+            extend: true
+        }),
+        WordListModule,
+        MatCardModule,
+        MatSelectModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatInputModule,
+        MatTooltipModule
+    ]
 })
 export class WordModule {
 }
