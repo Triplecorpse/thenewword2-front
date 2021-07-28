@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
-import {combineLatest} from 'rxjs';
+import {combineLatest, Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -9,24 +9,35 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {ModalNewWordsetComponent} from '../../components/modal-new-wordset/modal-new-wordset.component';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {IModalConfirm, ModalConfirmComponent} from '../../components/modal-confirm/modal-confirm.component';
-import {filter, switchMap, take, tap} from 'rxjs/operators';
+import {debounceTime, filter, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {FormControl, FormGroup} from "@angular/forms";
+import {User} from "../../models/User";
 
 @Component({
   selector: 'app-word',
   templateUrl: './word.component.html',
   styleUrls: ['./word.component.scss']
 })
-export class WordComponent implements OnInit {
+export class WordComponent implements OnInit, OnDestroy {
   metadata: IWordMetadata;
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
-  loadedWords: {[key: number]: IWord[]} = {};
+  loadedWords: { [key: number]: IWord[] } = {};
   showUserSearch = false;
+  private destroy$ = new Subject<void>();
+
+  filterFormGroup = new FormGroup({
+    searchByUser: new FormControl(this.userService.getUser()?.login),
+    searchByName: new FormControl(''),
+    foreignLanguage: new FormControl(''),
+    nativeLanguages: new FormControl(User.nativeLanguages.map(({id}) => id)),
+    showPool: new FormControl(false)
+  })
 
   constructor(private dialog: MatDialog,
               private wordService: WordService,
@@ -44,6 +55,12 @@ export class WordComponent implements OnInit {
       .subscribe(wordsets => {
         this.wordsets = wordsets;
       });
+    this.registerFilterFormChange();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   openNewWordSetModal() {
@@ -114,6 +131,30 @@ export class WordComponent implements OnInit {
 
   poolChange(event: MatSlideToggleChange) {
     this.showUserSearch = event.checked;
-    console.log(event);
+
+    if (this.showUserSearch) {
+      this.filterFormGroup.controls.searchByUser.setValue('');
+    } else {
+      this.filterFormGroup.controls.searchByUser.setValue(this.userService.getUser()?.login);
+    }
+  }
+
+  private registerFilterFormChange() {
+    this.filterFormGroup.valueChanges
+      .pipe(
+        debounceTime(1000),
+        switchMap(value => {
+          return this.wordService.getWordSets$({
+            name: this.filterFormGroup.controls.searchByName.value,
+            user_created_login: this.filterFormGroup.controls.searchByUser.value,
+            foreign_language_id: this.filterFormGroup.controls.foreignLanguage.value,
+            native_language_id: this.filterFormGroup.controls.nativeLanguages.value,
+          })
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(value => {
+        this.wordsets = value;
+      });
   }
 }
