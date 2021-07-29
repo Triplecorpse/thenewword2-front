@@ -1,1 +1,9 @@
-<p>dashboard works!</p>
+<div style="margin: 8px;" *ngIf="dashboard">
+  <h2>{{'DASHBOARD.DAYS' | translate}}: {{convertToDays(dashboard.accountCreated)}}</h2>
+  <p>{{'DASHBOARD.NATIVE_LANGUAGES' | translate}}: {{dashboard.myNativeLanguage}}</p>
+  <p>{{'DASHBOARD.LEARNING_LANGUAGES' | translate}}: {{dashboard.myLearnedLanguages}}</p>
+  <p>{{'DASHBOARD.CREATED_WORDSETS' | translate}}: {{dashboard.myWordsets}}</p>
+  <p>{{'DASHBOARD.SUBSCRIBED_WORDSETS_ON' | translate}}: {{dashboard.mySubscribedWordsets}}</p>
+  <p>{{'DASHBOARD.OTHER_SUBSCRIBED_WORDSETS_ON' | translate}}: {{dashboard.otherSubscribedWordsets}}</p>
+  <p>{{'DASHBOARD.WORDS_ANSWERED' | translate}}: {{dashboard.exercisesPassed}}</p>
+</div>

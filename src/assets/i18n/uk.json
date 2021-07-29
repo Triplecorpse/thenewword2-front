@@ -68,6 +68,15 @@
     "GOTO_REGISTER": "Зареєструватися",
     "LOGIN": "Увійти"
   },
+  "DASHBOARD": {
+    "DAYS": "Днів з нами",
+    "NATIVE_LANGUAGES": "Кількість мов, які ви знаєте",
+    "LEARNING_LANGUAGES": "Кількість мов, які ви вчита на даний момент",
+    "CREATED_WORDSETS": "Створено наборів слів",
+    "SUBSCRIBED_WORDSETS_ON": "Підписано на набори слів",
+    "OTHER_SUBSCRIBED_WORDSETS_ON": "Кількість наборів слів, на які підписались інші користувачі",
+    "WORDS_ANSWERED": "Кількість слів, на які ви відповідали"
+  },
   "WORDS": {
     "NEW_WORDSET": "Новий набір слів",
     "NEW_WORD": "Нове слово",

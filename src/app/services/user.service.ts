@@ -205,7 +205,7 @@ export class UserService {
     return this.httpClient.get<IDashboardDto>('user/statistics')
       .pipe(
         map<IDashboardDto, IDashboard>(result => ({
-          accountCreated: result.account_created,
+          accountCreated: new Date(result.account_created),
           exercisesPassed: result.exercises_passed,
           myLearnedLanguages: result.my_learned_languages,
           myNativeLanguage: result.my_native_languages,

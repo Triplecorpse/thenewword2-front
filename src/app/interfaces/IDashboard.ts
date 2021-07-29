@@ -5,5 +5,5 @@ export interface IDashboard {
   myLearnedLanguages: number;
   myNativeLanguage: number;
   exercisesPassed: number;
-  accountCreated: string;
+  accountCreated: Date;
 }
