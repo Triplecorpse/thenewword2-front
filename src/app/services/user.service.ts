@@ -1,6 +1,6 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
-import {EMPTY, iif, Observable, of, ReplaySubject} from 'rxjs';
+import {iif, Observable, of, ReplaySubject} from 'rxjs';
 import {IUser} from '../interfaces/IUser';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {ReCaptchaV3Service} from 'ng-recaptcha';
@@ -13,6 +13,8 @@ import {Metadata} from '../models/Metadata';
 import {ISymbolDto} from '../interfaces/dto/ISymbolDto';
 import {ISymbol} from "../interfaces/ISymbol";
 import {environment} from "../../environments/environment";
+import {IDashboard} from "../interfaces/IDashboard";
+import {IDashboardDto} from "../interfaces/dto/IDashboardDto";
 
 @Injectable({
   providedIn: 'root'
@@ -197,5 +199,20 @@ export class UserService {
     User.nativeLanguages = user?.nativeLanguages;
     User.learningLanguages = user?.learningLanguages;
     User.id = user?.id;
+  }
+
+  getDashboard$(): Observable<IDashboard> {
+    return this.httpClient.get<IDashboardDto>('user/statistics')
+      .pipe(
+        map<IDashboardDto, IDashboard>(result => ({
+          accountCreated: result.account_created,
+          exercisesPassed: result.exercises_passed,
+          myLearnedLanguages: result.my_learned_languages,
+          myNativeLanguage: result.my_native_language,
+          mySubscribedWordsets: result.my_subscribed_wordsets,
+          myWordsets: result.my_wordsets,
+          otherSubscribedWordsets: result.other_subscribed_wordsets
+        }))
+      )
   }
 }
