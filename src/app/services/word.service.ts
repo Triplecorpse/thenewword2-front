@@ -76,7 +76,14 @@ export class WordService {
     return request.pipe(map(wordDto => this.wordFromDto(wordDto)));
   }
 
-  addOrModifyWordSet(wordSet: IWordSet): Observable<IWordSet> {
+  addOrModifyWordSet(wordSet: IWordSet, isSubscribing?: boolean): Observable<IWordSet> {
+    if (isSubscribing) {
+      return this.httpClient.post<IWordSetDto>('wordset/add', {wordset_id: wordSet.id})
+        .pipe(
+          map(wordSetDto => this.wordSetFromDto(wordSetDto))
+        );
+    }
+
     if (wordSet.id) {
       return this.httpClient.put<IWordSetDto>('wordset/edit', this.dtoFromWordSet(wordSet))
         .pipe(

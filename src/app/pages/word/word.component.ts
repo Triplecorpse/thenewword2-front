@@ -166,4 +166,24 @@ export class WordComponent implements OnInit, OnDestroy {
         this.wordsets = value;
       });
   }
+
+  subscribeToWordset(event: MouseEvent, wordset: IWordSet) {
+    event.stopPropagation();
+    this.wordService.addOrModifyWordSet(wordset, true)
+      .pipe(
+        tap(() => {
+          const index = this.wordsets.findIndex(ws => ws.id === wordset.id);
+          this.wordsets.splice(index, 1);
+        }),
+        switchMap((wordset) => this.translateService.get('WORDS.SUBSCRIBED_WORDSET_SUCCESS',
+          {
+            wordSet: wordset.name,
+            foreign: wordset.foreignLanguage.nativeName,
+            native: wordset.nativeLanguage.nativeName
+          }))
+      )
+      .subscribe(translation => {
+        this.snackBar.open(translation, '', {duration: 10000});
+      });
+  }
 }
