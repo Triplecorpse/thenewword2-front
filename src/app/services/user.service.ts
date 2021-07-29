@@ -208,7 +208,7 @@ export class UserService {
           accountCreated: result.account_created,
           exercisesPassed: result.exercises_passed,
           myLearnedLanguages: result.my_learned_languages,
-          myNativeLanguage: result.my_native_language,
+          myNativeLanguage: result.my_native_languages,
           mySubscribedWordsets: result.my_subscribed_wordsets,
           myWordsets: result.my_wordsets,
           otherSubscribedWordsets: result.other_subscribed_wordsets
