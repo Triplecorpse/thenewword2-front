@@ -8,4 +8,6 @@ export interface IWordSet {
   foreignLanguage: ILanguage;
   nativeLanguage: ILanguage;
   wordsCount: number;
+  userIsSubscribed?: boolean;
+  userCreatedId?: number;
 }

@@ -43,26 +43,35 @@
           <div style="display:flex; justify-content:space-between; align-items: center">
             <div style="display: flex; align-items: center; margin-left: 16px; color: gray;">
               <div style="margin: 0 8px;"
-                   [matTooltip]="wordset.foreignLanguage.nativeName">{{wordset.foreignLanguage.iso2.toUpperCase()}}</div>
+                   [matTooltip]="wordset.foreignLanguage?.nativeName">{{wordset.foreignLanguage?.iso2.toUpperCase()}}</div>
               <mat-icon style="transform: scale(.75)">arrow_forward</mat-icon>
               <div style="margin: 0 8px;"
-                   [matTooltip]="wordset.nativeLanguage.nativeName">{{wordset.nativeLanguage.iso2.toUpperCase()}}</div>
+                   [matTooltip]="wordset.nativeLanguage?.nativeName">{{wordset.nativeLanguage?.iso2.toUpperCase()}}</div>
             </div>
             <mat-divider [vertical]="true" style="height: 26px; margin-left: 16px; margin-right: 8px;"></mat-divider>
-            <button mat-mini-fab type="button" (click)="exercise($event, wordset)" color="primary"
+            <button *ngIf="wordset.userIsSubscribed" mat-mini-fab type="button" (click)="exercise($event, wordset)"
+                    color="primary"
                     style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
                     [matTooltip]="'WORDS.EXERCISE_THIS' | translate">
               <mat-icon>school</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openEditWordSetModal($event, wordset)" color="primary"
+            <button *ngIf="wordset.userCreatedId === userId" mat-mini-fab type="button"
+                    (click)="openEditWordSetModal($event, wordset)" color="primary"
                     style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
                     [matTooltip]="'WORDS.EDIT' | translate">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-mini-fab type="button" (click)="openDeleteWordSetModal($event, wordset)" color="warn"
+            <button *ngIf="!wordset.userIsSubscribed" mat-mini-fab type="button"
+                    (click)="openDeleteWordSetModal($event, wordset)" color="primary"
+                    style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
+                    [matTooltip]="'WORDS.ADD' | translate">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button *ngIf="wordset.userIsSubscribed" mat-mini-fab type="button"
+                    (click)="openDeleteWordSetModal($event, wordset)" color="warn"
                     style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
                     [matTooltip]="'WORDS.DELETE' | translate">
-              <mat-icon>delete</mat-icon>
+              <mat-icon>remove</mat-icon>
             </button>
           </div>
         </mat-panel-description>

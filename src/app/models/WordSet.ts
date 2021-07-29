@@ -11,6 +11,8 @@ export class WordSet implements IWordSet {
   foreignLanguage: ILanguage;
   nativeLanguage: ILanguage;
   wordsCount: number;
+  userIsSubscribed: boolean;
+  userCreatedId: number;
 
   constructor(wordSetDto?: IWordSetDto) {
     this.id = wordSetDto?.id;
@@ -18,6 +20,8 @@ export class WordSet implements IWordSet {
     this.foreignLanguage = Metadata.languages.find(({id}) => id === wordSetDto?.foreign_language_id);
     this.nativeLanguage = Metadata.languages.find(({id}) => id === wordSetDto?.native_language_id);
     this.wordsCount = wordSetDto?.words_count;
+    this.userIsSubscribed = wordSetDto.user_is_subscribed;
+    this.userCreatedId = wordSetDto.user_created_id;
   }
 
   convertToDto(): IWordSetDto {

@@ -9,7 +9,7 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {ModalNewWordsetComponent} from '../../components/modal-new-wordset/modal-new-wordset.component';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {IModalConfirm, ModalConfirmComponent} from '../../components/modal-confirm/modal-confirm.component';
-import {debounceTime, filter, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -29,6 +29,7 @@ export class WordComponent implements OnInit, OnDestroy {
   wordsets: IWordSet[];
   loadedWords: { [key: number]: IWord[] } = {};
   showUserSearch = false;
+  userId: number;
   private destroy$ = new Subject<void>();
 
   filterFormGroup = new FormGroup({
@@ -51,6 +52,7 @@ export class WordComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.metadata = this.metadataService.metadata;
     this.learningLanguages = this.userService.getUser().learningLanguages;
+    this.userId = User.id;
     this.registerFilterFormChange();
   }
 
@@ -146,6 +148,7 @@ export class WordComponent implements OnInit, OnDestroy {
             native_language_id: this.filterFormGroup.controls.nativeLanguages.value,
           })
         }),
+        map(wordsets => wordsets.filter(wordset => wordset.userIsSubscribed === !this.filterFormGroup.value.showPool)),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
