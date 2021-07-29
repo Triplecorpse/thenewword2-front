@@ -17,6 +17,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {WordListModule} from "../../components/word-list/word-list.module";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ReactiveFormsModule} from "@angular/forms";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatChipsModule} from "@angular/material/chips";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -45,7 +47,9 @@ const routes: Routes = [
     MatInputModule,
     MatTooltipModule,
     MatSlideToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDividerModule,
+    MatChipsModule
   ]
 })
 export class WordModule {

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
-import {combineLatest, Subject} from 'rxjs';
+import {combineLatest, merge, of, Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -51,10 +51,6 @@ export class WordComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.metadata = this.metadataService.metadata;
     this.learningLanguages = this.userService.getUser().learningLanguages;
-    this.wordService.getWordSets$()
-      .subscribe(wordsets => {
-        this.wordsets = wordsets;
-      });
     this.registerFilterFormChange();
   }
 
@@ -140,9 +136,8 @@ export class WordComponent implements OnInit, OnDestroy {
   }
 
   private registerFilterFormChange() {
-    this.filterFormGroup.valueChanges
+    merge(this.filterFormGroup.valueChanges.pipe(debounceTime(1000)), of(this.filterFormGroup.value))
       .pipe(
-        debounceTime(1000),
         switchMap(value => {
           return this.wordService.getWordSets$({
             name: this.filterFormGroup.controls.searchByName.value,

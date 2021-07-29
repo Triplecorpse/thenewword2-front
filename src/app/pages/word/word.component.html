@@ -34,12 +34,21 @@
   <mat-accordion multi>
     <mat-expansion-panel *ngFor="let wordset of wordsets" (opened)="wordsetOpened(wordset)">
       <mat-expansion-panel-header style="display:flex; justify-content: space-between; align-items: center">
-        <mat-panel-title style="display:flex; justify-content: space-between; align-items: center">
-          {{wordset.name}}
+        <mat-panel-title style="display:flex; justify-content: flex-start; align-items: center">
+          <div>
+            {{wordset.name}}
+          </div>
         </mat-panel-title>
-        <mat-panel-description style="display:flex; justify-content:space-between; align-items: center">
-          {{wordset.translatedlanguage.nativeName}}
+        <mat-panel-description style="display:flex; justify-content: flex-end; align-items: center">
           <div style="display:flex; justify-content:space-between; align-items: center">
+            <div style="display: flex; align-items: center; margin-left: 16px; color: gray;">
+              <div style="margin: 0 8px;"
+                   [matTooltip]="wordset.foreignLanguage.nativeName">{{wordset.foreignLanguage.iso2.toUpperCase()}}</div>
+              <mat-icon style="transform: scale(.75)">arrow_forward</mat-icon>
+              <div style="margin: 0 8px;"
+                   [matTooltip]="wordset.nativeLanguage.nativeName">{{wordset.nativeLanguage.iso2.toUpperCase()}}</div>
+            </div>
+            <mat-divider [vertical]="true" style="height: 26px; margin-left: 16px; margin-right: 8px;"></mat-divider>
             <button mat-mini-fab type="button" (click)="exercise($event, wordset)" color="primary"
                     style="margin: 8px; height: 30px; width: 30px; display:flex; justify-content: center; align-items: center;"
                     [matTooltip]="'WORDS.EXERCISE_THIS' | translate">

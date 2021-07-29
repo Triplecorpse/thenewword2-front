@@ -131,8 +131,8 @@ export class WordService {
     return {
       id: wordSet.id,
       name: wordSet.name,
-      original_language_id: wordSet.originalLanguage?.id,
-      translated_language_id: wordSet.translatedlanguage?.id,
+      foreign_language_id: wordSet.foreignLanguage?.id,
+      native_language_id: wordSet.nativeLanguage?.id,
       words_count: wordSet.wordsCount
     };
   }

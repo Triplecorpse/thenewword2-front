@@ -11,8 +11,8 @@ import {User} from '../../models/User';
 import {Metadata} from "../../models/Metadata";
 import {DomSanitizer} from "@angular/platform-browser";
 import {TranslateService} from "@ngx-translate/core";
-import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
-import {ActivatedRoute, Route} from "@angular/router";
+import {MatSelectionListChange} from "@angular/material/list";
+import {ActivatedRoute} from "@angular/router";
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -212,8 +212,8 @@ export class ExerciseComponent implements OnInit, OnDestroy {
       uniqLangCodes.push(languageId)
     } else {
       this.wordsets.forEach(ws => {
-        if (!uniqLangCodes.includes(ws.translatedlanguage.id)) {
-          uniqLangCodes.push(ws.translatedlanguage.id);
+        if (!uniqLangCodes.includes(ws.nativeLanguage.id)) {
+          uniqLangCodes.push(ws.nativeLanguage.id);
         }
       });
     }
@@ -221,7 +221,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     const uniqLangs: ILanguage[] = uniqLangCodes.map(code => Metadata.languages.find(l => l.id === code));
 
     this.displayedWordsets = uniqLangs.map((lang: ILanguage) => {
-      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.translatedlanguage.id === lang.id)
+      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.nativeLanguage.id === lang.id)
 
       return {
         language: lang,
@@ -246,7 +246,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
         }
 
         if (value.length === 1) {
-          this.rebuildWordsets(wordset.translatedlanguage.id);
+          this.rebuildWordsets(wordset.nativeLanguage.id);
         }
 
         if (value.length) {
@@ -254,7 +254,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
           const wordCount = selectedWordSets
             .reduce((prev: number, curr: IWordSet) => prev + curr.wordsCount, 0);
           this.filterFormGroup.controls.limit.patchValue(wordCount);
-          this.filterFormGroup.controls.language.patchValue(wordset.translatedlanguage.id);
+          this.filterFormGroup.controls.language.patchValue(wordset.nativeLanguage.id);
           this.filterFormGroup.controls.language.disable();
         }
       });
