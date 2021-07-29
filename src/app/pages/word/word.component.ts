@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
-import {combineLatest, merge, of, Subject} from 'rxjs';
+import {combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -135,6 +135,17 @@ export class WordComponent implements OnInit, OnDestroy {
     } else {
       this.filterFormGroup.controls.searchByUser.setValue(this.userService.getUser()?.login);
     }
+  }
+
+  getWordsText(quantity: number): Observable<string> {
+    if (quantity === 0) {
+      return this.translateService.get(`WORDS.WORDS.NO`);
+    }
+
+    const lastDigit = quantity % 10;
+
+    return this.translateService.get(`WORDS.WORDS.${lastDigit}`)
+      .pipe(map(label => `${quantity} ${label}`));
   }
 
   private registerFilterFormChange() {

@@ -41,6 +41,10 @@
         </mat-panel-title>
         <mat-panel-description style="display:flex; justify-content: flex-end; align-items: center">
           <div style="display:flex; justify-content:space-between; align-items: center">
+            <div>
+              {{getWordsText(wordset.wordsCount) | async}}
+            </div>
+            <mat-divider [vertical]="true" style="height: 26px; margin-left: 16px;"></mat-divider>
             <div style="display: flex; align-items: center; margin-left: 16px; color: gray;">
               <div style="margin: 0 8px;"
                    [matTooltip]="wordset.foreignLanguage?.nativeName">{{wordset.foreignLanguage?.iso2.toUpperCase()}}</div>
