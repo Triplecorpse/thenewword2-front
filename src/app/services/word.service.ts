@@ -4,12 +4,10 @@ import {Observable} from 'rxjs';
 import {IWord} from '../interfaces/IWord';
 import {map} from 'rxjs/operators';
 import {IWordDto} from '../interfaces/dto/IWordDto';
-import {UserService} from './user.service';
 import {Word} from '../models/Word';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {IWordCheck} from '../interfaces/IWordCheck';
 import {IWordCheckDto} from '../interfaces/dto/IWordCheckDto';
-import {MetadataService} from './metadata.service';
 import {IWordSet} from '../interfaces/IWordSet';
 import {IWordSetDto} from '../interfaces/dto/IWordSetDto';
 import {WordSet} from '../models/WordSet';
@@ -41,9 +39,7 @@ export class WordService {
   isBrowser: boolean;
 
   constructor(@Inject(PLATFORM_ID) private platformId: string,
-              private httpClient: HttpClient,
-              private userService: UserService,
-              private metadataService: MetadataService) {
+              private httpClient: HttpClient) {
     this.isServer = isPlatformServer(platformId);
     this.isBrowser = isPlatformBrowser(platformId);
   }

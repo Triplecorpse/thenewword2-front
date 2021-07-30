@@ -10,6 +10,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {MatSort} from "@angular/material/sort";
 import {UserService} from "../../services/user.service";
+import {Word} from "../../models/Word";
+import {WordSet} from "../../models/WordSet";
 
 @Component({
   selector: 'app-word-list',
@@ -130,9 +132,15 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
     return of(this.words);
   }
 
-  checkAuthority(element: IWord): boolean {
+  checkAuthority(element: IWord | IWordSet): boolean {
     const user = this.userService.getUser();
 
-    return user.id === element.userCreated?.id;
+    if (element instanceof Word) {
+      return user.id === element.userCreated?.id;
+    } else if (element instanceof WordSet) {
+      return user.id === element.userCreatedId;
+    }
+
+    return false;
   }
 }

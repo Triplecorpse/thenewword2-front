@@ -1,5 +1,5 @@
 <div>
-  <mat-card *ngIf="!readonly">
+  <mat-card *ngIf="!readonly && checkAuthority(wordset)">
     <button mat-flat-button type="button" color="primary" (click)="openNewWordModal($event)">
       {{'WORDS.NEW_WORD' | translate}}
     </button>
@@ -30,7 +30,8 @@
     <ng-container matColumnDef="speech_part">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'WORDS.SPEECH_PART' | translate}}</th>
       <td mat-cell *matCellDef="let element">
-        <span *ngIf="element.speechPart">{{'SPEECH_PARTS.' + element.speechPart.englishName.toUpperCase() | translate}}</span>
+        <span
+          *ngIf="element.speechPart">{{'SPEECH_PARTS.' + element.speechPart.englishName.toUpperCase() | translate}}</span>
       </td>
     </ng-container>
 
@@ -38,10 +39,14 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <div style="display:flex; justify-content: flex-end">
-          <button mat-icon-button (click)="openEditWordModal(element)" [matTooltip]="'WORDS.EDIT_WORD' | translate" *ngIf="checkAuthority(element)">
+          <button mat-icon-button (click)="openEditWordModal(element)" [matTooltip]="'WORDS.EDIT_WORD' | translate"
+                  *ngIf="checkAuthority(element)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="openDeleteWordModal(element)" [matTooltip]="'WORDS.DELETE_WORD' | translate"><mat-icon>delete</mat-icon></button>
+          <button mat-icon-button (click)="openDeleteWordModal(element)" [matTooltip]="'WORDS.DELETE_WORD' | translate"
+                  *ngIf="checkAuthority(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </div>
       </td>
     </ng-container>
