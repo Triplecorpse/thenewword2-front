@@ -211,7 +211,11 @@ export class UserService {
           myNativeLanguage: result.my_native_languages,
           mySubscribedWordsets: result.my_subscribed_wordsets,
           myWordsets: result.my_wordsets,
-          otherSubscribedWordsets: result.other_subscribed_wordsets
+          otherSubscribedWordsets: result.other_subscribed_wordsets,
+          wordsRight: result.words_right,
+          wordsWrong: result.words_wrong,
+          wordsSkipped: result.words_skipped,
+          words80: result.words_80
         }))
       )
   }

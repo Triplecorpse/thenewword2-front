@@ -17,7 +17,6 @@ export class DashboardComponent implements OnInit {
     this.userService.getDashboard$()
       .subscribe((result) => {
         this.dashboard = result;
-        console.log(result);
       });
   }
 

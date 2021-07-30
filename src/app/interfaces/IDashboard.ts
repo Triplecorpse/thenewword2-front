@@ -6,4 +6,8 @@ export interface IDashboard {
   myNativeLanguage: number;
   exercisesPassed: number;
   accountCreated: Date;
+  wordsRight: number;
+  wordsWrong: number;
+  wordsSkipped: number;
+  words80: number;
 }
