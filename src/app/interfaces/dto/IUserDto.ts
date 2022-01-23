@@ -7,4 +7,5 @@ export interface IUserDto {
   native_languages?: number[];
   learning_languages?: number[];
   token?: string;
+  refresh?: string;
 }

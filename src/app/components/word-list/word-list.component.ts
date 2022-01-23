@@ -9,6 +9,9 @@ import {filter, switchMap, take} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {MatSort} from "@angular/material/sort";
+import {UserService} from "../../services/user.service";
+import {Word} from "../../models/Word";
+import {WordSet} from "../../models/WordSet";
 
 @Component({
   selector: 'app-word-list',
@@ -24,6 +27,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   displayedColumns: string[] = ['translations', 'from_language', 'gender', 'speech_part'];
 
   constructor(private wordService: WordService,
+              private userService: UserService,
               private dialog: MatDialog,
               private translateService: TranslateService) {
   }
@@ -66,8 +70,8 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
       data: {
         word: element,
         wordsetId: this.wordset.id,
-        wordsetForeignLanguage: this.wordset.translatedlanguage,
-        wordsetNativeLanguage: this.wordset.originalLanguage
+        wordsetForeignLanguage: this.wordset.nativeLanguage,
+        wordsetNativeLanguage: this.wordset.foreignLanguage
       }
     })
       .afterClosed()
@@ -109,8 +113,8 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
     this.dialog.open<any, IWordModalInputData, IWord>(ModalNewWordComponent,
       {
         data: {
-          wordsetForeignLanguage: this.wordset.translatedlanguage,
-          wordsetNativeLanguage: this.wordset.originalLanguage,
+          wordsetForeignLanguage: this.wordset.nativeLanguage,
+          wordsetNativeLanguage: this.wordset.foreignLanguage,
           wordsetId: this.wordset.id
         }
       }
@@ -126,5 +130,17 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
 
   getDataSource() {
     return of(this.words);
+  }
+
+  checkAuthority(element: IWord | IWordSet): boolean {
+    const user = this.userService.getUser();
+
+    if (element instanceof Word) {
+      return user.id === element.userCreated?.id;
+    } else if (element instanceof WordSet) {
+      return user.id === element.userCreatedId;
+    }
+
+    return false;
   }
 }

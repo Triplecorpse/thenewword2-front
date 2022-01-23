@@ -13,23 +13,25 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatBadgeModule} from "@angular/material/badge";
 import {SymbolsModule} from "../symbols/symbols.module";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 
 @NgModule({
     declarations: [ModalNewWordComponent],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    TranslateModule,
-    MatIconModule,
-    MatDividerModule,
-    SymbolsModule
-  ]
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatInputModule,
+        MatOptionModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        TranslateModule,
+        MatIconModule,
+        MatDividerModule,
+        SymbolsModule,
+        MatAutocompleteModule
+    ]
 })
 export class ModalNewWordModule { }

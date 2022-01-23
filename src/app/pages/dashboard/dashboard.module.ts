@@ -1,7 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DashboardComponent } from './dashboard.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DashboardComponent} from './dashboard.component';
 import {RouterModule, Routes} from "@angular/router";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 const routes: Routes = [
   {path: '', component: DashboardComponent}
@@ -13,7 +15,10 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule,
+    MatProgressBarModule
   ]
 })
-export class DashboardModule { }
+export class DashboardModule {
+}

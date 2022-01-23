@@ -22,9 +22,7 @@ export class Word implements IWord {
   userCreated?: IUser;
   transcription: string;
 
-  constructor(wordDto?: IWordDto, user?: IUser) {
-    user = user || User;
-
+  constructor(wordDto?: IWordDto) {
     const speechParts = Metadata.speechParts;
     const genders = Metadata.genders;
     const languages = Metadata.languages;
@@ -39,7 +37,7 @@ export class Word implements IWord {
     this.gender = genders?.find(g => g.id === wordDto?.gender_id);
     this.originalLanguage = languages?.find(l => l.id === wordDto?.original_language_id);
     this.translatedLanguage = languages?.find(l => l.id === wordDto?.translated_language_id);
-    this.userCreated = user;
+    this.userCreated = {id: wordDto.user_created_id};
   }
 
   convertToDto(): IWordDto {

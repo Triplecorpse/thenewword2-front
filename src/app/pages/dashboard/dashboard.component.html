@@ -1,1 +1,28 @@
-<p>dashboard works!</p>
+<div style="margin: 8px;" *ngIf="dashboard">
+  <h2>{{'DASHBOARD.DAYS' | translate}}: {{convertToDays(dashboard.accountCreated)}}</h2>
+  <p>{{'DASHBOARD.NATIVE_LANGUAGES' | translate}}: {{dashboard.myNativeLanguage}}</p>
+  <p>{{'DASHBOARD.LEARNING_LANGUAGES' | translate}}: {{dashboard.myLearnedLanguages}}</p>
+  <p>{{'DASHBOARD.CREATED_WORDSETS' | translate}}: {{dashboard.myWordsets}}</p>
+  <p>{{'DASHBOARD.SUBSCRIBED_WORDSETS_ON' | translate}}: {{dashboard.mySubscribedWordsets}}</p>
+  <p>{{'DASHBOARD.OTHER_SUBSCRIBED_WORDSETS_ON' | translate}}: {{dashboard.otherSubscribedWordsets}}</p>
+  <p>{{'DASHBOARD.WORDS_80' | translate}}: {{dashboard.words80}}</p>
+  <p>{{'DASHBOARD.WORDS_ANSWERED' | translate}}: {{dashboard.exercisesPassed}}</p>
+  <div style="width: 200px; margin: 8px 0;">
+    {{'DASHBOARD.WORDS_RIGHT' | translate: {percent: (dashboard.wordsRight * 100 / dashboard.exercisesPassed).toFixed(0)} }}
+    <mat-progress-bar mode="determinate"
+                      [value]="dashboard.wordsRight * 100 / dashboard.exercisesPassed">
+    </mat-progress-bar>
+  </div>
+  <div style="width: 200px; margin: 8px 0;">
+    {{'DASHBOARD.WORDS_WRONG' | translate: {percent: (dashboard.wordsWrong * 100 / dashboard.exercisesPassed).toFixed(0)} }}
+    <mat-progress-bar mode="determinate"
+                      [value]="dashboard.wordsWrong * 100 / dashboard.exercisesPassed">
+    </mat-progress-bar>
+  </div>
+  <div style="width: 200px; margin: 8px 0;">
+    {{'DASHBOARD.WORDS_SKIPPED' | translate: {percent: (dashboard.wordsSkipped * 100 / dashboard.exercisesPassed).toFixed(0)} }}
+    <mat-progress-bar mode="determinate"
+                      [value]="dashboard.wordsSkipped * 100 / dashboard.exercisesPassed">
+    </mat-progress-bar>
+  </div>
+</div>

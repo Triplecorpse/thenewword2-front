@@ -1,8 +1,8 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {iif, Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {catchError} from 'rxjs/operators';
+import {catchError, map, switchMap, switchMapTo, tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from './user.service';
 import {isPlatformServer} from '@angular/common';
@@ -11,7 +11,7 @@ import {isPlatformServer} from '@angular/common';
   providedIn: 'root'
 })
 export class InterceptorService implements HttpInterceptor {
-  static errorCodes: {[key: string]: string};
+  static errorCodes: { [key: string]: string };
   unhandledError = 'Сталася невідома помилка при запиті: ';
 
   constructor(private userService: UserService,
@@ -20,11 +20,13 @@ export class InterceptorService implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.userService.getUser()?.token ? this.userService.getUser()?.token : '';
-    const exclusions: RegExp[] = [/(.json)$/];
+    const urlExclusions: RegExp[] = [/(.json)$/];
+    const authExclusions: RegExp[] = [/(user\/refresh)$/];
     let url = req.url;
     let newReq;
-    const replaceUrlByExclusion = exclusions.map(exclusion => exclusion.test(url)).some(result => !!result);
+    const replaceUrlByExclusion = urlExclusions.map(exclusion => exclusion.test(url)).some(result => !!result);
+    const skipAddTokenByExclusion = authExclusions.map(exclusion => exclusion.test(url)).some(result => !!result);
+    let tokenIsExpired = false;
 
     if (!req.url.startsWith('http://') && !req.url.startsWith('https://') && !replaceUrlByExclusion) {
       url = `${environment.api}/${url}`;
@@ -34,23 +36,31 @@ export class InterceptorService implements HttpInterceptor {
       url = `${environment.baseUrl}${url}`;
     }
 
-    if (token) {
-      newReq = req.clone({url, setParams: {token}, setHeaders: {Authorization: `Bearer ${token}`}});
-    } else {
-      newReq = req.clone({url});
-    }
-
-    return next.handle(newReq)
+    return this.userService.refreshTokenIfRequired()
       .pipe(
-        catchError(error => {
-          if (InterceptorService.errorCodes && InterceptorService.errorCodes[error?.error?.name]) {
-            this.snackBar.open(InterceptorService.errorCodes[error.error.name], '', {duration: 10000});
+        switchMap(() => {
+          const user = this.userService.getUser();
+          const token = user?.token ? user.token : '';
+
+          if (!skipAddTokenByExclusion) {
+            newReq = req.clone({url, setHeaders: {Authorization: `Bearer ${token}`}});
           } else {
-            this.snackBar.open(this.unhandledError + url, '', {duration: 10000});
+            newReq = req.clone({url});
           }
 
-          return throwError(error);
+          return next.handle(newReq)
+            .pipe(
+              catchError(error => {
+                if (InterceptorService.errorCodes && InterceptorService.errorCodes[error?.error?.name]) {
+                  this.snackBar.open(InterceptorService.errorCodes[error.error.name], '', {duration: 10000});
+                } else {
+                  this.snackBar.open(this.unhandledError + url, '', {duration: 10000});
+                }
+
+                return throwError(error);
+              })
+            );
         })
-      );
+      )
   }
 }

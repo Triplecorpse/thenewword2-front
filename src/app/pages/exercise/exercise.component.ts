@@ -1,8 +1,8 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
-import {debounceTime, map, switchMap, tap} from 'rxjs/operators';
-import {merge, Observable, of} from 'rxjs';
+import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {merge, Observable, of, Subject} from 'rxjs';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
@@ -11,7 +11,8 @@ import {User} from '../../models/User';
 import {Metadata} from "../../models/Metadata";
 import {DomSanitizer} from "@angular/platform-browser";
 import {TranslateService} from "@ngx-translate/core";
-import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
+import {MatSelectionListChange} from "@angular/material/list";
+import {ActivatedRoute} from "@angular/router";
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -28,7 +29,7 @@ export interface IFilterFormValue {
   templateUrl: './exercise.component.html',
   styleUrls: ['./exercise.component.scss']
 })
-export class ExerciseComponent implements OnInit {
+export class ExerciseComponent implements OnInit, OnDestroy {
   rightWords: IWordCheck[] = [];
   wrongWords: IWordCheck[] = [];
   skippedWords: IWordCheck[] = [];
@@ -58,47 +59,28 @@ export class ExerciseComponent implements OnInit {
   startButtonDisabled = true;
   symbolsDisabled: boolean;
   language: ILanguage;
+  private destroy$ = new Subject<void>();
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
 
   constructor(private wordService: WordService,
               private translateService: TranslateService,
-              private domSanitizer: DomSanitizer) {
+              private domSanitizer: DomSanitizer,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    //TODO: check if any on-going exercise
     this.wordService.getWordSets$()
+      .pipe(takeUntil(this.destroy$))
       .subscribe(wordsets => {
         this.wordsets = wordsets;
-        this.rebuildWordsets()
+        this.rebuildWordsets();
+        this.continueOnInitAfterGetWordsets();
       });
 
     this.learningLanguages = User.learningLanguages;
     this.filterFormGroup.controls.language.patchValue(this.learningLanguages[0]?.id);
-
-    this.filterFormGroup.controls.wordset.valueChanges
-      .subscribe(value => {
-        const wordset = this.wordsets.find(ws => ws.id === value[0]);
-
-        if (value.length === 0) {
-          this.rebuildWordsets()
-          this.filterFormGroup.controls.language.enable();
-          this.filterFormGroup.controls.limit.patchValue(10);
-        }
-
-        if (value.length === 1) {
-          this.rebuildWordsets(wordset.translatedlanguage.id);
-        }
-
-        if (value.length) {
-          const selectedWordSets = this.wordsets.filter(ws => value.includes(ws.id));
-          const wordCount = selectedWordSets
-            .reduce((prev: number, curr: IWordSet) => prev + curr.wordsCount, 0);
-          this.filterFormGroup.controls.limit.patchValue(wordCount);
-          this.filterFormGroup.controls.language.patchValue(wordset.translatedlanguage.id);
-          this.filterFormGroup.controls.language.disable();
-        }
-      });
 
     const backendControlsChange = merge(
       this.filterFormGroup.controls.wordset.valueChanges,
@@ -129,6 +111,11 @@ export class ExerciseComponent implements OnInit {
 
         this.words = words;
       });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   exerciseFormSubmit(skipCheck?: boolean) {
@@ -198,9 +185,12 @@ export class ExerciseComponent implements OnInit {
   }
 
   filterFormSubmit() {
-    this.isExercising = true;
-    this.wordToAsk = this.words.shift();
-    this.language = this.wordToAsk.originalLanguage;
+    this.wordService.setExercise(this.words)
+      .subscribe(() => {
+        this.isExercising = true;
+        this.wordToAsk = this.words.shift();
+        this.language = this.wordToAsk.originalLanguage;
+      })
   }
 
   getWordSetTooltip(): string {
@@ -222,8 +212,8 @@ export class ExerciseComponent implements OnInit {
       uniqLangCodes.push(languageId)
     } else {
       this.wordsets.forEach(ws => {
-        if (!uniqLangCodes.includes(ws.translatedlanguage.id)) {
-          uniqLangCodes.push(ws.translatedlanguage.id);
+        if (!uniqLangCodes.includes(ws.nativeLanguage.id)) {
+          uniqLangCodes.push(ws.nativeLanguage.id);
         }
       });
     }
@@ -231,13 +221,58 @@ export class ExerciseComponent implements OnInit {
     const uniqLangs: ILanguage[] = uniqLangCodes.map(code => Metadata.languages.find(l => l.id === code));
 
     this.displayedWordsets = uniqLangs.map((lang: ILanguage) => {
-      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.translatedlanguage.id === lang.id)
+      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.nativeLanguage.id === lang.id)
 
       return {
         language: lang,
         wordsets
       }
     })
+  }
+
+  private continueOnInitAfterGetWordsets() {
+    this.filterFormGroup.controls.wordset.valueChanges
+      .pipe(
+        filter(() => !!this.wordsets?.length),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(value => {
+        const wordset = this.wordsets.find(ws => ws.id === value[0]);
+
+        if (value.length === 0) {
+          this.rebuildWordsets()
+          this.filterFormGroup.controls.language.enable();
+          this.filterFormGroup.controls.limit.patchValue(10);
+        }
+
+        if (value.length === 1) {
+          this.rebuildWordsets(wordset.nativeLanguage.id);
+        }
+
+        if (value.length) {
+          const selectedWordSets = this.wordsets.filter(ws => value.includes(ws.id));
+          const wordCount = selectedWordSets
+            .reduce((prev: number, curr: IWordSet) => prev + curr.wordsCount, 0);
+          this.filterFormGroup.controls.limit.patchValue(wordCount);
+          this.filterFormGroup.controls.language.patchValue(wordset.nativeLanguage.id);
+          this.filterFormGroup.controls.language.disable();
+        }
+      });
+
+    this.activatedRoute.queryParams
+      .pipe(
+        filter(query => query.wordset),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(query => {
+        const wordsets = typeof query.wordset === "string"
+          ? [+query.wordset]
+          : [query.wordset.map((ws: string) => +ws)]
+
+        this.filterFormGroup.patchValue({
+          wordset: wordsets
+        });
+      });
   }
 
   listSelection($event: MatSelectionListChange) {

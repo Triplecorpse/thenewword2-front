@@ -9,6 +9,7 @@ import {MetadataService} from '../../services/metadata.service';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {Language} from '../../models/Language';
 import {Metadata} from "../../models/Metadata";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 
 export interface IWordModalInputData {
   word?: IWord;
@@ -44,8 +45,12 @@ export class ModalNewWordComponent implements OnInit {
   wordSetId: number;
   isShownMore: boolean;
   symbolsDisabled: boolean;
+  translationsAutocomplete: IWord[] = [];
+  selectedWord: IWord;
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
+  @ViewChild('translationsControl', {read: ElementRef}) private translationsControl: ElementRef;
+  actionDisabled = false;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
@@ -74,11 +79,11 @@ export class ModalNewWordComponent implements OnInit {
       this.foreignLanguage = this.data.word.originalLanguage;
       this.formGroup.patchValue({
         word: this.data.word.word,
-        translations: this.data.word.translations.join(', '),
+        translations: this.data.word.translations?.join(', '),
         transcription: this.data.word.transcription,
-        speechPart: this.data.word.speechPart.id,
-        gender: this.data.word.gender.id,
-        forms: this.data.word.forms.join(', '),
+        speechPart: this.data.word.speechPart?.id,
+        gender: this.data.word.gender?.id,
+        forms: this.data.word.forms?.join(', '),
         remarks: this.data.word.remarks
       });
     }
@@ -94,6 +99,13 @@ export class ModalNewWordComponent implements OnInit {
     if (!!this.data.wordsetNativeLanguage) {
       this.foreignLanguage = this.data.wordsetForeignLanguage;
     }
+
+    this.formGroup.controls.translations.valueChanges
+      .subscribe((value) => {
+        if (value !== this.selectedWord?.translations?.join(', ')) {
+          this.selectedWord = null;
+        }
+      })
   }
 
   saveWord() {
@@ -114,7 +126,7 @@ export class ModalNewWordComponent implements OnInit {
         word_set_id: this.wordSetId
       });
 
-      this.wordService.addOrModifyWord(wordDto, this.wordSetId)
+      this.wordService.addOrModifyWord(wordDto, this.wordSetId, this.selectedWord?.dbid)
         .subscribe(word => {
           this.dialogRef.close(word);
         });
@@ -149,5 +161,40 @@ export class ModalNewWordComponent implements OnInit {
     this.formGroup.controls.word.patchValue(newString);
     this.wordControl.nativeElement.setSelectionRange(selectionStart + 1, selectionStart + 1);
     this.wordControl.nativeElement.focus();
+  }
+
+  wordFocusOut() {
+    if (this.isEditing) {
+      return;
+    }
+
+    this.symbolsDisabled = true;
+    this.formGroup.controls.translations.disable();
+    this.actionDisabled = true;
+    this.wordService.findByUserInput({
+      word: this.formGroup.value.word,
+      originalLanguage: this.foreignLanguage,
+      translatedLanguage: this.nativeLanguage
+    })
+      .subscribe((result) => {
+        this.translationsAutocomplete = result
+        this.formGroup.controls.translations.enable();
+        this.translationsControl.nativeElement.focus();
+        this.actionDisabled = false;
+      })
+  }
+
+  wordSelected(data: MatAutocompleteSelectedEvent) {
+    this.selectedWord = data.option.value;
+    const selectedWord = this.selectedWord;
+    this.formGroup.patchValue({
+      word: selectedWord.word,
+      translations: selectedWord.translations?.join(', '),
+      transcription: selectedWord.transcription,
+      speechPart: selectedWord.speechPart?.id,
+      gender: selectedWord.gender?.id,
+      forms: selectedWord.forms?.join(', '),
+      remarks: selectedWord.remarks
+    });
   }
 }

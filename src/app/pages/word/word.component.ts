@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WordService} from '../../services/word.service';
-import {combineLatest} from 'rxjs';
+import {combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {ModalNewWordComponent} from '../../components/modal-new-word/modal-new-word.component';
 import {IWordMetadata} from '../../interfaces/IWordMetadata';
 import {MetadataService} from '../../services/metadata.service';
 import {UserService} from '../../services/user.service';
@@ -10,45 +9,56 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {ModalNewWordsetComponent} from '../../components/modal-new-wordset/modal-new-wordset.component';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {IModalConfirm, ModalConfirmComponent} from '../../components/modal-confirm/modal-confirm.component';
-import {filter, switchMap, take, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {FormControl, FormGroup} from "@angular/forms";
+import {User} from "../../models/User";
 
 @Component({
   selector: 'app-word',
   templateUrl: './word.component.html',
   styleUrls: ['./word.component.scss']
 })
-export class WordComponent implements OnInit {
+export class WordComponent implements OnInit, OnDestroy {
   metadata: IWordMetadata;
   learningLanguages: ILanguage[];
   wordsets: IWordSet[];
-  loadedWords: {[key: number]: IWord[]} = {};
+  loadedWords: { [key: number]: IWord[] } = {};
+  showUserSearch = false;
+  userId: number;
+  private destroy$ = new Subject<void>();
+
+  filterFormGroup = new FormGroup({
+    searchByUser: new FormControl(this.userService.getUser()?.login),
+    searchByName: new FormControl(''),
+    foreignLanguage: new FormControl(''),
+    nativeLanguages: new FormControl(User.nativeLanguages.map(({id}) => id)),
+    showPool: new FormControl(false)
+  })
 
   constructor(private dialog: MatDialog,
               private wordService: WordService,
               private metadataService: MetadataService,
               private translateService: TranslateService,
               private userService: UserService,
-              private snackBar: MatSnackBar) {
+              private snackBar: MatSnackBar,
+              private router: Router) {
   }
 
   ngOnInit(): void {
     this.metadata = this.metadataService.metadata;
     this.learningLanguages = this.userService.getUser().learningLanguages;
-    this.wordService.getWordSets$()
-      .subscribe(wordsets => {
-        this.wordsets = wordsets;
-      });
+    this.userId = User.id;
+    this.registerFilterFormChange();
   }
 
-  openNewWordModal(event: MouseEvent, wordset: IWordSet) {
-    event?.stopPropagation();
-    this.dialog.open<any, number, IWord>(ModalNewWordComponent, {data: wordset.id})
-      .afterClosed()
-      .subscribe(() => {
-      });
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   openNewWordSetModal() {
@@ -110,6 +120,70 @@ export class WordComponent implements OnInit {
       .subscribe((newWordSet: IWordSet) => {
         const index = this.wordsets.findIndex(ws => ws.id === newWordSet.id);
         this.wordsets[index] = newWordSet;
+      });
+  }
+
+  exercise(event: MouseEvent, wordset: IWordSet) {
+    this.router.navigate(['exercise'], {queryParams: {wordset: wordset.id}})
+  }
+
+  poolChange(event: MatSlideToggleChange) {
+    this.showUserSearch = event.checked;
+
+    if (this.showUserSearch) {
+      this.filterFormGroup.controls.searchByUser.setValue('');
+    } else {
+      this.filterFormGroup.controls.searchByUser.setValue(this.userService.getUser()?.login);
+    }
+  }
+
+  getWordsText(quantity: number): Observable<string> {
+    if (quantity === 0) {
+      return this.translateService.get(`WORDS.WORDS.NO`);
+    }
+
+    const lastDigit = quantity % 10;
+
+    return this.translateService.get(`WORDS.WORDS.${lastDigit}`)
+      .pipe(map(label => `${quantity} ${label}`));
+  }
+
+  private registerFilterFormChange() {
+    merge(this.filterFormGroup.valueChanges.pipe(debounceTime(1000)), of(this.filterFormGroup.value))
+      .pipe(
+        switchMap(value => {
+          return this.wordService.getWordSets$({
+            name: this.filterFormGroup.controls.searchByName.value,
+            user_created_login: this.filterFormGroup.controls.searchByUser.value,
+            foreign_language_id: this.filterFormGroup.controls.foreignLanguage.value,
+            native_language_id: this.filterFormGroup.controls.nativeLanguages.value,
+          })
+        }),
+        map(wordsets => wordsets.filter(wordset => wordset.userIsSubscribed === !this.filterFormGroup.value.showPool)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(value => {
+        this.wordsets = value;
+      });
+  }
+
+  subscribeToWordset(event: MouseEvent, wordset: IWordSet) {
+    event.stopPropagation();
+    this.wordService.addOrModifyWordSet(wordset, true)
+      .pipe(
+        tap(() => {
+          const index = this.wordsets.findIndex(ws => ws.id === wordset.id);
+          this.wordsets.splice(index, 1);
+        }),
+        switchMap((wordset) => this.translateService.get('WORDS.SUBSCRIBED_WORDSET_SUCCESS',
+          {
+            wordSet: wordset.name,
+            foreign: wordset.foreignLanguage.nativeName,
+            native: wordset.nativeLanguage.nativeName
+          }))
+      )
+      .subscribe(translation => {
+        this.snackBar.open(translation, '', {duration: 10000});
       });
   }
 }

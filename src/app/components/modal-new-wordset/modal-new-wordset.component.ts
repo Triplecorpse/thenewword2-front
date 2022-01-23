@@ -22,7 +22,8 @@ export class ModalNewWordsetComponent implements OnInit {
 
   constructor(private wordService: WordService,
               private dialogRef: MatDialogRef<any>,
-              @Inject(MAT_DIALOG_DATA) public data: IWordSet) { }
+              @Inject(MAT_DIALOG_DATA) public data: IWordSet) {
+  }
 
   ngOnInit(): void {
     this.isEditing = !!this.data;
@@ -30,8 +31,8 @@ export class ModalNewWordsetComponent implements OnInit {
     if (this.isEditing) {
       this.formGroup.patchValue({
         name: this.data.name,
-        foreignLanguage: this.data.translatedlanguage.id,
-        nativeLanguage: this.data.originalLanguage.id,
+        foreignLanguage: this.data.foreignLanguage.id,
+        nativeLanguage: this.data.nativeLanguage.id,
       });
 
       this.formGroup.controls.foreignLanguage.disable();
@@ -45,8 +46,8 @@ export class ModalNewWordsetComponent implements OnInit {
       const wordSetDto = this.wordService.wordSetFromDto({
         id: this.data?.id,
         name: form.name,
-        translated_language_id: form.foreignLanguage,
-        original_language_id: form.nativeLanguage
+        native_language_id: form.nativeLanguage,
+        foreign_language_id: form.foreignLanguage
       });
 
       this.wordService.addOrModifyWordSet(wordSetDto)

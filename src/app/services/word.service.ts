@@ -4,13 +4,10 @@ import {Observable} from 'rxjs';
 import {IWord} from '../interfaces/IWord';
 import {map} from 'rxjs/operators';
 import {IWordDto} from '../interfaces/dto/IWordDto';
-import {UserService} from './user.service';
 import {Word} from '../models/Word';
-import {IUser} from '../interfaces/IUser';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {IWordCheck} from '../interfaces/IWordCheck';
 import {IWordCheckDto} from '../interfaces/dto/IWordCheckDto';
-import {MetadataService} from './metadata.service';
 import {IWordSet} from '../interfaces/IWordSet';
 import {IWordSetDto} from '../interfaces/dto/IWordSetDto';
 import {WordSet} from '../models/WordSet';
@@ -27,6 +24,12 @@ export interface IWordFilterData {
   word_set_id?: number;
 }
 
+export interface IWordSetFilterData {
+  user_created_login?: string;
+  foreign_language_id?: number;
+  native_language_id?: number[];
+  name?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +39,7 @@ export class WordService {
   isBrowser: boolean;
 
   constructor(@Inject(PLATFORM_ID) private platformId: string,
-              private httpClient: HttpClient,
-              private userService: UserService,
-              private metadataService: MetadataService) {
+              private httpClient: HttpClient) {
     this.isServer = isPlatformServer(platformId);
     this.isBrowser = isPlatformBrowser(platformId);
   }
@@ -50,22 +51,35 @@ export class WordService {
       .pipe(map(wordsDto => wordsDto.map(wordDto => this.wordFromDto(wordDto))));
   }
 
-  getWordSets$(): Observable<IWordSet[]> {
-    return this.httpClient.get<IWordSetDto[]>('wordset/get')
+  getWordSets$(filter?: IWordSetFilterData): Observable<IWordSet[]> {
+    const params: { [param: string]: string | string[] } = filter as any || {};
+
+    return this.httpClient.get<IWordSetDto[]>('wordset/get', {params})
       .pipe(map(wordSetsDto => wordSetsDto.map(wordSetDto => this.wordSetFromDto(wordSetDto))));
   }
 
-  addOrModifyWord(word: IWord, wordSetId?: number): Observable<IWord> {
-    if (word.dbid) {
-      return this.httpClient.put<IWordDto>('word/edit', this.dtoFromWord(word, wordSetId))
-        .pipe(map(wordDto => this.wordFromDto(wordDto)));
+  addOrModifyWord(word: IWord, wordSetId?: number, idSubscribing?: number): Observable<IWord> {
+    let request = this.httpClient.post<IWordDto>('word/add', this.dtoFromWord(word, wordSetId));
+
+    if (idSubscribing) {
+      request = this.httpClient.post<IWordDto>('word/add', {id_subscribing: idSubscribing, word_set_id: wordSetId});
     }
 
-    return this.httpClient.post<IWordDto>('word/add', this.dtoFromWord(word, wordSetId))
-      .pipe(map(wordDto => this.wordFromDto(wordDto)));
+    if (word.dbid) {
+      request = this.httpClient.put<IWordDto>('word/edit', this.dtoFromWord(word, wordSetId));
+    }
+
+    return request.pipe(map(wordDto => this.wordFromDto(wordDto)));
   }
 
-  addOrModifyWordSet(wordSet: IWordSet): Observable<IWordSet> {
+  addOrModifyWordSet(wordSet: IWordSet, isSubscribing?: boolean): Observable<IWordSet> {
+    if (isSubscribing) {
+      return this.httpClient.post<IWordSetDto>('wordset/add', {wordset_id: wordSet.id})
+        .pipe(
+          map(wordSetDto => this.wordSetFromDto(wordSetDto))
+        );
+    }
+
     if (wordSet.id) {
       return this.httpClient.put<IWordSetDto>('wordset/edit', this.dtoFromWordSet(wordSet))
         .pipe(
@@ -92,7 +106,7 @@ export class WordService {
   }
 
   wordFromDto(wordDto: IWordDto): IWord {
-    return new Word(wordDto, this.userService.getUser() as IUser);
+    return new Word(wordDto);
   }
 
   wordSetFromDto(wordSetDto: IWordSetDto): IWordSet {
@@ -120,14 +134,14 @@ export class WordService {
     return {
       id: wordSet.id,
       name: wordSet.name,
-      original_language_id: wordSet.originalLanguage?.id,
-      translated_language_id: wordSet.translatedlanguage?.id,
+      foreign_language_id: wordSet.foreignLanguage?.id,
+      native_language_id: wordSet.nativeLanguage?.id,
       words_count: wordSet.wordsCount
     };
   }
 
   getWordsToLearn(filter: IFilterFormValue): Observable<IWord[]> {
-    const params: {[key: string]: string} = {};
+    const params: { [key: string]: string } = {};
 
     Object.keys(filter).forEach(key => {
       if (Array.isArray((filter as any)[key])) {
@@ -142,11 +156,11 @@ export class WordService {
   }
 
   checkWord(word: IWord,
-            settings?: {[key: string]: string},
+            settings?: { [key: string]: string },
             skipCheck?: boolean,
             fixingId?: number,
             prevValue?: 'skipped' | 'wrong'): Observable<IWordCheck> {
-    return this.httpClient.post<IWordCheckDto>('word/exercise',
+    return this.httpClient.post<IWordCheckDto>('word/set-stat',
       {
         skipped: skipCheck,
         settings: {},
@@ -162,5 +176,20 @@ export class WordService {
         diff: response.diff,
         statId: response.stat_id
       })));
+  }
+
+  setExercise(words: IWord[]): Observable<void> {
+    return this.httpClient.post<void>('word/set-exercise', words.map(({dbid}) => dbid));
+  }
+
+  findByUserInput(word: IWord): Observable<IWord[]> {
+    return this.httpClient.post<IWordDto[]>('word/find', {
+      word: word.word,
+      foreign_language: word.originalLanguage.id,
+      native_language: word.translatedLanguage.id
+    })
+      .pipe(
+        map(wordDtos => wordDtos.map(wdto => this.wordFromDto(wdto)))
+      );
   }
 }

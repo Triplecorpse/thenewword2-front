@@ -58,8 +58,6 @@ export class SymbolsComponent implements OnChanges {
           : this.symbols[index]
         : '';
 
-      console.log(this.shiftPressed);
-
       this.symbol.emit(symbol);
       this.numberStore = '';
     }

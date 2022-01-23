@@ -13,17 +13,24 @@
 
     <div>
       <mat-form-field>
-        <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" #wordControl (focusin)="symbolsDisabled = false" (focusout)="symbolsDisabled = true">
+        <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" #wordControl (focusin)="symbolsDisabled = false" (focusout)="wordFocusOut()">
       </mat-form-field>
       <mat-form-field style="margin-left: 8px;">
-        <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations">
+        <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations" #translationsControl [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="wordSelected($event)">
+          <mat-option *ngFor="let option of translationsAutocomplete" [value]="option">
+            <span style="font-weight: bold; font-style: italic" *ngIf="option.speechPart">{{'SPEECH_PARTS.' + option.speechPart.englishName.toUpperCase() | translate}}: </span>
+            {{option.translations.join(', ')}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
+      <mat-icon style="color: green" *ngIf="selectedWord">fiber_manual_record</mat-icon>
       <mat-divider style="margin: 0 0 8px 0"></mat-divider>
       <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
 
       <div style="display: flex">
         <button mat-flat-button (click)="saveWord()"
-                color="primary">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</button>
+                color="primary" [disabled]="actionDisabled">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</button>
         <button mat-button mat-dialog-close>{{'MODAL_WORD.CANCEL' | translate}}</button>
         <button mat-icon-button style="margin-left: auto;" (click)="isShownMore = !isShownMore">
           <mat-icon matSuffix>
