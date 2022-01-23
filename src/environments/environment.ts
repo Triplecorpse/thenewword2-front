@@ -2,12 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export interface IEnvironment {
-  production: boolean;
-  recaptcha: string;
-  api: string;
-  baseUrl: string;
-}
+import {IEnvironment} from './IEnvironment';
 
 export const environment: IEnvironment = {
   production: false,
