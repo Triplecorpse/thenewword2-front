@@ -7,7 +7,7 @@ import {IEnvironment} from './IEnvironment';
 export const environment: IEnvironment = {
   production: false,
   recaptcha: '6LcKUuwUAAAAAMrf5iUjvcqfyult47l9hgGrXfF7',
-  api: 'http://qa.api.spellword.com.ua',
+  api: 'http://api.qa.spellword.com.ua',
   baseUrl: 'http://qa.spellword.com.ua'
 };
 

@@ -12,6 +12,7 @@
     "serve:ssr": "node dist/thenewword2-front/server/main.js",
     "build:ssr": "ng build --prod && ng run thenewword2-front:server:production",
     "build:ssr:qa": "ng build --configuration=qa&& ng run thenewword2-front:server:qa",
+    "live:update": "npm install && npm run build:ssr:qa && pm2 restart main",
     "prerender": "ng run thenewword2-front:prerender"
   },
   "private": true,
