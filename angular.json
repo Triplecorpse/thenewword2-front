@@ -66,6 +66,20 @@
                   "maximumError": "4kb"
                 }
               ]
+            },
+            "qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "sourceMap": true,
+              "namedChunks": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false
             }
           }
         },
@@ -77,6 +91,9 @@
           "configurations": {
             "production": {
               "browserTarget": "thenewword2-front:build:production"
+            },
+            "qa": {
+              "browserTarget": "thenewword2-front:build:qa"
             }
           }
         },
@@ -148,6 +165,17 @@
               ],
               "sourceMap": false,
               "optimization": true
+            },
+            "qa": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
+              "sourceMap": true,
+              "optimization": false
             }
           }
         },
@@ -161,6 +189,10 @@
             "production": {
               "browserTarget": "thenewword2-front:build:production",
               "serverTarget": "thenewword2-front:server:production"
+            },
+            "qa": {
+              "browserTarget": "thenewword2-front:build:qa",
+              "serverTarget": "thenewword2-front:server:qa"
             }
           }
         },
@@ -174,7 +206,8 @@
             ]
           },
           "configurations": {
-            "production": {}
+            "production": {},
+            "qa": {}
           }
         }
       }
