@@ -16,6 +16,12 @@
       </ng-template>
     </div>
     <div class="user-block">
+      <div>
+        <label class="dev-mode" *ngIf="isDevMode()">
+          <span>{{'MAIN.DEV_MODE' | translate}}</span>
+          <mat-icon [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">info_outlined</mat-icon>
+        </label>
+      </div>
       <div *ngIf="user$ | async as user; else guestTpl2">
         <div>
           <button mat-button [matMenuTriggerFor]="menu">

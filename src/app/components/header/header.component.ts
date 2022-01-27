@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserService} from "../../services/user.service";
-import {Observable, Subject} from "rxjs";
-import {IUser} from "../../interfaces/IUser";
+import {UserService} from '../../services/user.service';
+import {Observable, Subject} from 'rxjs';
+import {IUser} from '../../interfaces/IUser';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -12,10 +13,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
   user$: Observable<IUser | null> | undefined;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {
+  }
 
   ngOnInit(): void {
-    this.user$ = this.userService.getUser$()
+    this.user$ = this.userService.getUser$();
   }
 
   ngOnDestroy() {
@@ -25,5 +27,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.userService.logout();
+  }
+
+  isDevMode(): boolean {
+    return !environment.production;
   }
 }

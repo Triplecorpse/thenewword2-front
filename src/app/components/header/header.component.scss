@@ -13,3 +13,17 @@
     background-color: rgba(0,0,0,.04);
   }
 }
+
+.user-block, .dev-mode {
+  display: flex;
+  align-items: center;
+}
+
+.dev-mode {
+  color: red;
+  font-weight: bold;
+
+  span {
+    margin-right: 8px;
+  }
+}
