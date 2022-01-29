@@ -146,9 +146,19 @@ export class WordComponent implements OnInit, OnDestroy {
     }
 
     const lastDigit = quantity % 10;
+    const last2Digit = quantity % 100;
 
-    return this.translateService.get(`WORDS.WORDS.${lastDigit}`)
-      .pipe(map(label => `${quantity} ${label}`));
+    return this.translateService.get(`WORDS.WORDS.${last2Digit}`)
+      .pipe(
+        switchMap(label => {
+          if (label === `WORDS.WORDS.${last2Digit}`) {
+            return this.translateService.get(`WORDS.WORDS.${lastDigit}`);
+          }
+
+          return of(label);
+        }),
+        map(label => `${quantity} ${label}`)
+      );
   }
 
   private registerFilterFormChange() {

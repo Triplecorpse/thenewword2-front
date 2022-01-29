@@ -211,9 +211,19 @@ export class ExerciseComponent implements OnInit, OnDestroy {
 
   getErrorText(errorQuantity: number): Observable<string> {
     const lastDigit = errorQuantity % 10;
+    const last2Digit = errorQuantity % 100;
 
-    return this.translateService.get(`EXERCISE.MISTAKES.${lastDigit}`)
-      .pipe(map(errorLabel => `(${errorQuantity} ${errorLabel})`));
+    return this.translateService.get(`EXERCISE.MISTAKES.${last2Digit}`)
+      .pipe(
+        switchMap(label => {
+          if (label === `EXERCISE.MISTAKES.${last2Digit}`) {
+            return this.translateService.get(`EXERCISE.MISTAKES.${lastDigit}`);
+          }
+
+          return of(label);
+        }),
+        map(errorLabel => `(${errorQuantity} ${errorLabel})`)
+      );
   }
 
   private rebuildWordsets(languageId?: number) {
