@@ -14,24 +14,26 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatBadgeModule} from "@angular/material/badge";
 import {SymbolsModule} from "../symbols/symbols.module";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 
 @NgModule({
     declarations: [ModalNewWordComponent],
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatInputModule,
-        MatOptionModule,
-        MatSelectModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        TranslateModule,
-        MatIconModule,
-        MatDividerModule,
-        SymbolsModule,
-        MatAutocompleteModule
-    ]
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    TranslateModule,
+    MatIconModule,
+    MatDividerModule,
+    SymbolsModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
+  ]
 })
 export class ModalNewWordModule { }

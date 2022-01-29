@@ -12,11 +12,11 @@ import {IModalConfirm, ModalConfirmComponent} from '../../components/modal-confi
 import {debounceTime, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWord} from '../../interfaces/IWord';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {Router} from "@angular/router";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
-import {FormControl, FormGroup} from "@angular/forms";
-import {User} from "../../models/User";
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
+import {FormControl, FormGroup} from '@angular/forms';
+import {User} from '../../models/User';
 
 @Component({
   selector: 'app-word',
@@ -30,6 +30,7 @@ export class WordComponent implements OnInit, OnDestroy {
   loadedWords: { [key: number]: IWord[] } = {};
   showUserSearch = false;
   userId: number;
+  isLoading = false;
   private destroy$ = new Subject<void>();
 
   filterFormGroup = new FormGroup({
@@ -38,7 +39,7 @@ export class WordComponent implements OnInit, OnDestroy {
     foreignLanguage: new FormControl(''),
     nativeLanguages: new FormControl(User.nativeLanguages.map(({id}) => id)),
     showPool: new FormControl(false)
-  })
+  });
 
   constructor(private dialog: MatDialog,
               private wordService: WordService,
@@ -103,8 +104,10 @@ export class WordComponent implements OnInit, OnDestroy {
 
   wordsetOpened(wordset: IWordSet) {
     if (!this.loadedWords[wordset.id]) {
+      wordset.isLoading = true;
       this.wordService.getWords$({word_set_id: wordset.id})
         .subscribe(words => {
+          wordset.isLoading = false;
           this.loadedWords[wordset.id] = words;
         });
     }
@@ -124,7 +127,7 @@ export class WordComponent implements OnInit, OnDestroy {
   }
 
   exercise(event: MouseEvent, wordset: IWordSet) {
-    this.router.navigate(['exercise'], {queryParams: {wordset: wordset.id}})
+    this.router.navigate(['exercise'], {queryParams: {wordset: wordset.id}});
   }
 
   poolChange(event: MatSlideToggleChange) {
@@ -151,18 +154,22 @@ export class WordComponent implements OnInit, OnDestroy {
   private registerFilterFormChange() {
     merge(this.filterFormGroup.valueChanges.pipe(debounceTime(1000)), of(this.filterFormGroup.value))
       .pipe(
+        tap(() => {
+          this.isLoading = true;
+        }),
         switchMap(value => {
           return this.wordService.getWordSets$({
             name: this.filterFormGroup.controls.searchByName.value,
             user_created_login: this.filterFormGroup.controls.searchByUser.value,
             foreign_language_id: this.filterFormGroup.controls.foreignLanguage.value,
             native_language_id: this.filterFormGroup.controls.nativeLanguages.value,
-          })
+          });
         }),
         map(wordsets => wordsets.filter(wordset => wordset.userIsSubscribed === !this.filterFormGroup.value.showPool)),
         takeUntil(this.destroy$)
       )
       .subscribe(value => {
+        this.isLoading = false;
         this.wordsets = value;
       });
   }

@@ -47,6 +47,7 @@ export class ModalNewWordComponent implements OnInit {
   symbolsDisabled: boolean;
   translationsAutocomplete: IWord[] = [];
   selectedWord: IWord;
+  isLoading = false;
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
   @ViewChild('translationsControl', {read: ElementRef}) private translationsControl: ElementRef;
@@ -105,11 +106,12 @@ export class ModalNewWordComponent implements OnInit {
         if (value !== this.selectedWord?.translations?.join(', ')) {
           this.selectedWord = null;
         }
-      })
+      });
   }
 
   saveWord() {
-    if (this.formGroup.value) {
+    if (this.formGroup.value && this.formGroup.valid) {
+      this.isLoading = true;
       const form = this.formGroup.value;
       const wordDto = this.wordService.wordFromDto({
         id: this.idEditing,
@@ -126,6 +128,8 @@ export class ModalNewWordComponent implements OnInit {
         word_set_id: this.wordSetId
       });
 
+      this.formGroup.controls.word.disable();
+      this.formGroup.controls.translations.disable();
       this.wordService.addOrModifyWord(wordDto, this.wordSetId, this.selectedWord?.dbid)
         .subscribe(word => {
           this.dialogRef.close(word);

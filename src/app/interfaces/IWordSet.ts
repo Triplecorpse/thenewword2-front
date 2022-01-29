@@ -10,4 +10,5 @@ export interface IWordSet {
   wordsCount: number;
   userIsSubscribed?: boolean;
   userCreatedId?: number;
+  isLoading?: boolean;
 }

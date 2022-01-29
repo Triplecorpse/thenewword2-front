@@ -19,6 +19,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatChipsModule} from "@angular/material/chips";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 const routes: Routes = [
   {path: '', component: WordComponent}
@@ -28,29 +29,30 @@ const routes: Routes = [
   declarations: [
     WordComponent
   ],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    RouterModule.forChild(routes),
-    MatDialogModule,
-    ModalNewWordModule,
-    ModalNewWordsetModule,
-    ModalConfirmModule,
-    TranslateModule.forChild({
-      extend: true
-    }),
-    WordListModule,
-    MatCardModule,
-    MatSelectModule,
-    MatIconModule,
-    MatExpansionModule,
-    MatInputModule,
-    MatTooltipModule,
-    MatSlideToggleModule,
-    ReactiveFormsModule,
-    MatDividerModule,
-    MatChipsModule
-  ]
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        RouterModule.forChild(routes),
+        MatDialogModule,
+        ModalNewWordModule,
+        ModalNewWordsetModule,
+        ModalConfirmModule,
+        TranslateModule.forChild({
+            extend: true
+        }),
+        WordListModule,
+        MatCardModule,
+        MatSelectModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatInputModule,
+        MatTooltipModule,
+        MatSlideToggleModule,
+        ReactiveFormsModule,
+        MatDividerModule,
+        MatChipsModule,
+        MatProgressSpinnerModule
+    ]
 })
 export class WordModule {
 }

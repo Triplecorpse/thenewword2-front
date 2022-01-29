@@ -1,12 +1,12 @@
 <div>
-  <form [formGroup]="formGroup">
+  <form [formGroup]="formGroup" (ngSubmit)="saveWord()">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <h2 mat-dialog-title style="margin-bottom: 0;">{{(isEditing ? 'MODAL_WORD.HEADER_MODIFY' : 'MODAL_WORD.HEADER_ADD') | translate}}</h2>
 
       <div style="display:flex; justify-content: flex-end; align-items: center">
-        <button mat-mini-fab color="primary" disabled>{{foreignLanguage.iso2.toUpperCase()}}</button>
+        <button mat-mini-fab type="button" color="primary" disabled>{{foreignLanguage.iso2.toUpperCase()}}</button>
         <mat-icon style="margin: 0 8px; color: gray">arrow_forward</mat-icon>
-        <button mat-mini-fab color="primary" disabled>{{nativeLanguage.iso2.toUpperCase()}}</button>
+        <button mat-mini-fab type="button" color="primary" disabled>{{nativeLanguage.iso2.toUpperCase()}}</button>
       </div>
     </div>
     <mat-divider style="margin: 8px 0;"></mat-divider>
@@ -29,10 +29,15 @@
       <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
 
       <div style="display: flex">
-        <button mat-flat-button (click)="saveWord()"
-                color="primary" [disabled]="actionDisabled">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</button>
-        <button mat-button mat-dialog-close>{{'MODAL_WORD.CANCEL' | translate}}</button>
-        <button mat-icon-button style="margin-left: auto;" (click)="isShownMore = !isShownMore">
+        <button mat-flat-button
+                type="submit"
+                color="primary"
+                [disabled]="actionDisabled || isLoading">
+          <mat-spinner *ngIf="isLoading" [diameter]="20" color="accent"></mat-spinner>
+          <span *ngIf="!isLoading">{{(isEditing ? 'MODAL_WORD.SUBMIT_MODIFY' : 'MODAL_WORD.SUBMIT_ADD') | translate}}</span>
+        </button>
+        <button mat-button type="button" mat-dialog-close [disabled]="isLoading">{{'MODAL_WORD.CANCEL' | translate}}</button>
+        <button mat-icon-button type="button" style="margin-left: auto;" (click)="isShownMore = !isShownMore" [disabled]="isLoading">
           <mat-icon matSuffix>
             arrow_downward
           </mat-icon>
