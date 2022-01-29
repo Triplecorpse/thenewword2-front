@@ -2,6 +2,9 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MainPageComponent} from './main-page.component';
 import {RouterModule, Routes} from '@angular/router';
+import {MatCardModule} from "@angular/material/card";
+import {TranslateModule} from "@ngx-translate/core";
+import {RegistrationFormModule} from "../../components/registration-form/registration-form.module";
 
 const routes: Routes = [
   {path: '', component: MainPageComponent}
@@ -13,7 +16,10 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatCardModule,
+    TranslateModule,
+    RegistrationFormModule
   ]
 })
 export class MainPageModule {
