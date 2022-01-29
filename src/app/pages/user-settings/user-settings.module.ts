@@ -11,9 +11,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
-import {MatBadgeModule} from "@angular/material/badge";
-import {TranslateModule} from "@ngx-translate/core";
-import {MatChipsModule} from "@angular/material/chips";
+import {MatBadgeModule} from '@angular/material/badge';
+import {TranslateModule} from '@ngx-translate/core';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 const routes: Routes = [
   {path: '', component: UserSettingsComponent}
@@ -38,7 +39,8 @@ const routes: Routes = [
         FormsModule,
         MatBadgeModule,
         TranslateModule,
-        MatChipsModule
+        MatChipsModule,
+        MatCheckboxModule
     ]
 })
 export class UserSettingsModule {

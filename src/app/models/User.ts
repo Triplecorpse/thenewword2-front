@@ -8,4 +8,5 @@ export class User {
   static password: string;
   static nativeLanguages: ILanguage[];
   static learningLanguages: ILanguage[];
+  static mapCyrillic: boolean;
 }

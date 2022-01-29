@@ -8,4 +8,5 @@ export interface IUserDto {
   learning_languages?: number[];
   token?: string;
   refresh?: string;
+  map_cyrillic?: boolean;
 }

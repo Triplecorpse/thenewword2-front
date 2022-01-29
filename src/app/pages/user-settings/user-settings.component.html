@@ -33,6 +33,11 @@
   </mat-card>
   <mat-card style="margin: 16px;">
     <h3 matCardTitle>{{'SETTINGS.KEYBOARD_SETTINGS.HEADER' | translate}}</h3>
+    <div style="margin: 8px 0;">
+      <mat-checkbox [(ngModel)]="keymaper" [ngModelOptions]="{standalone: true}" color="primary" (change)="keymapperChange()">
+        {{'SETTINGS.KEYBOARD_SETTINGS.KEYBOARD_MAPPER' | translate}}
+      </mat-checkbox>
+    </div>
     <p>{{'SETTINGS.KEYBOARD_SETTINGS.DESCRIPTION' | translate}}</p>
     <mat-card-content>
       <mat-card *ngFor="let section of languageSections" style="margin-bottom: 8px;">

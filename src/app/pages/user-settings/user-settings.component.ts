@@ -9,6 +9,7 @@ import {debounceTime, filter, map, switchMap, switchMapTo, tap} from 'rxjs/opera
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TranslateService} from "@ngx-translate/core";
 import {ISymbol} from "../../interfaces/ISymbol";
+import {User} from "../../models/User";
 
 interface ILanguageSection {
   lang: ILanguage;
@@ -24,6 +25,7 @@ interface ILanguageSection {
 })
 export class UserSettingsComponent implements OnInit {
   private languageSectionsChange = new Subject<ILanguageSection>();
+  private keymapperValueChange = new Subject<boolean>();
   languages: ILanguage[] = [];
   settingsFormGroup = new FormGroup({
     login: new FormControl({value: '', disabled: true}),
@@ -39,6 +41,7 @@ export class UserSettingsComponent implements OnInit {
   learningLanguagesTooltip: string;
   languageSections: ILanguageSection[];
   defaultKeys: { [key: number]: string[] } = {};
+  keymaper = User.mapCyrillic;
 
   constructor(private userService: UserService,
               private snackBar: MatSnackBar,
@@ -73,12 +76,13 @@ export class UserSettingsComponent implements OnInit {
 
     merge(
       this.settingsFormGroup.controls.learningLanguages.valueChanges.pipe(map(v => ({learningLanguages: v}))),
-      this.languageSectionsChange.pipe(map(v => ({languageSections: v})))
+      this.languageSectionsChange.pipe(map(v => ({languageSections: v}))),
+      this.keymapperValueChange.pipe(map(v => ({keymapper: v})))
     )
       .pipe(
         filter(() => this.settingsFormGroup.valid),
         debounceTime(1000),
-        switchMap<any, any>((value: { learningLanguages?: number[]; languageSections?: ILanguageSection }) => {
+        switchMap<any, any>((value: { learningLanguages?: number[]; languageSections?: ILanguageSection, keymapper?: boolean }) => {
           if (value.learningLanguages) {
             const user: IUser = {
               learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
@@ -118,6 +122,17 @@ export class UserSettingsComponent implements OnInit {
 
                   return EMPTY;
                 })
+              );
+          }
+
+          if (typeof value.keymapper !== 'undefined') {
+            const user: IUser = {
+              mapCyrillic: value.keymapper
+            };
+
+            return this.userService.update(user, this.settingsFormGroup.value.newPassword)
+              .pipe(
+                switchMapTo(this.translateService.get('SETTINGS.USER_SETTINGS.RESPONSES.USER_UPDATED'))
               );
           }
 
@@ -166,7 +181,11 @@ export class UserSettingsComponent implements OnInit {
         .pipe(switchMapTo(this.translateService.get('SETTINGS.SECURITY_SETTINGS.RESPONSES.USER_UPDATED')))
         .subscribe(result => {
           this.snackBar.open(result as string, '', {duration: 10000});
-        })
+        });
     }
+  }
+
+  keymapperChange() {
+    this.keymapperValueChange.next(this.keymaper);
   }
 }

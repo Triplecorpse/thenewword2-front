@@ -9,4 +9,5 @@ export interface IUser {
   password?: string;
   nativeLanguages?: ILanguage[];
   learningLanguages?: ILanguage[];
+  mapCyrillic?: boolean;
 }

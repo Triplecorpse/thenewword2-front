@@ -11,10 +11,10 @@ import {MetadataService} from './metadata.service';
 import {User} from '../models/User';
 import {Metadata} from '../models/Metadata';
 import {ISymbolDto} from '../interfaces/dto/ISymbolDto';
-import {ISymbol} from "../interfaces/ISymbol";
-import {environment} from "../../environments/environment";
-import {IDashboard} from "../interfaces/IDashboard";
-import {IDashboardDto} from "../interfaces/dto/IDashboardDto";
+import {ISymbol} from '../interfaces/ISymbol';
+import {environment} from '../../environments/environment';
+import {IDashboard} from '../interfaces/IDashboard';
+import {IDashboardDto} from '../interfaces/dto/IDashboardDto';
 
 @Injectable({
   providedIn: 'root'
@@ -84,7 +84,8 @@ export class UserService {
           nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token,
-          refresh: res.refresh
+          refresh: res.refresh,
+          mapCyrillic: res.map_cyrillic
         })),
         tap(res => {
           this.setUser(res, saveSession);
@@ -100,7 +101,8 @@ export class UserService {
       learning_languages: user.learningLanguages?.map(({id}) => id),
       native_languages: user.nativeLanguages.map(({id}) => id),
       email: user.email,
-      password: user.password
+      password: user.password,
+      map_cyrillic: user.mapCyrillic
     };
 
     return this.recaptchaV3Service.execute('importantAction')
@@ -125,10 +127,10 @@ export class UserService {
       })
         .pipe(
           tap(({token, refresh}) => {
-            this.setUser({...this.getUser(), token, refresh}, localStorage.getItem('save-session') === 'true')
+            this.setUser({...this.getUser(), token, refresh}, localStorage.getItem('save-session') === 'true');
           }),
           switchMapTo(of(null))
-        )
+        );
 
       return iif(() => isExpired, getNewToken, of(null));
     }
@@ -153,7 +155,8 @@ export class UserService {
       password: user.password,
       new_password: newPassword,
       login: user.login,
-      learning_languages: user.learningLanguages?.map(lang => lang.id)
+      learning_languages: user.learningLanguages?.map(lang => lang.id),
+      map_cyrillic: user.mapCyrillic
     };
 
     return this.httpClient.post<IUserDto>('user/modify', userDto)
@@ -166,7 +169,8 @@ export class UserService {
           nativeLanguages: Metadata.languages.filter(lang => res.native_languages.includes(lang.id)),
           learningLanguages: Metadata.languages.filter(lang => res.learning_languages.includes(lang.id)),
           token: res.token,
-          refresh: this.getUser()?.refresh
+          refresh: this.getUser()?.refresh,
+          mapCyrillic: res.map_cyrillic
         })),
         tap(newUser => {
           this.setUser(newUser, localStorage.getItem('save-session') === 'true');
@@ -199,6 +203,7 @@ export class UserService {
     User.nativeLanguages = user?.nativeLanguages;
     User.learningLanguages = user?.learningLanguages;
     User.id = user?.id;
+    User.mapCyrillic = user?.mapCyrillic;
   }
 
   getDashboard$(): Observable<IDashboard> {
@@ -217,6 +222,6 @@ export class UserService {
           wordsSkipped: result.words_skipped,
           words80: result.words_80
         }))
-      )
+      );
   }
 }

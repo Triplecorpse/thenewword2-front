@@ -1,8 +1,8 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {iif, Observable, throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {catchError, map, switchMap, switchMapTo, tap} from 'rxjs/operators';
+import {catchError, switchMap } from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from './user.service';
 import {isPlatformServer} from '@angular/common';
@@ -26,7 +26,6 @@ export class InterceptorService implements HttpInterceptor {
     let newReq;
     const replaceUrlByExclusion = urlExclusions.map(exclusion => exclusion.test(url)).some(result => !!result);
     const skipAddTokenByExclusion = authExclusions.map(exclusion => exclusion.test(url)).some(result => !!result);
-    let tokenIsExpired = false;
 
     if (!req.url.startsWith('http://') && !req.url.startsWith('https://') && !replaceUrlByExclusion) {
       url = `${environment.api}/${url}`;
@@ -61,6 +60,6 @@ export class InterceptorService implements HttpInterceptor {
               })
             );
         })
-      )
+      );
   }
 }
