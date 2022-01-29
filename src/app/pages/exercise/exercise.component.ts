@@ -8,11 +8,11 @@ import {IWordCheck} from '../../interfaces/IWordCheck';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
-import {Metadata} from "../../models/Metadata";
-import {DomSanitizer} from "@angular/platform-browser";
-import {TranslateService} from "@ngx-translate/core";
-import {MatSelectionListChange} from "@angular/material/list";
-import {ActivatedRoute} from "@angular/router";
+import {Metadata} from '../../models/Metadata';
+import {DomSanitizer} from '@angular/platform-browser';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSelectionListChange} from '@angular/material/list';
+import {ActivatedRoute} from '@angular/router';
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -59,6 +59,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
   startButtonDisabled = true;
   symbolsDisabled: boolean;
   language: ILanguage;
+  isLoading: boolean;
   private destroy$ = new Subject<void>();
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
@@ -70,10 +71,16 @@ export class ExerciseComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    //TODO: check if any on-going exercise
+    // TODO: check if any on-going exercise
     this.wordService.getWordSets$()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        tap(() => {
+          this.isLoading = true;
+        }),
+        takeUntil(this.destroy$)
+      )
       .subscribe(wordsets => {
+        this.isLoading = false;
         this.wordsets = wordsets;
         this.rebuildWordsets();
         this.continueOnInitAfterGetWordsets();
@@ -102,9 +109,13 @@ export class ExerciseComponent implements OnInit, OnDestroy {
 
     merge(of(this.filterFormGroup.value), backendControlsChange)
       .pipe(
-        switchMap((filter: IFilterFormValue) => this.wordService.getWordsToLearn(filter))
+        tap(() => {
+          this.isLoading = true;
+        }),
+        switchMap((filterValue: IFilterFormValue) => this.wordService.getWordsToLearn(filterValue))
       )
       .subscribe((words: IWord[]) => {
+        this.isLoading = false;
         if (words.length) {
           this.startButtonDisabled = false;
         }
@@ -158,9 +169,9 @@ export class ExerciseComponent implements OnInit, OnDestroy {
         if (skipCheck) {
           this.skippedWords.push(response);
         } else if (response.isRight) {
-          this.rightWords.push(response)
+          this.rightWords.push(response);
         } else if (!response.isRight) {
-          this.wrongWords.push(response)
+          this.wrongWords.push(response);
         }
 
         if (prevWordCheck?.status === 'skipped') {
@@ -190,7 +201,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
         this.isExercising = true;
         this.wordToAsk = this.words.shift();
         this.language = this.wordToAsk.originalLanguage;
-      })
+      });
   }
 
   getWordSetTooltip(): string {
@@ -209,11 +220,11 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     const uniqLangCodes: number[] = [];
 
     if (languageId) {
-      uniqLangCodes.push(languageId)
+      uniqLangCodes.push(languageId);
     } else {
       this.wordsets.forEach(ws => {
-        if (!uniqLangCodes.includes(ws.nativeLanguage.id)) {
-          uniqLangCodes.push(ws.nativeLanguage.id);
+        if (!uniqLangCodes.includes(ws.foreignLanguage.id)) {
+          uniqLangCodes.push(ws.foreignLanguage.id);
         }
       });
     }
@@ -221,13 +232,13 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     const uniqLangs: ILanguage[] = uniqLangCodes.map(code => Metadata.languages.find(l => l.id === code));
 
     this.displayedWordsets = uniqLangs.map((lang: ILanguage) => {
-      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.nativeLanguage.id === lang.id)
+      const wordsets: IWordSet[] = this.wordsets.filter(ws => ws.foreignLanguage.id === lang.id);
 
       return {
         language: lang,
         wordsets
-      }
-    })
+      };
+    });
   }
 
   private continueOnInitAfterGetWordsets() {
@@ -240,13 +251,13 @@ export class ExerciseComponent implements OnInit, OnDestroy {
         const wordset = this.wordsets.find(ws => ws.id === value[0]);
 
         if (value.length === 0) {
-          this.rebuildWordsets()
+          this.rebuildWordsets();
           this.filterFormGroup.controls.language.enable();
           this.filterFormGroup.controls.limit.patchValue(10);
         }
 
         if (value.length === 1) {
-          this.rebuildWordsets(wordset.nativeLanguage.id);
+          this.rebuildWordsets(wordset.foreignLanguage.id);
         }
 
         if (value.length) {
@@ -265,9 +276,9 @@ export class ExerciseComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(query => {
-        const wordsets = typeof query.wordset === "string"
+        const wordsets = typeof query.wordset === 'string'
           ? [+query.wordset]
-          : [query.wordset.map((ws: string) => +ws)]
+          : [query.wordset.map((ws: string) => +ws)];
 
         this.filterFormGroup.patchValue({
           wordset: wordsets

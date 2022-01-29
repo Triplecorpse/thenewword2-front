@@ -43,9 +43,12 @@
     </form>
   </mat-card>
 
+  <div style="display: flex; justify-content: center" *ngIf="isLoading">
+    <mat-spinner [diameter]="50" color="primary"></mat-spinner>
+  </div>
+
   <div style="margin: 0 8px">
-    <app-word-list [words]="words" [readonly]="true"
-                   [hideWordColumn]="!filterFormGroup.value.allowLearn"></app-word-list>
+    <app-word-list [words]="words" [readonly]="true" [hideWordColumn]="!filterFormGroup.value.allowLearn" *ngIf="!isLoading"></app-word-list>
   </div>
 </ng-container>
 <ng-template #exercise>

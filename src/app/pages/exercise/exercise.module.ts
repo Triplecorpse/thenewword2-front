@@ -17,6 +17,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {WordModule} from "../word/word.module";
 import {WordListModule} from "../../components/word-list/word-list.module";
 import {SymbolsModule} from "../../components/symbols/symbols.module";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 const routes: Routes = [
   {path: '', component: ExerciseComponent}
@@ -43,7 +44,8 @@ const routes: Routes = [
         MatTooltipModule,
         WordListModule,
         FormsModule,
-        SymbolsModule
+        SymbolsModule,
+        MatProgressSpinnerModule
     ]
 })
 export class ExerciseModule {
