@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {combineLatest, of} from 'rxjs';
 import {IWord} from '../../interfaces/IWord';
 import {WordService} from '../../services/word.service';
@@ -23,6 +33,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() words: IWord[];
   @Input() readonly: boolean;
   @Input() hideWordColumn = false;
+  @Output() triggerUpdate = new EventEmitter();
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['translations', 'from_language', 'gender', 'speech_part'];
 
@@ -120,11 +131,8 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
       }
     )
       .afterClosed()
-      .pipe(
-        filter(r => !!r)
-      )
       .subscribe((word: IWord) => {
-        this.words.push(word);
+        this.triggerUpdate.emit();
       });
   }
 

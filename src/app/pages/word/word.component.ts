@@ -104,12 +104,7 @@ export class WordComponent implements OnInit, OnDestroy {
 
   wordsetOpened(wordset: IWordSet) {
     if (!this.loadedWords[wordset.id]) {
-      wordset.isLoading = true;
-      this.wordService.getWords$({word_set_id: wordset.id})
-        .subscribe(words => {
-          wordset.isLoading = false;
-          this.loadedWords[wordset.id] = words;
-        });
+      this.updateWords(wordset);
     }
   }
 
@@ -201,6 +196,15 @@ export class WordComponent implements OnInit, OnDestroy {
       )
       .subscribe(translation => {
         this.snackBar.open(translation, '', {duration: 10000});
+      });
+  }
+
+  updateWords(wordset: IWordSet) {
+    wordset.isLoading = true;
+    this.wordService.getWords$({word_set_id: wordset.id})
+      .subscribe(words => {
+        wordset.isLoading = false;
+        this.loadedWords[wordset.id] = words;
       });
   }
 }

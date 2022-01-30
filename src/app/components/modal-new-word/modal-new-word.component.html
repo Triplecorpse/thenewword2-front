@@ -44,7 +44,7 @@
         <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" #wordControl (focusin)="symbolsDisabled = false" (focusout)="wordFocusOut()">
       </mat-form-field>
       <mat-form-field style="margin-left: 8px;">
-        <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations" #translationsControl [matAutocomplete]="auto">
+        <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations" #translationsControl [matAutocomplete]="auto" (keydown)="onTranslationKeyDown($event)">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="wordSelected($event)">
           <mat-option *ngFor="let option of translationsAutocomplete" [value]="option">
             <span style="font-weight: bold; font-style: italic" *ngIf="option.speechPart">{{'SPEECH_PARTS.' + option.speechPart.englishName.toUpperCase() | translate}}: </span>

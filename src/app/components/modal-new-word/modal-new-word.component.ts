@@ -14,6 +14,7 @@ import {User} from '../../models/User';
 import {switchMapTo, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {keyMapperUk} from '../../models/KeyMapper.uk';
 
 export interface IWordModalInputData {
   word?: IWord;
@@ -55,11 +56,11 @@ export class ModalNewWordComponent implements OnInit {
   isLoading = false;
   isKeymapperOn = User.mapCyrillic;
   isKeymapperAvailable: boolean;
+  actionDisabled = false;
+  dontClose = true;
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
   @ViewChild('translationsControl', {read: ElementRef}) private translationsControl: ElementRef;
-  actionDisabled = false;
-  dontClose = true;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
@@ -95,8 +96,10 @@ export class ModalNewWordComponent implements OnInit {
         speechPart: this.data.word.speechPart?.id,
         gender: this.data.word.gender?.id,
         forms: this.data.word.forms?.join(', '),
-        remarks: this.data.word.remarks
+        remarks: this.data.word.remarks,
+        dontClose: false
       });
+      this.formGroup.controls.dontClose.disable();
     }
 
     if (!!this.data.wordsetId) {
@@ -249,5 +252,23 @@ export class ModalNewWordComponent implements OnInit {
       stressLetterIndex: null,
       dontClose: true,
     });
+  }
+
+  onTranslationKeyDown($event: KeyboardEvent): boolean | void {
+    // @ts-ignore
+    const symbol = keyMapperUk[$event.key];
+    if (symbol && this.isKeymapperOn) {
+      $event.stopPropagation();
+      const selectionStart = this.translationsControl.nativeElement.selectionStart;
+      const selectionEnd = this.translationsControl.nativeElement.selectionEnd;
+      const newString1 = this.formGroup.controls.translations.value.slice(0, selectionStart);
+      const newString2 = this.formGroup.controls.translations.value.slice(selectionEnd);
+      const newString = `${newString1}${symbol}${newString2}`;
+
+      this.formGroup.controls.translations.patchValue(newString);
+      this.translationsControl.nativeElement.setSelectionRange(selectionStart + 1, selectionStart + 1);
+      this.translationsControl.nativeElement.focus();
+      return false;
+    }
   }
 }

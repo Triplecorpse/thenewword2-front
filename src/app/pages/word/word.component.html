@@ -83,7 +83,7 @@
             </div>
           </mat-panel-description>
   </mat-expansion-panel-header>
-      <app-word-list [words]="loadedWords[wordset.id]" [wordset]="wordset" *ngIf="!wordset.isLoading; else loading"></app-word-list>
+      <app-word-list [words]="loadedWords[wordset.id]" [wordset]="wordset" *ngIf="!wordset.isLoading; else loading" (triggerUpdate)="updateWords(wordset)"></app-word-list>
       <ng-template #loading>
         <div style="display: flex; justify-content: center">
           <mat-spinner [diameter]="30" color="accent"></mat-spinner>
