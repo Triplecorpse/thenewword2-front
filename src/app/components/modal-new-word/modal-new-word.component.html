@@ -12,6 +12,34 @@
     <mat-divider style="margin: 8px 0;"></mat-divider>
 
     <div>
+      <p *ngIf="!isKeymapperAvailable" style="display: flex; align-items: center;">
+        <span>{{'MODAL_WORD.KEYMAPPER_NA' | translate : {language: nativeLanguage.nativeName} }}</span>
+        <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate">
+          info_outlined
+        </mat-icon>
+      </p>
+      <ng-container *ngIf="isKeymapperAvailable && isKeymapperOn">
+        <p style="display:flex; align-items: center;">
+          <span>{{'MODAL_WORD.KEYMAPPER_ON' | translate}}</span>
+          <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate" style="margin-left: 8px;">
+            info_outlined
+          </mat-icon>
+        </p>
+        <div>
+          <a href="javascript:void(0)" (click)="setKeymapper(false)">{{'MODAL_WORD.KEYMAPPER_ACTION_OFF' | translate}}</a>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isKeymapperAvailable && !isKeymapperOn">
+        <p style="display:flex; align-items: center;">
+          <span>{{'MODAL_WORD.KEYMAPPER_OFF' | translate}}</span>
+          <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate" style="margin-left: 8px;">
+            info_outlined
+          </mat-icon>
+        </p>
+        <div>
+          <a href="javascript:void(0)" (click)="setKeymapper(true)">{{'MODAL_WORD.KEYMAPPER_ACTION_ON' | translate}}</a>
+        </div>
+      </ng-container>
       <mat-form-field>
         <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" #wordControl (focusin)="symbolsDisabled = false" (focusout)="wordFocusOut()">
       </mat-form-field>
@@ -28,6 +56,9 @@
       <mat-divider style="margin: 0 0 8px 0"></mat-divider>
       <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
 
+      <div style="margin: 8px 0;">
+        <mat-checkbox formControlName="dontClose" color="primary">{{'MODAL_WORD.NOT_CLOSE' | translate}}</mat-checkbox>
+      </div>
       <div style="display: flex">
         <button mat-flat-button
                 type="submit"

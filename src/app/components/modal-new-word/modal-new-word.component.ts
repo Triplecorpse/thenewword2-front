@@ -10,6 +10,10 @@ import {ILanguage} from '../../interfaces/ILanguage';
 import {Language} from '../../models/Language';
 import {Metadata} from "../../models/Metadata";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {User} from "../../models/User";
+import {switchMapTo, tap} from "rxjs/operators";
+import {TranslateService} from "@ngx-translate/core";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 export interface IWordModalInputData {
   word?: IWord;
@@ -38,7 +42,8 @@ export class ModalNewWordComponent implements OnInit {
     gender: new FormControl(''),
     forms: new FormControl(''),
     remarks: new FormControl(''),
-    stressLetterIndex: new FormControl()
+    stressLetterIndex: new FormControl(),
+    dontClose: new FormControl(true),
   });
   stressLetterIndex: number;
   idEditing: number;
@@ -48,16 +53,21 @@ export class ModalNewWordComponent implements OnInit {
   translationsAutocomplete: IWord[] = [];
   selectedWord: IWord;
   isLoading = false;
+  isKeymapperOn = User.mapCyrillic;
+  isKeymapperAvailable: boolean;
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
   @ViewChild('translationsControl', {read: ElementRef}) private translationsControl: ElementRef;
   actionDisabled = false;
+  dontClose = true;
 
   constructor(private dialogRef: MatDialogRef<any>,
               private wordService: WordService,
               private userService: UserService,
               private metadataService: MetadataService,
               private changeDetection: ChangeDetectorRef,
+              private translateService: TranslateService,
+              private snackBar: MatSnackBar,
               @Inject(MAT_DIALOG_DATA) public data: IWordModalInputData) {
   }
 
@@ -100,6 +110,8 @@ export class ModalNewWordComponent implements OnInit {
     if (!!this.data.wordsetNativeLanguage) {
       this.foreignLanguage = this.data.wordsetForeignLanguage;
     }
+
+    this.isKeymapperAvailable = ['uk'].includes(this.nativeLanguage.iso2);
 
     this.formGroup.controls.translations.valueChanges
       .subscribe((value) => {
@@ -181,11 +193,11 @@ export class ModalNewWordComponent implements OnInit {
       translatedLanguage: this.nativeLanguage
     })
       .subscribe((result) => {
-        this.translationsAutocomplete = result
+        this.translationsAutocomplete = result;
         this.formGroup.controls.translations.enable();
         this.translationsControl.nativeElement.focus();
         this.actionDisabled = false;
-      })
+      });
   }
 
   wordSelected(data: MatAutocompleteSelectedEvent) {
@@ -200,5 +212,18 @@ export class ModalNewWordComponent implements OnInit {
       forms: selectedWord.forms?.join(', '),
       remarks: selectedWord.remarks
     });
+  }
+
+  setKeymapper(b: boolean) {
+    this.userService.update({mapCyrillic: b})
+      .pipe(
+        tap(result => {
+          this.isKeymapperOn = result.mapCyrillic;
+        }),
+        switchMapTo(this.translateService.get('SETTINGS.USER_SETTINGS.RESPONSES.USER_UPDATED'))
+      )
+      .subscribe((result) => {
+        this.snackBar.open(result as string, '', {duration: 10000});
+      });
   }
 }
