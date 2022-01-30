@@ -8,12 +8,12 @@ import {UserService} from '../../services/user.service';
 import {MetadataService} from '../../services/metadata.service';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {Language} from '../../models/Language';
-import {Metadata} from "../../models/Metadata";
-import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {User} from "../../models/User";
-import {switchMapTo, tap} from "rxjs/operators";
-import {TranslateService} from "@ngx-translate/core";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {Metadata} from '../../models/Metadata';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {User} from '../../models/User';
+import {switchMapTo, tap} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface IWordModalInputData {
   word?: IWord;
@@ -142,9 +142,18 @@ export class ModalNewWordComponent implements OnInit {
 
       this.formGroup.controls.word.disable();
       this.formGroup.controls.translations.disable();
+
       this.wordService.addOrModifyWord(wordDto, this.wordSetId, this.selectedWord?.dbid)
         .subscribe(word => {
-          this.dialogRef.close(word);
+          if (this.formGroup.controls.dontClose.value) {
+            this.resetForm();
+            this.isLoading = false;
+            this.formGroup.controls.word.enable();
+            this.formGroup.controls.translations.enable();
+            this.wordControl.nativeElement.focus();
+          } else {
+            this.dialogRef.close(word);
+          }
         });
     }
   }
@@ -225,5 +234,20 @@ export class ModalNewWordComponent implements OnInit {
       .subscribe((result) => {
         this.snackBar.open(result as string, '', {duration: 10000});
       });
+  }
+
+  private resetForm() {
+    this.formGroup.reset();
+    this.formGroup.patchValue({
+      word: '',
+      translations: '',
+      transcription: '',
+      speechPart: '',
+      gender: '',
+      forms: '',
+      remarks: '',
+      stressLetterIndex: null,
+      dontClose: true,
+    });
   }
 }
