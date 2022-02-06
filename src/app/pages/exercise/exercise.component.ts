@@ -47,7 +47,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     limit: new FormControl(10),
     askForms: new FormControl({value: false, disabled: true}),
     askGender: new FormControl({value: false, disabled: true}),
-    typoMode: new FormControl(false),
+    typoMode: new FormControl({value: true, disabled: true}),
     askStress: new FormControl({value: false, disabled: true}),
     allowLearn: new FormControl(false)
   });
