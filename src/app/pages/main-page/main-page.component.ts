@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {UserService} from "../../services/user.service";
+import {filter} from "rxjs/operators";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-main-page',
@@ -7,9 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userService: UserService, private router: Router) {
+  }
 
   ngOnInit(): void {
+    this.userService.getUser$()
+      .pipe(
+        filter(r => !!r)
+      )
+      .subscribe(() => {
+        this.router.navigate(['word']);
+      })
   }
 
 }

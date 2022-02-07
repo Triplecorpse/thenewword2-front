@@ -5,7 +5,8 @@
       <div>
         <div style="margin-bottom: 26px;">
           <mat-form-field>
-            <input matInput formControlName="login" [placeholder]="'REGISTRATION.FIELDS.LOGIN.PLACEHOLDER' | translate">
+            <input matInput autocomplete="username" formControlName="login"
+                   [placeholder]="'REGISTRATION.FIELDS.LOGIN.PLACEHOLDER' | translate">
             <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.LOGIN.TOOLTIP' | translate">
               info_outlined
             </mat-icon>
@@ -23,7 +24,8 @@
 
         <div style="margin-bottom: 16px;">
           <mat-form-field>
-            <input matInput type="password" formControlName="password" [placeholder]="'REGISTRATION.FIELDS.PASSWORD.PLACEHOLDER' | translate">
+            <input matInput autocomplete="new-password" type="password" formControlName="password"
+                   [placeholder]="'REGISTRATION.FIELDS.PASSWORD.PLACEHOLDER' | translate">
             <mat-error *ngIf="formGroup?.controls?.password?.hasError('minlength')">
               {{'REGISTRATION.FIELDS.PASSWORD.ERROR1' | translate}}
             </mat-error>
@@ -32,7 +34,8 @@
 
         <div style="margin-bottom: 16px;">
           <mat-form-field>
-            <input matInput type="password" formControlName="passwordRepeat" [placeholder]="'REGISTRATION.FIELDS.PASSWORD_REPEAT.PLACEHOLDER' | translate">
+            <input matInput autocomplete="new-password" type="password" formControlName="passwordRepeat"
+                   [placeholder]="'REGISTRATION.FIELDS.PASSWORD_REPEAT.PLACEHOLDER' | translate">
             <mat-error *ngIf="formGroup?.controls?.passwordRepeat?.hasError('notequal')">
               {{'REGISTRATION.FIELDS.PASSWORD_REPEAT.ERROR1' | translate}}
             </mat-error>
@@ -42,7 +45,8 @@
       <div style="margin-left: 8px;">
         <div style="margin-bottom: 26px;">
           <mat-form-field>
-            <input matInput formControlName="email" [placeholder]="'REGISTRATION.FIELDS.EMAIL.PLACEHOLDER' | translate">
+            <input matInput autocomplete="email" formControlName="email"
+                   [placeholder]="'REGISTRATION.FIELDS.EMAIL.PLACEHOLDER' | translate">
             <mat-icon matSuffix [matTooltip]="'REGISTRATION.FIELDS.EMAIL.TOOLTIP' | translate">
               info_outlined
             </mat-icon>
@@ -53,7 +57,8 @@
         </div>
         <div style="margin-bottom: 16px;">
           <mat-form-field>
-            <mat-select formControlName="nativeLanguages" [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.PLACEHOLDER' | translate" multiple>
+            <mat-select formControlName="nativeLanguages"
+                        [placeholder]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.PLACEHOLDER' | translate" multiple>
               <mat-optgroup [label]="'REGISTRATION.FIELDS.NATIVE_LANGUAGE.RECOMMENDED_LANGUAGES' | translate">
                 <mat-option *ngFor="let lang of recommendedLanguages" [value]="lang.id">{{lang.nativeName}}</mat-option>
               </mat-optgroup>
@@ -71,7 +76,8 @@
         </div>
         <div style="margin-bottom: 16px;">
           <mat-form-field>
-            <mat-select formControlName="learningLanguages" [placeholder]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.PLACEHOLDER' | translate"
+            <mat-select formControlName="learningLanguages"
+                        [placeholder]="'REGISTRATION.FIELDS.LEARNING_LANGUAGES.PLACEHOLDER' | translate"
                         multiple
                         [matTooltip]="getLanguagesValue(formGroup.controls.learningLanguages.value).join(', ')">
               <mat-option *ngFor="let lang of languages" [value]="lang.id">{{lang.nativeName}}</mat-option>

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {NotUserGuard} from './services/not-user-guard.service';
 import {UserGuard} from './services/user-guard.service';
 import {MetadataService} from './services/metadata.service';
@@ -8,11 +8,6 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./pages/main-page/main-page.module').then(m => m.MainPageModule),
-    canActivate: [MetadataService]
-  },
-  {
-    path: 'how-it-works',
-    loadChildren: () => import('./pages/how-it-works/how-it-works.module').then(m => m.HowItWorksModule),
     canActivate: [MetadataService]
   },
   {
@@ -55,7 +50,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
     initialNavigation: 'enabled'
-})],
+  })],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
