@@ -275,7 +275,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
           const wordCount = selectedWordSets
             .reduce((prev: number, curr: IWordSet) => prev + curr.wordsCount, 0);
           this.filterFormGroup.controls.limit.patchValue(wordCount);
-          this.filterFormGroup.controls.language.patchValue(wordset.nativeLanguage.id);
+          this.filterFormGroup.controls.language.patchValue(wordset.foreignLanguage.id);
           this.filterFormGroup.controls.language.disable();
         }
       });
