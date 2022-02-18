@@ -12,4 +12,6 @@ export interface IWordDto {
   stress_letter_index?: number;
   word_set_id?: number;
   user_created_id?: number;
+  threshold?: number;
+  times_in_exercise?: number;
 }

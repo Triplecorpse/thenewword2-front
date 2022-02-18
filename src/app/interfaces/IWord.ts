@@ -16,4 +16,6 @@ export interface IWord {
   stressLetterIndex?: number;
   userCreated?: IUser;
   transcription?: string;
+  threshold?: number;
+  timesInExercise?: number;
 }

@@ -4,9 +4,7 @@ import {ISpeechPart} from '../interfaces/ISpeechPart';
 import {IGender} from '../interfaces/IGender';
 import {ILanguage} from '../interfaces/ILanguage';
 import {IUser} from '../interfaces/IUser';
-import {IWordMetadata} from '../interfaces/IWordMetadata';
 import {Metadata} from './Metadata';
-import {User} from './User';
 
 export class Word implements IWord {
   dbid?: number;
@@ -21,6 +19,8 @@ export class Word implements IWord {
   stressLetterIndex?: number;
   userCreated?: IUser;
   transcription: string;
+  threshold?: number;
+  timesInExercise?: number;
 
   constructor(wordDto?: IWordDto) {
     const speechParts = Metadata.speechParts;
@@ -38,6 +38,8 @@ export class Word implements IWord {
     this.originalLanguage = languages?.find(l => l.id === wordDto?.original_language_id);
     this.translatedLanguage = languages?.find(l => l.id === wordDto?.translated_language_id);
     this.userCreated = {id: wordDto.user_created_id};
+    this.threshold = wordDto.threshold;
+    this.timesInExercise = wordDto.times_in_exercise;
   }
 
   convertToDto(): IWordDto {
