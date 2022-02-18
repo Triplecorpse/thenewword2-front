@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {combineLatest, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {IWord} from '../../interfaces/IWord';
 import {WordService} from '../../services/word.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -22,6 +22,8 @@ import {MatSort} from "@angular/material/sort";
 import {UserService} from "../../services/user.service";
 import {Word} from "../../models/Word";
 import {WordSet} from "../../models/WordSet";
+import {PluralizeService} from "../../services/pluralize.service";
+import {ITimeInterval} from "../../interfaces/ITimeInterval";
 
 @Component({
   selector: 'app-word-list',
@@ -41,7 +43,8 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(private wordService: WordService,
               private userService: UserService,
               private dialog: MatDialog,
-              private translateService: TranslateService) {
+              private translateService: TranslateService,
+              private pluralizeService: PluralizeService) {
   }
 
   ngOnInit(): void {
@@ -51,8 +54,10 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
 
     if (this.hideThresholdColumn) {
       this.removeDisplayedColumn('threshold');
+      this.removeDisplayedColumn('last_issued');
     } else {
       this.addDisplayedColumn('threshold');
+      this.addDisplayedColumn('last_issued');
     }
 
     if (this.hideWordColumn) {
@@ -161,6 +166,30 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
     return false;
   }
 
+  getLastIssueValue(time: ITimeInterval): Observable<string> {
+    let part = 'SECONDS';
+    let value = time.seconds;
+
+    if (time.years) {
+      part = 'YEARS';
+      value = time.years;
+    } else if (time.mons) {
+      part = 'MONS';
+      value = time.mons;
+    } else if (time.days) {
+      part = 'DAYS';
+      value = time.days;
+    } else if (time.hours) {
+      part = 'HOURS';
+      value = time.hours;
+    } else if (time.minutes) {
+      part = 'MINUTES';
+      value = time.minutes;
+    }
+
+    return this.pluralizeService.pluralize(`WORDS.LAST_ISSUED.${part}`, value);
+  }
+
   private removeDisplayedColumn(name: string) {
     const indexOf = this.displayedColumns.indexOf(name);
 
@@ -170,7 +199,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   private addDisplayedColumn(name: string) {
-    const order: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'threshold', 'actions'];
+    const order: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'threshold', 'last_issued', 'actions'];
     const indexOf = order.indexOf(name);
 
     if (indexOf > -1 && this.displayedColumns.indexOf(name) === -1) {

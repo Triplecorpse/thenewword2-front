@@ -2,6 +2,7 @@ import {ISpeechPart} from './ISpeechPart';
 import {IGender} from './IGender';
 import {ILanguage} from './ILanguage';
 import {IUser} from './IUser';
+import {ITimeInterval} from "./ITimeInterval";
 
 export interface IWord {
   dbid?: number;
@@ -18,4 +19,5 @@ export interface IWord {
   transcription?: string;
   threshold?: number;
   timesInExercise?: number;
+  lastIssued?: ITimeInterval;
 }

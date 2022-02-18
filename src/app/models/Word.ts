@@ -5,6 +5,7 @@ import {IGender} from '../interfaces/IGender';
 import {ILanguage} from '../interfaces/ILanguage';
 import {IUser} from '../interfaces/IUser';
 import {Metadata} from './Metadata';
+import {ITimeInterval} from "../interfaces/ITimeInterval";
 
 export class Word implements IWord {
   dbid?: number;
@@ -21,6 +22,7 @@ export class Word implements IWord {
   transcription: string;
   threshold?: number;
   timesInExercise?: number;
+  lastIssued?: ITimeInterval;
 
   constructor(wordDto?: IWordDto) {
     const speechParts = Metadata.speechParts;
@@ -40,6 +42,7 @@ export class Word implements IWord {
     this.userCreated = {id: wordDto.user_created_id};
     this.threshold = wordDto.threshold;
     this.timesInExercise = wordDto.times_in_exercise;
+    this.lastIssued = wordDto.last_issued;
   }
 
   convertToDto(): IWordDto {

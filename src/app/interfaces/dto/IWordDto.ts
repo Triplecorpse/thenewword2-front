@@ -1,3 +1,5 @@
+import {ITimeInterval} from "../ITimeInterval";
+
 export interface IWordDto {
   id?: number;
   word?: string;
@@ -14,4 +16,5 @@ export interface IWordDto {
   user_created_id?: number;
   threshold?: number;
   times_in_exercise?: number;
+  last_issued?: ITimeInterval;
 }
