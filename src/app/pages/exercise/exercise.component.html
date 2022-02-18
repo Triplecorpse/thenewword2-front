@@ -49,8 +49,12 @@
   </div>
 
   <div style="margin: 0 8px">
-    <app-word-list [words]="words" [readonly]="true" [hideWordColumn]="!filterFormGroup.value.allowLearn"
-                   *ngIf="!isLoading"></app-word-list>
+    <app-word-list [words]="words"
+                   [readonly]="true"
+                   [hideWordColumn]="!filterFormGroup.value.allowLearn"
+                   [hideThresholdColumn]="false"
+                   *ngIf="!isLoading">
+    </app-word-list>
   </div>
 </ng-container>
 <ng-template #exercise>

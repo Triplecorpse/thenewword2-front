@@ -33,6 +33,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() words: IWord[];
   @Input() readonly: boolean;
   @Input() hideWordColumn = false;
+  @Input() hideThresholdColumn = true;
   @Output() triggerUpdate = new EventEmitter();
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['translations', 'from_language', 'gender', 'speech_part'];
@@ -45,19 +46,27 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {
     if (!this.readonly) {
-      this.displayedColumns.push('actions');
+      this.addDisplayedColumn('actions');
     }
 
-    if (this.hideWordColumn === false && this.displayedColumns[0] !== 'word') {
-      this.displayedColumns.unshift('word');
+    if (this.hideThresholdColumn) {
+      this.removeDisplayedColumn('threshold');
+    } else {
+      this.addDisplayedColumn('threshold');
+    }
+
+    if (this.hideWordColumn) {
+      this.removeDisplayedColumn('word');
+    } else {
+      this.addDisplayedColumn('word');
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hideWordColumn?.currentValue && this.displayedColumns[0] === 'word') {
-      this.displayedColumns.shift();
-    } else if (changes.hideWordColumn?.currentValue === false && this.displayedColumns[0] !== 'word') {
-      this.displayedColumns.unshift('word');
+    if (changes.hideWordColumn?.currentValue === true) {
+      this.removeDisplayedColumn('word')
+    } else if (changes.hideWordColumn?.currentValue === false) {
+      this.addDisplayedColumn('word');
     }
   }
 
@@ -150,5 +159,23 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     return false;
+  }
+
+  private removeDisplayedColumn(name: string) {
+    const indexOf = this.displayedColumns.indexOf(name);
+
+    if (indexOf > -1) {
+      this.displayedColumns.splice(indexOf, 1);
+    }
+  }
+
+  private addDisplayedColumn(name: string) {
+    const order: string[] = ['word', 'translations', 'from_language', 'gender', 'speech_part', 'threshold', 'actions'];
+    const indexOf = order.indexOf(name);
+
+    if (indexOf > -1 && this.displayedColumns.indexOf(name) === -1) {
+      this.displayedColumns.splice(indexOf, 0, order[indexOf]);
+      this.displayedColumns.filter(col => !!col);
+    }
   }
 }

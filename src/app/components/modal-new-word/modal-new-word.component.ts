@@ -162,7 +162,7 @@ export class ModalNewWordComponent implements OnInit {
   }
 
   getWordSpelling() {
-    return this.formGroup.value.word.split('');
+    return this.formGroup.value.word?.split('') || [];
   }
 
   setStressLetter(i: number) {
