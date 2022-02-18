@@ -34,7 +34,8 @@
   <mat-card style="margin: 16px;">
     <h3 matCardTitle>{{'SETTINGS.KEYBOARD_SETTINGS.HEADER' | translate}}</h3>
     <div style="margin: 8px 0;">
-      <mat-checkbox [(ngModel)]="keymaper" [ngModelOptions]="{standalone: true}" color="primary" (change)="keymapperChange()">
+      <mat-checkbox [(ngModel)]="keymaper" [ngModelOptions]="{standalone: true}" color="primary"
+                    (change)="keymapperChange()">
         {{'SETTINGS.KEYBOARD_SETTINGS.KEYBOARD_MAPPER' | translate}}
       </mat-checkbox>
     </div>
@@ -42,38 +43,13 @@
     <mat-card-content>
       <mat-card *ngFor="let section of languageSections" style="margin-bottom: 8px;">
         <div style="display: flex">
-          <div>
-            <h4>{{section.lang.englishName}}</h4>
-            <mat-form-field>
-              <input matInput placeholder="Letter" [(ngModel)]="section.model" [ngModelOptions]="{standalone: true}"
-                     maxlength="1" (keydown.enter)="addLetter($event, section.lang.id)">
-              <button mat-button matSuffix mat-icon-button type="button"
-                      (keydown.enter)="addLetter($event, section.lang.id)" (click)="addLetter($event, section.lang.id)">
-                <mat-icon>check</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
           <div style="margin-left: 8px;">
-            <p *ngIf="defaultKeys[section.lang.id]">{{'SETTINGS.KEYBOARD_SETTINGS.DEFAULT_KEYS' | translate}}</p>
+            <p *ngIf="defaultKeys[section.lang.id]">{{section.lang.englishName}}</p>
             <mat-chip-list *ngIf="defaultKeys[section.lang.id]">
               <mat-chip *ngFor="let symbol of defaultKeys[section.lang.id]">
                 {{symbol}}
               </mat-chip>
             </mat-chip-list>
-            <p *ngIf="section.letters?.length">{{'SETTINGS.KEYBOARD_SETTINGS.ADDITIONAL_KEYS' | translate}}</p>
-            <button mat-flat-button
-                    color="primary"
-                    *ngFor="let letter of section.letters; let bi = index"
-                    matBadge="✖"
-                    matBadgeColor="warn"
-                    [matBadgeSize]="letter.currentBadgeSize"
-                    (mousemove)="changeBadgeSize(section.lang.id, bi, 'large')"
-                    (mouseout)="changeBadgeSize(section.lang.id, bi, 'small')"
-                    (click)="removeLetter(section.lang.id, bi)"
-                    type="button"
-                    style="margin: 8px 16px 8px 0">
-              {{letter.text}}
-            </button>
           </div>
         </div>
       </mat-card>

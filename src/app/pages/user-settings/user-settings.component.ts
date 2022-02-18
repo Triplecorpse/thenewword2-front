@@ -5,7 +5,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {IUser} from '../../interfaces/IUser';
 import {Metadata} from '../../models/Metadata';
 import {EMPTY, merge, Subject} from 'rxjs';
-import {debounceTime, filter, map, switchMap, switchMapTo, tap} from 'rxjs/operators';
+import {debounceTime, filter, map, switchMap, switchMapTo} from 'rxjs/operators';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {TranslateService} from "@ngx-translate/core";
 import {ISymbol} from "../../interfaces/ISymbol";
@@ -143,33 +143,6 @@ export class UserSettingsComponent implements OnInit {
       .subscribe(result => {
         this.snackBar.open(result as string, '', {duration: 10000});
       });
-  }
-
-  addLetter(event: MouseEvent, id: number) {
-    event.stopPropagation();
-    const section = this.languageSections.find(sec => sec.lang.id === id);
-
-    if (section.model) {
-      section.letters.push({text: section.model, currentBadgeSize: 'small'});
-      section.model = '';
-    }
-
-    this.languageSectionsChange.next({...section, action: 'add'});
-  }
-
-  changeBadgeSize(id: number, bi: number, desiredSize: 'small' | 'large') {
-    const section = this.languageSections.find(sec => sec.lang.id === id);
-    const button = section.letters[bi];
-
-    button.currentBadgeSize = desiredSize;
-  }
-
-  removeLetter(id: number, bi: number) {
-    const section = this.languageSections.find(sec => sec.lang.id === id);
-    const letter = section.letters[bi];
-    section.letters.splice(bi, 1);
-
-    this.languageSectionsChange.next({...section, action: 'remove', letters: [letter]});
   }
 
   securityFormSubmit() {
