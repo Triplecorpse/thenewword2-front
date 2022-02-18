@@ -16,11 +16,6 @@ const routes: Routes = [
     canActivate: [NotUserGuard, MetadataService]
   },
   {
-    path: 'register',
-    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterModule),
-    canActivate: [NotUserGuard, MetadataService]
-  },
-  {
     path: 'forgot-password',
     loadChildren: () => import('./pages/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
     canActivate: [NotUserGuard, MetadataService]

@@ -15,8 +15,8 @@ export class NotUserGuard implements CanActivate {
     return this.userService.getUser$()
       .pipe(
         map(user => !user),
-        tap((user) => {
-          if (user) {
+        tap((userIsEmpty) => {
+          if (!userIsEmpty) {
             this.router.navigate(['word'])
           }
         })
