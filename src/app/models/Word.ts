@@ -42,7 +42,15 @@ export class Word implements IWord {
     this.userCreated = {id: wordDto.user_created_id};
     this.threshold = wordDto.threshold;
     this.timesInExercise = wordDto.times_in_exercise;
-    this.lastIssued = wordDto.last_issued;
+    this.lastIssued = {
+      years: wordDto.last_issued.years || 0,
+      mons: wordDto.last_issued.mons || 0,
+      days: wordDto.last_issued.days || 0,
+      hours: wordDto.last_issued.hours || 0,
+      minutes: wordDto.last_issued.minutes || 0,
+      seconds: wordDto.last_issued.seconds || 0,
+      milliseconds: wordDto.last_issued.milliseconds || 0
+    };
   }
 
   convertToDto(): IWordDto {

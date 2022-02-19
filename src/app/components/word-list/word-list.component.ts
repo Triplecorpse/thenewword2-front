@@ -25,6 +25,8 @@ import {WordSet} from "../../models/WordSet";
 import {PluralizeService} from "../../services/pluralize.service";
 import {ITimeInterval} from "../../interfaces/ITimeInterval";
 
+type TEntity = 'years' | 'mons' | 'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds';
+
 @Component({
   selector: 'app-word-list',
   templateUrl: './word-list.component.html',
@@ -78,14 +80,82 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit() {
     this.sort.sortChange
       .subscribe(sort => {
-        if (sort.active === 'word') {
-          let pos = 1;
+        const pos = sort.direction === 'asc' ? -1 : 1;
+        const __compareLastIssuedBy = (entity: TEntity, a: ITimeInterval, b: ITimeInterval): number => {
+          return a[entity].toString().localeCompare(b[entity].toString(), undefined, {numeric: true});
+        }
 
-          if (sort.direction === 'asc') {
-            pos = -pos;
-          }
+        switch (sort.active) {
+          case 'word':
+            this.words.sort((a, b) => a.word.localeCompare(b.word, a.originalLanguage.iso2, {sensitivity: 'base'}) * pos);
+            break;
+          case 'threshold':
+            this.words.sort((a, b) => a.threshold > b.threshold ? pos : -pos);
+            break;
+          case 'gender':
+            this.translateService.get('GENDERS')
+              .subscribe((genderMap) => {
+                this.words.sort((a, b) => {
+                  const gender1 = a.gender?.englishName.toUpperCase();
+                  const gender2 = b.gender?.englishName.toUpperCase();
+                  const gender1Native = genderMap[gender1]?.toLowerCase();
+                  const gender2Native = genderMap[gender2]?.toLowerCase();
 
-          this.words.sort((a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? pos : -pos);
+                  if (gender1Native && !gender2Native) {
+                    return -pos;
+                  }
+
+                  if (!gender1Native && gender2Native) {
+                    return pos;
+                  }
+
+                  if (!gender1Native && !gender2Native) {
+                    return 0;
+                  }
+
+                  return gender1Native.localeCompare(gender2Native, 'uk', {sensitivity: 'base'}) * pos;
+                });
+              });
+            break;
+          case 'speech_part':
+            this.translateService.get('SPEECH_PARTS')
+              .subscribe((speechPartMap) => {
+                this.words.sort((a, b) => {
+                  const speechPart1 = a.speechPart?.englishName.toUpperCase();
+                  const speechPart2 = b.speechPart?.englishName.toUpperCase();
+                  const speechPart1Native = speechPartMap[speechPart1]?.toLowerCase();
+                  const speechPart2Native = speechPartMap[speechPart2]?.toLowerCase();
+
+                  if (speechPart1Native && !speechPart2Native) {
+                    return -pos;
+                  }
+
+                  if (!speechPart1Native && speechPart2Native) {
+                    return pos;
+                  }
+
+                  if (!speechPart1Native && !speechPart2Native) {
+                    return 0;
+                  }
+
+                  return speechPart1Native.localeCompare(speechPart2Native, 'uk', {sensitivity: 'base'}) * pos;
+                });
+              });
+            break;
+          case 'last_issued':
+            this.words.sort((a, b) => {
+              const entities: TEntity[] = ['years', 'mons', 'days', 'hours', 'minutes', 'seconds', 'milliseconds'];
+              let entity = entities.shift();
+              let result = 0;
+
+              while (result === 0 && entities.length > 0) {
+                result = __compareLastIssuedBy(entity, a.lastIssued, b.lastIssued)
+                entity = entities.shift();
+              }
+
+              return result * pos;
+            });
+            break;
         }
       });
   }
