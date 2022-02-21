@@ -29,7 +29,7 @@ export class UserSettingsComponent implements OnInit {
   languages: ILanguage[] = [];
   settingsFormGroup = new FormGroup({
     login: new FormControl({value: '', disabled: true}),
-    nativeLanguages: new FormControl({value: '', disabled: true}),
+    nativeLanguages: new FormControl(),
     learningLanguages: new FormControl()
   });
   securityFormGroup = new FormGroup({
@@ -76,16 +76,28 @@ export class UserSettingsComponent implements OnInit {
 
     merge(
       this.settingsFormGroup.controls.learningLanguages.valueChanges.pipe(map(v => ({learningLanguages: v}))),
+      this.settingsFormGroup.controls.nativeLanguages.valueChanges.pipe(map(v => ({nativeLanguages: v}))),
       this.languageSectionsChange.pipe(map(v => ({languageSections: v}))),
       this.keymapperValueChange.pipe(map(v => ({keymapper: v})))
     )
       .pipe(
         filter(() => this.settingsFormGroup.valid),
         debounceTime(1000),
-        switchMap<any, any>((value: { learningLanguages?: number[]; languageSections?: ILanguageSection, keymapper?: boolean }) => {
+        switchMap<any, any>((value: { learningLanguages?: number[]; nativeLanguages?: number[]; languageSections?: ILanguageSection, keymapper?: boolean }) => {
           if (value.learningLanguages) {
             const user: IUser = {
               learningLanguages: this.languages.filter(lang => value.learningLanguages.includes(lang.id))
+            };
+
+            return this.userService.update(user, this.settingsFormGroup.value.newPassword)
+              .pipe(
+                switchMapTo(this.translateService.get('SETTINGS.USER_SETTINGS.RESPONSES.USER_UPDATED'))
+              );
+          }
+
+          if (value.nativeLanguages) {
+            const user: IUser = {
+              nativeLanguages: this.languages.filter(lang => value.nativeLanguages.includes(lang.id))
             };
 
             return this.userService.update(user, this.settingsFormGroup.value.newPassword)

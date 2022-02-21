@@ -156,6 +156,7 @@ export class UserService {
       new_password: newPassword,
       login: user.login,
       learning_languages: user.learningLanguages?.map(lang => lang.id),
+      native_languages: user.nativeLanguages?.map(lang => lang.id),
       map_cyrillic: user.mapCyrillic
     };
 

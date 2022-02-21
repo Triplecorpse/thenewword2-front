@@ -15,12 +15,18 @@ import {switchMapTo, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {keyMapperUk} from '../../models/KeyMapper.uk';
+import {keyMapperRu} from "../../models/KeyMapper.ru";
 
 export interface IWordModalInputData {
   word?: IWord;
   wordsetId?: number;
   wordsetNativeLanguage?: Language;
   wordsetForeignLanguage?: Language;
+}
+
+const keyMapper = {
+  uk: keyMapperUk,
+  ru: keyMapperRu
 }
 
 @Component({
@@ -114,7 +120,7 @@ export class ModalNewWordComponent implements OnInit {
       this.foreignLanguage = this.data.wordsetForeignLanguage;
     }
 
-    this.isKeymapperAvailable = ['uk'].includes(this.nativeLanguage.iso2);
+    this.isKeymapperAvailable = ['uk', 'ru'].includes(this.nativeLanguage.iso2);
 
     this.formGroup.controls.translations.valueChanges
       .subscribe((value) => {
@@ -256,8 +262,8 @@ export class ModalNewWordComponent implements OnInit {
 
   onTranslationKeyDown($event: KeyboardEvent): boolean | void {
     // @ts-ignore
-    const symbol = keyMapperUk[$event.key];
-    if (symbol && this.isKeymapperOn) {
+    const symbol = keyMapper[this.nativeLanguage.iso2][$event.key];
+    if (symbol && this.isKeymapperOn && this.isKeymapperAvailable) {
       $event.stopPropagation();
       const selectionStart = this.translationsControl.nativeElement.selectionStart;
       const selectionEnd = this.translationsControl.nativeElement.selectionEnd;
