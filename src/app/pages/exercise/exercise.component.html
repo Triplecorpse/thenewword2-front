@@ -22,10 +22,6 @@
             </mat-optgroup>
           </mat-select>
         </mat-form-field>
-        <div style="display: flex; flex-direction: column; width: 200px; margin-left: 8px">
-          <mat-label style="margin-left: 8px;">{{'EXERCISE.UNLEARNED_THRESHOLD' | translate}}</mat-label>
-          <mat-slider [min]="0" [max]="100" [step]="1" formControlName="threshold"></mat-slider>
-        </div>
         <mat-form-field style="margin-left: 8px">
           <input matInput type="number" [placeholder]="'EXERCISE.LIMIT' | translate" formControlName="limit">
         </mat-form-field>

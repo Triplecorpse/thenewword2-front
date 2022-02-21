@@ -17,7 +17,6 @@ import {ActivatedRoute} from '@angular/router';
 export interface IFilterFormValue {
   wordset: number[];
   language: number;
-  threshold: number;
   limit: number;
   askForms: boolean;
   askGender: boolean;
@@ -43,7 +42,6 @@ export class ExerciseComponent implements OnInit, OnDestroy {
   filterFormGroup = new FormGroup({
     wordset: new FormControl([]),
     language: new FormControl(''),
-    threshold: new FormControl(20),
     limit: new FormControl(10),
     askForms: new FormControl({value: false, disabled: true}),
     askGender: new FormControl({value: false, disabled: true}),
@@ -92,7 +90,6 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     const backendControlsChange = merge(
       this.filterFormGroup.controls.wordset.valueChanges,
       this.filterFormGroup.controls.language.valueChanges,
-      this.filterFormGroup.controls.threshold.valueChanges,
       this.filterFormGroup.controls.limit.valueChanges
     ).pipe(
       tap(() => {
@@ -102,7 +99,6 @@ export class ExerciseComponent implements OnInit, OnDestroy {
       map(() => ({
         wordset: this.filterFormGroup.value.wordset,
         language: this.filterFormGroup.value.language || this.displayedWordsets[0].language.id,
-        threshold: this.filterFormGroup.value.threshold,
         limit: this.filterFormGroup.value.limit
       }))
     );
