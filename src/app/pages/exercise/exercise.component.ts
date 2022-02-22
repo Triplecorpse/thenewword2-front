@@ -32,7 +32,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
   rightWords: IWordCheck[] = [];
   wrongWords: IWordCheck[] = [];
   skippedWords: IWordCheck[] = [];
-  askedWords: IWordCheck[] = [];
+  answeredWords: IWordCheck[] = [];
   wordToAsk: IWord;
   exerciseFinished: boolean;
   exerciseFormGroup = new FormGroup({
@@ -169,6 +169,8 @@ export class ExerciseComponent implements OnInit, OnDestroy {
         } else if (!response.isRight) {
           this.wrongWords.push(response);
         }
+
+        this.answeredWords.push(response);
 
         if (prevWordCheck?.status === 'skipped') {
           this.skippedWords = this.skippedWords.filter(sw => sw.vault.dbid !== prevWordCheck.vault.dbid);
