@@ -1,8 +1,8 @@
 <mat-card class="wrapper">
   <h2 style="margin-right: 8px;">{{'REGISTRATION.FORM_HEADER' | translate}}</h2>
   <form [formGroup]="formGroup" (ngSubmit)="submit(form)" #form="ngForm">
-    <div style="display:flex;">
-      <div>
+    <div class="fields-wrapper">
+      <div class="fields-wrapper-1">
         <div style="margin-bottom: 26px;">
           <mat-form-field>
             <input matInput autocomplete="username" formControlName="login"
@@ -42,7 +42,7 @@
           </mat-form-field>
         </div>
       </div>
-      <div style="margin-left: 8px;">
+      <div class="fields-wrapper-2">
         <div style="margin-bottom: 26px;">
           <mat-form-field>
             <input matInput autocomplete="email" formControlName="email"
@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <div style="display:flex; justify-content: space-between">
+    <div class="buttons-wrapper" style="display:flex; justify-content: space-between">
       <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
         <span *ngIf="!isLoading">{{'REGISTRATION.REGISTER' | translate}}</span>
         <mat-spinner *ngIf="isLoading" [diameter]="20" color="accent"></mat-spinner>

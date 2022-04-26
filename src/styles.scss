@@ -2,3 +2,39 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@mixin xs {
+  @media screen and (max-width: 575px) {
+    @content
+  }
+}
+
+@mixin s {
+  @media screen and (min-width: 576px) {
+    @content
+  }
+}
+
+@mixin m {
+  @media screen and (min-width: 768px) {
+    @content
+  }
+}
+
+@mixin l {
+  @media screen and (min-width: 992px) {
+    @content
+  }
+}
+
+@mixin xl {
+  @media screen and (min-width: 1200px) {
+    @content
+  }
+}
+
+@mixin xxl {
+  @media screen and (min-width: 1400px) {
+    @content
+  }
+}

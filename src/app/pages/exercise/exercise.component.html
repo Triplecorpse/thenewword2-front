@@ -60,7 +60,7 @@
         <div style="display: flex; justify-content: space-between">
           <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()">
             <mat-form-field>
-              <input matInput autocomplete="off" [placeholder]="'EXERCISE.WORD' | translate" formControlName="word"
+              <input matInput autocomplete="off" [placeholder]="wordToAsk?.translations.join(', ')" formControlName="word"
                      autofocus (focusin)="symbolsDisabled = false" (focusout)="symbolsDisabled = true" #wordControl>
             </mat-form-field>
             <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit"

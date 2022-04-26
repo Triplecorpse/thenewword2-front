@@ -1,3 +1,5 @@
+@import "src/styles/vars";
+
 .page-wrapper {
   width: 100%;
   height: calc(100% - 52px);
@@ -15,4 +17,23 @@
   display: flex;
   height: calc(100% - 16px);
   align-items: center;
+}
+
+.about-wrapper {
+  margin-right: 8px;
+  opacity: .8;
+  min-height: 315px;
+}
+
+@include m {
+  .page-contents {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+  }
+
+  .about-wrapper {
+    margin-right: 0;
+    opacity: .8;
+    margin-top: 8px;
+  }
 }
