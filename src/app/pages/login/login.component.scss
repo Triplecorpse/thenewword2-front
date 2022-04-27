@@ -1,3 +1,5 @@
+@import "src/styles/vars";
+
 .general-wrapper {
   height: calc(100% - 52px);
   display: flex;
@@ -8,4 +10,25 @@
 
 .wrapper {
   margin: auto;
+}
+
+.buttons-wrapper {
+  display: flex;
+
+  .line-2 {
+    display:flex;
+    align-items: center;
+    margin-left: 32px;
+  }
+}
+
+@include m {
+  .buttons-wrapper {
+    flex-direction: column;
+
+    .line-2 {
+      margin-top: 12px;
+      margin-left: 0;
+    }
+  }
 }

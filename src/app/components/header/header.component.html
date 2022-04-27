@@ -21,7 +21,8 @@
       <div>
         <label class="dev-mode" *ngIf="isDevMode()" style="margin-right: 8px;">
           <span>{{'MAIN.DEV_MODE' | translate}}</span>
-          <mat-icon [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">info_outlined</mat-icon>
+          <mat-icon class="desktop" [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">info_outlined</mat-icon>
+          <mat-icon class="mobile" style="font-size: 30px; margin-right: 12px;" [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">warning</mat-icon>
         </label>
       </div>
       <div *ngIf="user$ | async as user; else guestTpl2">

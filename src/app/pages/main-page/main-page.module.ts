@@ -5,6 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {MatCardModule} from "@angular/material/card";
 import {TranslateModule} from "@ngx-translate/core";
 import {RegistrationFormModule} from "../../components/registration-form/registration-form.module";
+import {MatButtonModule} from '@angular/material/button';
 
 const routes: Routes = [
   {path: '', component: MainPageComponent}
@@ -14,13 +15,14 @@ const routes: Routes = [
   declarations: [
     MainPageComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatCardModule,
-    TranslateModule,
-    RegistrationFormModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatCardModule,
+        TranslateModule,
+        RegistrationFormModule,
+        MatButtonModule
+    ]
 })
 export class MainPageModule {
 }
