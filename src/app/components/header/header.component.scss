@@ -34,6 +34,14 @@
   }
 }
 
+.main-menu {
+  position: relative;
+
+  .mobile {
+    display: none;
+  }
+}
+
 @include m {
   .dev-mode {
     span {
@@ -46,6 +54,16 @@
 
     .mobile {
       display: block;
+    }
+  }
+
+  .main-menu {
+    .mobile {
+      display: block;
+    }
+
+    .desktop {
+      display: none;
     }
   }
 }

@@ -28,7 +28,9 @@
         <div class="buttons-wrapper">
           <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
             <span *ngIf="!isLoading">{{'LOGIN.LOGIN' | translate}}</span>
-            <mat-spinner *ngIf="isLoading" [diameter]="20" color="accent"></mat-spinner>
+            <div *ngIf="isLoading" style="display: flex; height: 37.5px; justify-content: center; align-items: center">
+              <mat-spinner [diameter]="20" color="accent"></mat-spinner>
+            </div>
           </button>
           <div class="line-2">
             <label>{{'LOGIN.NOT_REGISTERED' | translate}}</label>
