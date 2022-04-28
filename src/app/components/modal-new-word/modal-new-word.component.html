@@ -12,38 +12,40 @@
     <mat-divider style="margin: 8px 0;"></mat-divider>
 
     <div>
-      <p *ngIf="!isKeymapperAvailable" style="display: flex; align-items: center;">
-        <span>{{'MODAL_WORD.KEYMAPPER_NA' | translate : {language: nativeLanguage.nativeName} }}</span>
-        <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate">
-          info_outlined
-        </mat-icon>
-      </p>
-      <ng-container *ngIf="isKeymapperAvailable && isKeymapperOn">
-        <p style="display:flex; align-items: center;">
-          <span>{{'MODAL_WORD.KEYMAPPER_ON' | translate}}</span>
-          <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate" style="margin-left: 8px;">
+      <div class="desktop-m">
+        <p *ngIf="!isKeymapperAvailable" style="display: flex; align-items: center;">
+          <span>{{'MODAL_WORD.KEYMAPPER_NA' | translate : {language: nativeLanguage.nativeName} }}</span>
+          <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate">
             info_outlined
           </mat-icon>
         </p>
-        <div>
-          <a href="javascript:void(0)" (click)="setKeymapper(false)">{{'MODAL_WORD.KEYMAPPER_ACTION_OFF' | translate}}</a>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="isKeymapperAvailable && !isKeymapperOn">
-        <p style="display:flex; align-items: center;">
-          <span>{{'MODAL_WORD.KEYMAPPER_OFF' | translate}}</span>
-          <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate" style="margin-left: 8px;">
-            info_outlined
-          </mat-icon>
-        </p>
-        <div>
-          <a href="javascript:void(0)" (click)="setKeymapper(true)">{{'MODAL_WORD.KEYMAPPER_ACTION_ON' | translate}}</a>
-        </div>
-      </ng-container>
+        <ng-container *ngIf="isKeymapperAvailable && isKeymapperOn">
+          <p style="display:flex; align-items: center;">
+            <span>{{'MODAL_WORD.KEYMAPPER_ON' | translate}}</span>
+            <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate" style="margin-left: 8px;">
+              info_outlined
+            </mat-icon>
+          </p>
+          <div>
+            <a href="javascript:void(0)" (click)="setKeymapper(false)">{{'MODAL_WORD.KEYMAPPER_ACTION_OFF' | translate}}</a>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isKeymapperAvailable && !isKeymapperOn">
+          <p style="display:flex; align-items: center;">
+            <span>{{'MODAL_WORD.KEYMAPPER_OFF' | translate}}</span>
+            <mat-icon matSuffix [matTooltip]="'MODAL_WORD.KEYMAPPER_ABOUT' | translate" style="margin-left: 8px;">
+              info_outlined
+            </mat-icon>
+          </p>
+          <div>
+            <a href="javascript:void(0)" (click)="setKeymapper(true)">{{'MODAL_WORD.KEYMAPPER_ACTION_ON' | translate}}</a>
+          </div>
+        </ng-container>
+      </div>
       <mat-form-field>
         <input matInput [placeholder]="'MODAL_WORD.WORD' | translate" formControlName="word" #wordControl (focusin)="symbolsDisabled = false" (focusout)="wordFocusOut()">
       </mat-form-field>
-      <mat-form-field style="margin-left: 8px;">
+      <mat-form-field class="form-element">
         <input matInput [placeholder]="'MODAL_WORD.TRANSLATIONS' | translate" formControlName="translations" #translationsControl [matAutocomplete]="auto" (keydown)="onTranslationKeyDown($event)">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="wordSelected($event)">
           <mat-option *ngFor="let option of translationsAutocomplete" [value]="option">
@@ -54,9 +56,9 @@
       </mat-form-field>
       <mat-icon style="color: green" *ngIf="selectedWord">fiber_manual_record</mat-icon>
       <mat-divider style="margin: 0 0 8px 0"></mat-divider>
-      <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
+      <app-symbols [language]="foreignLanguage" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled" class="desktop-m"></app-symbols>
 
-      <div style="margin: 8px 0;">
+      <div style="margin: 8px 0; word-break: break-word; width: 100%;">
         <mat-checkbox formControlName="dontClose" color="primary">{{'MODAL_WORD.NOT_CLOSE' | translate}}</mat-checkbox>
       </div>
       <div style="display: flex">
@@ -100,7 +102,7 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field style="margin-left: 8px;">
+        <mat-form-field class="form-element">
           <mat-select [placeholder]="'MODAL_WORD.GENDER' | translate" formControlName="gender">
             <mat-option *ngFor="let g of wordMetadata.genders" [value]="g.id">
               {{"GENDERS." + g.englishName.toUpperCase() | translate}}
@@ -114,7 +116,7 @@
           <input matInput [placeholder]="'MODAL_WORD.FORMS' | translate" formControlName="forms">
         </mat-form-field>
 
-        <mat-form-field style="margin-left: 8px;">
+        <mat-form-field class="form-element">
           <input matInput [placeholder]="'MODAL_WORD.REMARKS' | translate" formControlName="remarks">
         </mat-form-field>
       </div>

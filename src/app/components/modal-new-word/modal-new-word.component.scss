@@ -1,3 +1,5 @@
+@import "src/styles/vars";
+
 .spell-letter {
   cursor: pointer;
   display: inline-block;
@@ -5,5 +7,23 @@
 
   &:hover {
     font-weight: bold;
+  }
+}
+
+.form-element {
+  margin-left: 8px;
+}
+
+:host::ng-deep mat-checkbox .mat-checkbox-layout {
+  white-space: normal;
+}
+
+@include m {
+  mat-form-field {
+    width: 100%;
+  }
+
+  .form-element {
+    margin-left: 0;
   }
 }

@@ -1,40 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+@import "styles/vars";
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-@mixin xs {
-  @media screen and (max-width: 575px) {
-    @content
+@include nm {
+  .mobile-m {
+    display: none !important;
   }
 }
 
-@mixin s {
-  @media screen and (min-width: 576px) {
-    @content
+@include m {
+  .desktop-m {
+    display: none !important;
   }
 }
 
-@mixin m {
-  @media screen and (min-width: 768px) {
-    @content
+@include ns {
+  .mobile-s {
+    display: none !important;
   }
 }
 
-@mixin l {
-  @media screen and (min-width: 992px) {
-    @content
-  }
-}
-
-@mixin xl {
-  @media screen and (min-width: 1200px) {
-    @content
-  }
-}
-
-@mixin xxl {
-  @media screen and (min-width: 1400px) {
-    @content
+@include s {
+  .desktop-s {
+    display: none !important;
   }
 }

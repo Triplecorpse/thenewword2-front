@@ -1,3 +1,15 @@
+@import "src/styles/vars";
+
 table {
   width: 100%;
+}
+
+@include m {
+  .new-word-button {
+    width: 100%;
+  }
+
+  td.translations, th.translations {
+    padding-left: 8px;
+  }
 }

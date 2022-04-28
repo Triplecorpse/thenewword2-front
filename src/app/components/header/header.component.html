@@ -2,7 +2,7 @@
   <nav class="docs-navbar-header">
     <div class="nav-block">
       <div class="main-menu" *ngIf="user$ | async as user; else guestTpl">
-        <div class="mobile">
+        <div class="mobile-m">
           <button mat-button [matMenuTriggerFor]="mobileMenu">
             <mat-icon>menu</mat-icon>
           </button>
@@ -12,7 +12,7 @@
             <button mat-menu-item routerLink="exercise" routerLinkActive="active">{{'MAIN.EXERCISE' | translate}}</button>
           </mat-menu>
         </div>
-        <div class="desktop">
+        <div class="desktop-m">
           <button mat-button routerLink="dashboard" class="nav-item"
                   routerLinkActive="active">{{'MAIN.DASHBOARD' | translate}}</button>
           <button mat-button routerLink="word" class="nav-item"
@@ -31,8 +31,8 @@
       <div>
         <label class="dev-mode" *ngIf="isDevMode()" style="margin-right: 8px;">
           <span>{{'MAIN.DEV_MODE' | translate}}</span>
-          <mat-icon class="desktop" [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">info_outlined</mat-icon>
-          <mat-icon class="mobile" style="font-size: 30px; margin-right: 12px;"
+          <mat-icon class="desktop-m" [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">info_outlined</mat-icon>
+          <mat-icon class="mobile-m" style="font-size: 30px; margin-right: 12px;"
                     [matTooltip]="'MAIN.DEV_MODE_TOOLTIP' | translate">warning
           </mat-icon>
         </label>

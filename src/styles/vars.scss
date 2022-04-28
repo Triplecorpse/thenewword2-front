@@ -10,8 +10,20 @@
   }
 }
 
+@mixin ns {
+  @media screen and (min-width: 577px) {
+    @content
+  }
+}
+
 @mixin m {
   @media screen and (max-width: 768px) {
+    @content
+  }
+}
+
+@mixin nm {
+  @media screen and (min-width: 769px) {
     @content
   }
 }

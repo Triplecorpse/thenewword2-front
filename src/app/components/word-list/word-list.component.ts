@@ -18,12 +18,12 @@ import {IModalConfirm, ModalConfirmComponent} from '../modal-confirm/modal-confi
 import {filter, switchMap, take} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {IWordSet} from '../../interfaces/IWordSet';
-import {MatSort} from "@angular/material/sort";
-import {UserService} from "../../services/user.service";
-import {Word} from "../../models/Word";
-import {WordSet} from "../../models/WordSet";
-import {PluralizeService} from "../../services/pluralize.service";
-import {ITimeInterval} from "../../interfaces/ITimeInterval";
+import {MatSort} from '@angular/material/sort';
+import {UserService} from '../../services/user.service';
+import {Word} from '../../models/Word';
+import {WordSet} from '../../models/WordSet';
+import {PluralizeService} from '../../services/pluralize.service';
+import {ITimeInterval} from '../../interfaces/ITimeInterval';
 
 type TEntity = 'years' | 'mons' | 'days' | 'hours' | 'minutes' | 'seconds' | 'milliseconds';
 
@@ -71,7 +71,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.hideWordColumn?.currentValue === true) {
-      this.removeDisplayedColumn('word')
+      this.removeDisplayedColumn('word');
     } else if (changes.hideWordColumn?.currentValue === false) {
       this.addDisplayedColumn('word');
     }
@@ -83,7 +83,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
         const pos = sort.direction === 'asc' ? -1 : 1;
         const __compareLastIssuedBy = (entity: TEntity, a: ITimeInterval, b: ITimeInterval): number => {
           return a[entity].toString().localeCompare(b[entity].toString(), undefined, {numeric: true});
-        }
+        };
 
         switch (sort.active) {
           case 'word':
@@ -149,7 +149,7 @@ export class WordListComponent implements OnInit, AfterViewInit, OnChanges {
               let result = 0;
 
               while (result === 0 && entities.length > 0) {
-                result = __compareLastIssuedBy(entity, a.lastIssued, b.lastIssued)
+                result = __compareLastIssuedBy(entity, a.lastIssued, b.lastIssued);
                 entity = entities.shift();
               }
 
