@@ -11,11 +11,13 @@ import {Language} from '../../models/Language';
 import {Metadata} from '../../models/Metadata';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {User} from '../../models/User';
-import {switchMapTo, tap} from 'rxjs/operators';
+import {switchMapTo, takeUntil, tap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {keyMapperUk} from '../../models/KeyMapper.uk';
-import {keyMapperRu} from "../../models/KeyMapper.ru";
+import {keyMapperRu} from '../../models/KeyMapper.ru';
+import {ScreenService} from '../../services/screen.service';
+import {Subject} from 'rxjs';
 
 export interface IWordModalInputData {
   word?: IWord;
@@ -27,7 +29,7 @@ export interface IWordModalInputData {
 const keyMapper = {
   uk: keyMapperUk,
   ru: keyMapperRu
-}
+};
 
 @Component({
   selector: 'app-modal-new-word',
@@ -64,6 +66,8 @@ export class ModalNewWordComponent implements OnInit {
   isKeymapperAvailable: boolean;
   actionDisabled = false;
   dontClose = true;
+  shouldUseKeyMapper = true;
+  destroy$ = new Subject();
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
   @ViewChild('translationsControl', {read: ElementRef}) private translationsControl: ElementRef;
@@ -75,6 +79,7 @@ export class ModalNewWordComponent implements OnInit {
               private changeDetection: ChangeDetectorRef,
               private translateService: TranslateService,
               private snackBar: MatSnackBar,
+              private screenService: ScreenService,
               @Inject(MAT_DIALOG_DATA) public data: IWordModalInputData) {
   }
 
@@ -85,7 +90,6 @@ export class ModalNewWordComponent implements OnInit {
       speechParts: Metadata.speechParts,
       symbols: Metadata.symbols
     };
-
     this.nativeLanguages = this.userService.getUser().nativeLanguages;
     this.learningLanguages = this.userService.getUser().learningLanguages;
 
@@ -128,6 +132,25 @@ export class ModalNewWordComponent implements OnInit {
           this.selectedWord = null;
         }
       });
+
+    this.screenService.screen$
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(data => {
+        console.log(data.sizes, data.size);
+        if (data.sizes.indexOf(data.size) <= 1) {
+          this.isShownMore = true;
+          this.shouldUseKeyMapper = false;
+        } else {
+          this.shouldUseKeyMapper = true;
+        }
+      });
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   saveWord() {
@@ -263,7 +286,7 @@ export class ModalNewWordComponent implements OnInit {
   onTranslationKeyDown($event: KeyboardEvent): boolean | void {
     // @ts-ignore
     const symbol = keyMapper[this.nativeLanguage.iso2][$event.key];
-    if (symbol && this.isKeymapperOn && this.isKeymapperAvailable) {
+    if (symbol && this.isKeymapperOn && this.isKeymapperAvailable && this.shouldUseKeyMapper) {
       $event.stopPropagation();
       const selectionStart = this.translationsControl.nativeElement.selectionStart;
       const selectionEnd = this.translationsControl.nativeElement.selectionEnd;
