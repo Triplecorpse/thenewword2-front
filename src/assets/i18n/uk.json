@@ -265,7 +265,10 @@
     "USE_ALT": "<span style=\"padding: 2px 3px; font-size: smaller; border: 1px solid lightgray; border-radius: 5px\">Alt</span> + <span style=\"padding: 2px 3px; font-size: smaller; border: 1px solid lightgray; border-radius: 5px\">цифра</span> або <span style=\"padding: 2px 3px; font-size: smaller; border: 1px solid lightgray; border-radius: 5px\">клік</span> для вставки символа"
   },
   "EXERCISE": {
-    "START": "Почати",
+    "START_EXAM": "Екзамен",
+    "START_EXAM_DESC": "Під час екзамену зараховується кожна відповіть і ведеться статистика",
+    "START_PRACTICE": "Навчання",
+    "START_PRACTICE_DESC": "Під час навчання необхідно ввести слово правильно. При неправильному введенні, буде надана така кількість спроб, яка необхідна. Статисстика не ведеться",
     "WORD_SET": "Список слів",
     "LANGUAGE": "Мова",
     "LIMIT": "Ліміт",

@@ -138,7 +138,6 @@ export class ModalNewWordComponent implements OnInit {
         takeUntil(this.destroy$)
       )
       .subscribe(data => {
-        console.log(data.sizes, data.size);
         if (data.sizes.indexOf(data.size) <= 1) {
           this.isShownMore = true;
           this.shouldUseKeyMapper = false;

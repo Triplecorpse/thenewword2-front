@@ -36,14 +36,15 @@
     </ng-container>
 
     <ng-container matColumnDef="threshold">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;">{{'WORDS.THRESHOLD' | translate}}</th>
-      <td mat-cell *matCellDef="let element">
-        <span style="font-size: smaller; color: gray; font-style: italic;">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 200px;" class="threshold">{{'WORDS.THRESHOLD' | translate}}</th>
+      <td mat-cell *matCellDef="let element" class="threshold">
+        <div class="threshold-content">
           <mat-progress-bar mode="determinate" [value]="element.threshold * 100"
                             style="width: 100px;"
                             [matTooltip]="element.threshold.toFixed(2) * 100 + '%'"></mat-progress-bar>
-          {{'WORDS.TOTAL_ATTEMPTS' | translate}}: {{element.timesInExercise}}
-        </span>
+          <span class="desktop-s">{{'WORDS.TOTAL_ATTEMPTS' | translate}}: {{element.timesInExercise}}</span>
+          <span class="mobile-s">{{element.threshold.toFixed(0)}} / {{element.timesInExercise}}</span>
+        </div>
       </td>
     </ng-container>
 

@@ -1,0 +1,51 @@
+@import "src/styles/vars";
+
+.action-button {
+  &-wrapper {
+    display: flex;
+  }
+
+  margin-left: 8px;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  width: 150px;
+}
+
+.filter-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.additional-options-wrapper {
+  margin-top: 16px;
+}
+
+@include m {
+  .action-button {
+    width: calc(50% - 4px);
+  }
+
+  .filter-actions-wrapper {
+    flex-direction: column;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  .filter-block {
+    margin-top: 16px;
+  }
+}

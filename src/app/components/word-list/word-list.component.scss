@@ -4,12 +4,27 @@ table {
   width: 100%;
 }
 
+.threshold-content {
+  font-size: smaller;
+  color: gray;
+  font-style: italic;
+}
+
 @include m {
   .new-word-button {
     width: 100%;
   }
 
-  td.translations, th.translations {
+  td.translations, th.translations, td.threshold, th.threshold {
     padding-left: 8px;
+  }
+
+  td.threshold, th.threshold {
+    padding-right: 8px;
+  }
+
+  .threshold-content {
+    display: inline-block;
+    text-align: center;
   }
 }
