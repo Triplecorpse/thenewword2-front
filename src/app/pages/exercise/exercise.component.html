@@ -41,7 +41,8 @@
         </div>
       </div>
       <div class="additional-options-wrapper">
-        <mat-checkbox style="display: none" formControlName="askGender">{{'EXERCISE.ASK_GENDER' | translate}}</mat-checkbox>
+        <mat-checkbox style="display: none"
+                      formControlName="askGender">{{'EXERCISE.ASK_GENDER' | translate}}</mat-checkbox>
         <mat-checkbox formControlName="askForms"
                       style="margin-left: 8px; display: none">{{'EXERCISE.ASK_FORMS' | translate}}</mat-checkbox>
         <mat-checkbox formControlName="askStress"
@@ -71,26 +72,25 @@
     <div style="display:flex;">
       <div style="width: 500px;">
         <div style="display: flex; justify-content: space-between">
-          <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()">
+          <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()" class="exercise-form">
             <mat-form-field>
-              <input matInput autocomplete="off" [placeholder]="wordToAsk?.translations.join(', ')" formControlName="word"
+              <input matInput autocomplete="off" [placeholder]="wordToAsk?.translations.join(', ')"
+                     formControlName="word"
                      autofocus (focusin)="symbolsDisabled = false" (focusout)="symbolsDisabled = true" #wordControl>
+              <button mat-button matSuffix type="submit" mat-icon-button aria-label="OK">
+                <mat-icon>check</mat-icon>
+              </button>
             </mat-form-field>
-            <div>
-              <button mat-flat-button color="primary" type="submit"
-                      [disabled]="!wordToAsk">{{'EXERCISE.OK' | translate}}</button>
-              <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)"
-                      [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
-            </div>
+            <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)"
+                    [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
           </form>
         </div>
-
-        <p style="margin-top: 8px; border-top: 1px solid lightgray; padding-top: 8px;"
-           *ngIf="wordToAsk">{{'EXERCISE.TRANSLATION'  | translate}}: {{wordToAsk?.translations.join(', ')}}<span
-          *ngIf="!wordToAsk">...</span></p>
-        <p style="margin-top: 8px"
-           *ngIf="!wordToAsk && isAnythingToRecall()">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
-        <p style="margin-top: 8px" *ngIf="!wordToAsk && !isAnythingToRecall()">{{'EXERCISE.FINISHED' | translate}}</p>
+        <p style="margin-top: 8px" *ngIf="!wordToAsk && isAnythingToRecall()">
+          {{'EXERCISE.PRESS_TO_FIX' | translate}}
+        </p>
+        <p style="margin-top: 8px" *ngIf="!wordToAsk && !isAnythingToRecall()">
+          {{'EXERCISE.FINISHED' | translate}}
+        </p>
       </div>
       <div style="margin-left: 8px;" class="desktop-m">
         <app-symbols [language]="language" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
@@ -99,7 +99,7 @@
   </mat-card>
   <mat-card style="margin: 8px">
     <mat-selection-list [multiple]="false" (selectionChange)="listSelection($event)">
-      <div mat-subheader *ngIf="answeredWords.length">{{'EXERCISE.ANSWERED' | translate}}</div>
+      <div mat-subheader *ngIf="answeredWords.length" class="desktop-m">{{'EXERCISE.ANSWERED' | translate}}</div>
       <ng-container *ngFor="let word of answeredWords.reverse()">
         <mat-list-option [value]="word.you.dbid" *ngIf="word.isRight">
           <mat-icon mat-list-icon style="color: green">check</mat-icon>
