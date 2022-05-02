@@ -5,7 +5,7 @@
         <div class="action-button-wrapper">
           <div class="action-button">
             <div>
-              <button [disabled]="startButtonDisabled" mat-flat-button color="primary"
+              <button [disabled]="startButtonDisabled || true" mat-flat-button color="primary"
                       type="submit">{{'EXERCISE.START_PRACTICE' | translate}}</button>
             </div>
             <div>{{'EXERCISE.START_PRACTICE_DESC' | translate}}</div>
@@ -76,10 +76,12 @@
               <input matInput autocomplete="off" [placeholder]="wordToAsk?.translations.join(', ')" formControlName="word"
                      autofocus (focusin)="symbolsDisabled = false" (focusout)="symbolsDisabled = true" #wordControl>
             </mat-form-field>
-            <button style="margin-left: 8px;" mat-flat-button color="primary" type="submit"
-                    [disabled]="!wordToAsk">{{'EXERCISE.OK' | translate}}</button>
-            <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)"
-                    [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
+            <div>
+              <button mat-flat-button color="primary" type="submit"
+                      [disabled]="!wordToAsk">{{'EXERCISE.OK' | translate}}</button>
+              <button style="margin-left: 8px;" mat-button type="button" (click)="exerciseFormSubmit(true)"
+                      [disabled]="!wordToAsk">{{'EXERCISE.SKIP' | translate}}</button>
+            </div>
           </form>
         </div>
 
@@ -90,7 +92,7 @@
            *ngIf="!wordToAsk && isAnythingToRecall()">{{'EXERCISE.PRESS_TO_FIX' | translate}}</p>
         <p style="margin-top: 8px" *ngIf="!wordToAsk && !isAnythingToRecall()">{{'EXERCISE.FINISHED' | translate}}</p>
       </div>
-      <div style="margin-left: 8px;">
+      <div style="margin-left: 8px;" class="desktop-m">
         <app-symbols [language]="language" (symbol)="setSymbol($event)" [disabled]="symbolsDisabled"></app-symbols>
       </div>
     </div>

@@ -184,6 +184,7 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     if (this.words.length) {
       this.wordToAsk = this.words.shift();
       this.exerciseFormGroup.controls.word.setValue('');
+      this.wordControl.nativeElement.focus();
     } else {
       this.exerciseFormGroup.setValue({
         word: ''
