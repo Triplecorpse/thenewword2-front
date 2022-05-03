@@ -8,7 +8,8 @@ export const environment: IEnvironment = {
   production: false,
   recaptcha: '6LcKUuwUAAAAAMrf5iUjvcqfyult47l9hgGrXfF7',
   api: 'http://localhost:5000',
-  baseUrl: 'http://localhost:4200'
+  baseUrl: 'http://localhost:4200',
+  hash: '@hash'
 };
 
 /*

@@ -3,4 +3,5 @@ export interface IEnvironment {
   recaptcha: string;
   api: string;
   baseUrl: string;
+  hash: string;
 }

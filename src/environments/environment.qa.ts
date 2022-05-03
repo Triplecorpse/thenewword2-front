@@ -8,7 +8,8 @@ export const environment: IEnvironment = {
   production: false,
   recaptcha: '6LcKUuwUAAAAAMrf5iUjvcqfyult47l9hgGrXfF7',
   api: 'https://api.qa.spellword.com.ua',
-  baseUrl: 'https://qa.spellword.com.ua'
+  baseUrl: 'https://qa.spellword.com.ua',
+  hash: '@hash_1651571096056'
 };
 
 /*

@@ -2,7 +2,7 @@ import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {catchError, switchMap } from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from './user.service';
 import {isPlatformServer} from '@angular/common';
@@ -20,7 +20,7 @@ export class InterceptorService implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const urlExclusions: RegExp[] = [/(.json)$/];
+    const urlExclusions: RegExp[] = [/(uk.json)/];
     const authExclusions: RegExp[] = [/(user\/refresh)$/];
     let url = req.url;
     let newReq;

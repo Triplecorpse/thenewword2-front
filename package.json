@@ -1,6 +1,6 @@
 {
   "name": "thenewword2-front",
-  "version": "0.0.0",
+  "version": "0.8.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,10 +8,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "predev:ssr": "node generateEnvironment.js",
+    "prebuild:ssr:qa": "node generateEnvironment.js",
     "dev:ssr": "ng run thenewword2-front:serve-ssr --host 0.0.0.0",
     "serve:ssr": "node dist/thenewword2-front/server/main.js",
     "build:ssr": "ng build --prod && ng run thenewword2-front:server:production",
-    "build:ssr:qa": "ng build --configuration=qa&& ng run thenewword2-front:server:qa",
+    "build:ssr:qa": "ng build --configuration=qa && ng run thenewword2-front:server:qa",
     "live:update": "git pull && npm install && npm run build:ssr:qa && pm2 restart main",
     "prerender": "ng run thenewword2-front:prerender"
   },
