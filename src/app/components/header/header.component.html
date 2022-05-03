@@ -7,9 +7,11 @@
             <mat-icon>menu</mat-icon>
           </button>
           <mat-menu #mobileMenu="matMenu">
-            <button mat-menu-item routerLink="dashboard" routerLinkActive="active">{{'MAIN.DASHBOARD' | translate}}</button>
+            <button mat-menu-item routerLink="dashboard"
+                    routerLinkActive="active">{{'MAIN.DASHBOARD' | translate}}</button>
             <button mat-menu-item routerLink="word" routerLinkActive="active">{{'MAIN.WORDS' | translate}}</button>
-            <button mat-menu-item routerLink="exercise" routerLinkActive="active">{{'MAIN.EXERCISE' | translate}}</button>
+            <button mat-menu-item routerLink="exercise"
+                    routerLinkActive="active">{{'MAIN.EXERCISE' | translate}}</button>
           </mat-menu>
         </div>
         <div class="desktop-m">
@@ -19,6 +21,10 @@
                   routerLinkActive="active">{{'MAIN.WORDS' | translate}}</button>
           <button mat-button routerLink="exercise" class="nav-item"
                   routerLinkActive="active">{{'MAIN.EXERCISE' | translate}}</button>
+          <button mat-button color="primary" routerLink="learn" class="nav-item learn"
+                  routerLinkActive="active">{{'MAIN.LEARN' | translate}}</button>
+          <button mat-button color="warn" routerLink="exam" class="nav-item exam"
+                  routerLinkActive="active">{{'MAIN.EXAM' | translate}}</button>
         </div>
       </div>
       <ng-template #guestTpl>

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
 import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -12,7 +12,8 @@ import {Metadata} from '../../models/Metadata';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
 import {MatSelectionListChange} from '@angular/material/list';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {isPlatformBrowser} from '@angular/common';
 
 export interface IFilterFormValue {
   wordset: number[];
@@ -29,16 +30,6 @@ export interface IFilterFormValue {
   styleUrls: ['./exercise.component.scss']
 })
 export class ExerciseComponent implements OnInit, OnDestroy {
-  rightWords: IWordCheck[] = [];
-  wrongWords: IWordCheck[] = [];
-  skippedWords: IWordCheck[] = [];
-  answeredWords: IWordCheck[] = [];
-  wordToAsk: IWord;
-  exerciseFinished: boolean;
-  exerciseFormGroup = new FormGroup({
-    word: new FormControl('', Validators.required)
-  });
-  allAnswered: boolean;
   filterFormGroup = new FormGroup({
     wordset: new FormControl([]),
     language: new FormControl(''),
@@ -55,17 +46,18 @@ export class ExerciseComponent implements OnInit, OnDestroy {
   words: IWord[];
   isExercising: boolean;
   startButtonDisabled = true;
-  symbolsDisabled: boolean;
   language: ILanguage;
   isLoading: boolean;
   private destroy$ = new Subject<void>();
+  private isBrowser: boolean;
 
-  @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
-
-  constructor(private wordService: WordService,
+  constructor(@Inject(PLATFORM_ID) private platformId: string,
+              private wordService: WordService,
               private translateService: TranslateService,
               private domSanitizer: DomSanitizer,
+              private router: Router,
               private activatedRoute: ActivatedRoute) {
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   ngOnInit(): void {
@@ -125,104 +117,18 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  exerciseFormSubmit(skipCheck?: boolean) {
-    if (!this.exerciseFormGroup.valid && !skipCheck) {
-      return;
-    }
-
-    const prevWordCheck: IWordCheck = [
-      ...this.wrongWords,
-      ...this.skippedWords
-    ]
-      .find(word => word.vault.dbid === this.wordToAsk.dbid);
-
-    this.wordService.checkWord({
-      ...this.wordToAsk,
-      word: this.exerciseFormGroup.controls.word.value
-    }, {}, skipCheck, prevWordCheck?.statId, prevWordCheck?.status as 'skipped' | 'wrong')
-      .subscribe(response => {
-        let htmlString = '';
-        let errors = 0;
-
-        response.diff.forEach((part) => {
-          let htmlPart = part.value;
-
-          if (part.added) {
-            htmlPart = `<span style="background-color: lightgreen">${part.value}</span>`;
-            errors += part.value.length;
-          }
-
-          if (part.removed) {
-            htmlPart = `<span style="background-color: lightcoral">${part.value}</span>`;
-            errors += part.value.length;
-          }
-
-          htmlString += htmlPart;
-        });
-        response.errQuantity = Math.abs(errors);
-        response.formattedString = this.domSanitizer.bypassSecurityTrustHtml(htmlString);
-
-        if (skipCheck) {
-          this.skippedWords.push(response);
-        } else if (response.isRight) {
-          this.rightWords.push(response);
-        } else if (!response.isRight) {
-          this.wrongWords.push(response);
-        }
-
-        this.answeredWords.push(response);
-
-        if (prevWordCheck?.status === 'skipped') {
-          this.skippedWords = this.skippedWords.filter(sw => sw.vault.dbid !== prevWordCheck.vault.dbid);
-        }
-
-        if (prevWordCheck?.status === 'wrong') {
-          this.wrongWords = this.wrongWords.filter(sw => sw.vault.dbid !== prevWordCheck.vault.dbid);
-        }
-      });
-
-    if (this.words.length) {
-      this.wordToAsk = this.words.shift();
-      this.exerciseFormGroup.controls.word.setValue('');
-      this.wordControl.nativeElement.focus();
-    } else {
-      this.exerciseFormGroup.setValue({
-        word: ''
-      });
-      this.exerciseFormGroup.controls.word.disable();
-      this.wordToAsk = null;
-    }
-  }
-
-  filterFormSubmit() {
+  toExercise(path: string) {
     this.wordService.setExercise(this.words)
       .subscribe(() => {
-        this.isExercising = true;
-        this.wordToAsk = this.words.shift();
-        this.language = this.wordToAsk.originalLanguage;
+        console.log(this.words);
+        sessionStorage.setItem('exercise', JSON.stringify(this.words));
+        this.router.navigate([path]);
       });
   }
 
   getWordSetTooltip(): string {
     const raw = this.filterFormGroup.value.wordset;
     return this.wordsets?.filter(ws => raw.includes(ws.id)).map(ws => ws.name).join(', ');
-  }
-
-  getErrorText(errorQuantity: number): Observable<string> {
-    const lastDigit = errorQuantity % 10;
-    const last2Digit = errorQuantity % 100;
-
-    return this.translateService.get(`EXERCISE.MISTAKES.${last2Digit}`)
-      .pipe(
-        switchMap(label => {
-          if (label === `EXERCISE.MISTAKES.${last2Digit}`) {
-            return this.translateService.get(`EXERCISE.MISTAKES.${lastDigit}`);
-          }
-
-          return of(label);
-        }),
-        map(errorLabel => `(${errorQuantity} ${errorLabel})`)
-      );
   }
 
   private rebuildWordsets(languageId?: number) {
@@ -293,33 +199,5 @@ export class ExerciseComponent implements OnInit, OnDestroy {
           wordset: wordsets
         });
       });
-  }
-
-  listSelection($event: MatSelectionListChange) {
-    const selected: IWordCheck = $event.option.value;
-
-    if ((selected.status === 'skipped' || selected.errQuantity <= 2) && !this.words.length) {
-      this.wordToAsk = selected.vault;
-      this.exerciseFormGroup.setValue({
-        word: ''
-      });
-      this.exerciseFormGroup.controls.word.enable();
-    }
-  }
-
-  isAnythingToRecall(): boolean {
-    return !!this.skippedWords.length || !!this.wrongWords.filter(ww => ww.errQuantity <= 2).length;
-  }
-
-  setSymbol(symbol: string) {
-    const selectionStart = this.wordControl.nativeElement.selectionStart;
-    const selectionEnd = this.wordControl.nativeElement.selectionEnd;
-    const newString1 = this.exerciseFormGroup.controls.word.value.slice(0, selectionStart);
-    const newString2 = this.exerciseFormGroup.controls.word.value.slice(selectionEnd);
-    const newString = `${newString1}${symbol}${newString2}`;
-
-    this.exerciseFormGroup.controls.word.patchValue(newString);
-    this.wordControl.nativeElement.setSelectionRange(selectionStart + 1, selectionStart + 1);
-    this.wordControl.nativeElement.focus();
   }
 }

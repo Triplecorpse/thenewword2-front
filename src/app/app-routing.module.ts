@@ -36,6 +36,16 @@ const routes: Routes = [
     canActivate: [UserGuard, MetadataService]
   },
   {
+    path: 'learn',
+    loadChildren: () => import('./pages/learn/learn.module').then(m => m.LearnModule),
+    canActivate: [UserGuard, MetadataService]
+  },
+  {
+    path: 'exam',
+    loadChildren: () => import('./pages/exam/exam.module').then(m => m.ExamModule),
+    canActivate: [UserGuard, MetadataService]
+  },
+  {
     path: 'user-settings',
     loadChildren: () => import('./pages/user-settings/user-settings.module').then(m => m.UserSettingsModule),
     canActivate: [UserGuard, MetadataService]

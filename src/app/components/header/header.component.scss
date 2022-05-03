@@ -14,6 +14,14 @@
   &.active {
     background-color: rgba(0,0,0,.04);
   }
+
+  &.learn.active {
+    background-color: rgba(63, 81, 181,.04);
+  }
+
+  &.exam.active {
+    background-color: rgba(244, 67, 54,.04);
+  }
 }
 
 .user-block, .dev-mode {
