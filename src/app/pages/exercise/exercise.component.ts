@@ -115,10 +115,11 @@ export class ExerciseComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  toExercise(path: string) {
+  toExercise(path: 'exam' | 'learn') {
     this.wordService.setExercise(this.words)
       .subscribe(() => {
         sessionStorage.setItem('exercise', JSON.stringify(this.words));
+        sessionStorage.setItem('mode', path);
         this.router.navigate([path]);
       });
   }

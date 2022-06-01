@@ -3,6 +3,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {InterceptorService} from './services/interceptor.service';
 import {ScreenService} from './services/screen.service';
 import {isPlatformBrowser} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit {
 
   constructor(private translateService: TranslateService,
               private screenService: ScreenService,
+              private route: Router,
               @Inject(PLATFORM_ID) private platformId: string) {
     this.translateService.get('ERROR_CODES')
       .subscribe(result => {
@@ -52,7 +54,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isBrowser) {
+      const mode = sessionStorage.getItem('mode');
+
       this.onresize();
+
+      if (mode) {
+        this.route.navigate([mode]);
+      }
     }
   }
 }
