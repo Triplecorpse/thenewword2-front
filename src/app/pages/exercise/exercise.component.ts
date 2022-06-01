@@ -1,17 +1,15 @@
-import {Component, ElementRef, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, PLATFORM_ID} from '@angular/core';
 import {WordService} from '../../services/word.service';
 import {IWord} from '../../interfaces/IWord';
 import {debounceTime, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {merge, Observable, of, Subject} from 'rxjs';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {IWordCheck} from '../../interfaces/IWordCheck';
+import {merge, of, Subject} from 'rxjs';
+import {FormControl, FormGroup} from '@angular/forms';
 import {ILanguage} from '../../interfaces/ILanguage';
 import {IWordSet} from '../../interfaces/IWordSet';
 import {User} from '../../models/User';
 import {Metadata} from '../../models/Metadata';
 import {DomSanitizer} from '@angular/platform-browser';
 import {TranslateService} from '@ngx-translate/core';
-import {MatSelectionListChange} from '@angular/material/list';
 import {ActivatedRoute, Router} from '@angular/router';
 import {isPlatformBrowser} from '@angular/common';
 
@@ -120,7 +118,6 @@ export class ExerciseComponent implements OnInit, OnDestroy {
   toExercise(path: string) {
     this.wordService.setExercise(this.words)
       .subscribe(() => {
-        console.log(this.words);
         sessionStorage.setItem('exercise', JSON.stringify(this.words));
         this.router.navigate([path]);
       });

@@ -3,6 +3,8 @@ import {UserService} from '../../services/user.service';
 import {Observable, Subject} from 'rxjs';
 import {IUser} from '../../interfaces/IUser';
 import {environment} from '../../../environments/environment';
+import {DisplayService} from '../../services/display.service';
+import {ExerciseMode} from '../../models/enums';
 
 @Component({
   selector: 'app-header',
@@ -12,8 +14,11 @@ import {environment} from '../../../environments/environment';
 export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
   user$: Observable<IUser | null> | undefined;
+  mode$: Observable<ExerciseMode>;
+  ExerciseMode = ExerciseMode;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private displayService: DisplayService) {
+    this.mode$ = displayService.exerciseMode;
   }
 
   ngOnInit(): void {
