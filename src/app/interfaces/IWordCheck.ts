@@ -1,6 +1,6 @@
-import {IWord} from "./IWord";
-import {Change} from "./dto/IWordCheckDto";
-import {SafeHtml} from "@angular/platform-browser";
+import {IWord} from './IWord';
+import {Change} from './dto/IWordCheckDto';
+import {SafeHtml} from '@angular/platform-browser';
 
 export interface IWordCheck {
   status: 'right' | 'wrong' | 'skipped';

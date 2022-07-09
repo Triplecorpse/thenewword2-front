@@ -5,5 +5,5 @@ export const environment: IEnvironment = {
   recaptcha: '6LcKUuwUAAAAAMrf5iUjvcqfyult47l9hgGrXfF7',
   api: 'http://localhost:5000',
   baseUrl: 'http://localhost:4200',
-  hash: '@hash_1654102626798'
+  hash: '@hash_1657389591677'
 };

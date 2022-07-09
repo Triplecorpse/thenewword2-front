@@ -1,4 +1,4 @@
-import {IWordDto} from "./IWordDto";
+import {IWordDto} from './IWordDto';
 
 export interface Change {
   count?: number;
