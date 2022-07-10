@@ -13,12 +13,12 @@ const routes: Route[] = [
   declarations: [
     LearnComponent
   ],
-    imports: [
-        CommonModule,
-        AskWordModule,
-        RouterModule.forChild(routes),
-        LearnWordModule
-    ]
+  imports: [
+    CommonModule,
+    AskWordModule,
+    RouterModule.forChild(routes),
+    LearnWordModule
+  ]
 })
 export class LearnModule {
 }

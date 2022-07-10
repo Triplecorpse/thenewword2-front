@@ -10,6 +10,7 @@ import {isPlatformBrowser} from '@angular/common';
 import {MatSelectionListChange} from '@angular/material/list';
 import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
+import {Change} from "../../interfaces/dto/IWordCheckDto";
 
 @Component({
   selector: 'app-learn-word',
@@ -30,6 +31,7 @@ export class LearnWordComponent implements OnInit {
   language: ILanguage;
   symbolsDisabled: boolean;
   isBrowser: boolean;
+  mistakeLastIndex: number;
 
   @ViewChild('wordControl', {read: ElementRef}) private wordControl: ElementRef;
 
@@ -45,7 +47,7 @@ export class LearnWordComponent implements OnInit {
     this.language = this.wordToAsk.originalLanguage;
   }
 
-  exerciseFormSubmit(skipCheck?: boolean) {
+  formSubmit(skipCheck?: boolean) {
     if (!this.exerciseFormGroup.valid && !skipCheck) {
       return;
     }
@@ -63,7 +65,7 @@ export class LearnWordComponent implements OnInit {
         let htmlString = '';
         let errors = 0;
 
-        response.diff.forEach((part) => {
+        response.diff.forEach((part: Change, index: number) => {
           let htmlPart = part.value;
 
           if (part.added) {

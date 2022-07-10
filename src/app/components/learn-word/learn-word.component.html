@@ -2,7 +2,7 @@
   <div style="display:flex;">
     <div style="width: 500px;">
       <div style="display: flex; justify-content: space-between">
-        <form [formGroup]="exerciseFormGroup" (ngSubmit)="exerciseFormSubmit()" class="exercise-form">
+        <form [formGroup]="exerciseFormGroup" (ngSubmit)="formSubmit()" class="exercise-form">
           <mat-form-field>
             <input matInput autocomplete="off" [placeholder]="wordToAsk?.translations.join(', ')"
                    formControlName="word"

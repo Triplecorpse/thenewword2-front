@@ -9,7 +9,7 @@ export const environment: IEnvironment = {
   recaptcha: '6LcKUuwUAAAAAMrf5iUjvcqfyult47l9hgGrXfF7',
   api: 'https://api.qa.spellword.com.ua',
   baseUrl: 'https://qa.spellword.com.ua',
-  hash: '@hash_1657389591677'
+  hash: '@hash_1657471723727'
 };
 
 /*
