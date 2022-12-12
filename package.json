@@ -33,7 +33,7 @@
     "@nguniversal/express-engine": "^11.2.1",
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "ng-recaptcha": "^7.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
